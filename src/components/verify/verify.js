@@ -75,7 +75,7 @@ class THVVerify extends LitElement {
   render() {
     const isPending = this._subscribeTask.status === TaskStatus.PENDING
     const [firstEvent, trustedEvents, untrustedEvents] = this._eventsSorted
-    const url = firstEvent?.getFirstTagValue('url')
+    const url = firstEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<thv-spinner></thv-spinner>`
       : html`<span class="empty">&mdash;</span>`

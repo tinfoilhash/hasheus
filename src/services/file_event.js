@@ -8,6 +8,20 @@ class FileEvent extends NostrEvent {
   get userDisplayName() {
     return this.userEvent?.displayName ?? this.pubkeyEncodedTruncated
   }
+
+  // anyone can publish this event, so only web urls are allowed to keep a
+  // javascript: url from running script when the link is clicked.
+  get url() {
+    const url = this.getFirstTagValue('url')
+
+    if (!URL.canParse(url)) {
+      return null
+    }
+
+    const { protocol } = new URL(url)
+
+    return protocol === 'https:' || protocol === 'http:' ? url : null
+  }
 }
 
 export default FileEvent
