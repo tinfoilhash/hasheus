@@ -59,7 +59,7 @@ class FileSubscriber {
             }
           },
           onclose: (reasons) => {
-            // The pool is shared with user relays, so check this subscription's
+            // the pool is shared with user relays, so check this subscription's
             // close reasons instead of the pool's connection status.
             const hasReachedEose = reasons.some(
               ({ reason }) => reason === 'closed automatically on eose',
