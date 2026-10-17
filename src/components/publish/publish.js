@@ -35,14 +35,14 @@ class THVPublish extends THVNavigable(LitElement) {
       autoRun: false,
       onComplete: (fileEvent) => {
         if (fileEvent) {
-          // Going back avoids a duplicate history entry for the verify page.
+          // going back avoids a duplicate history entry for the verify page.
           this.navigate(`/${this.file.hash}`, { replace: true, back: true })
         }
       },
     })
   }
 
-  // Redirects replace the history entry so the back button doesn't land on
+  // redirects replace the history entry so the back button doesn't land on
   // this page again and redirect forward in a loop.
   willUpdate() {
     if (!this.file) {

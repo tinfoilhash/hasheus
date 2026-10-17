@@ -16,8 +16,8 @@ class THVRouter extends Router {
     this.goto(path)
   }
 
-  // Only an entry in this document counts, so going back never leaves the app.
-  // Without the Navigation API (older browsers), this falls back to navigating.
+  // only an entry in this document counts, so going back never leaves the app.
+  // without the navigation api (older browsers), this falls back to navigating.
   _isPreviousEntry(path) {
     const { navigation } = window
 
