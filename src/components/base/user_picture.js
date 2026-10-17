@@ -11,14 +11,17 @@ class THVUserPicture extends LitElement {
   render() {
     return html`
       <a href=${`https://njump.to/${this.pubkeyEncoded}`} target="_blank">
-        ${this.userEvent?.picture
-          ? html`<img src=${this.userEvent.picture} />`
-          : html`
-              <div class="text">
-                <span class="display-name">${this.userEvent?.displayName}</span
-                ><span>${this.pubkeyEncoded}</span>
-              </div>
-            `}
+        ${
+          this.userEvent?.picture
+            ? html`<img src=${this.userEvent.picture} />`
+            : html`
+                <div class="text">
+                  <span class="display-name"
+                    >${this.userEvent?.displayName}</span
+                  ><span>${this.pubkeyEncoded}</span>
+                </div>
+              `
+        }
       </a>
     `
   }

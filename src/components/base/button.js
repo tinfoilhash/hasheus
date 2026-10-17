@@ -10,9 +10,11 @@ class THVButton extends LitElement {
   render() {
     return html`
       <slot></slot>
-      ${this.pending
-        ? html`<div class="pending"><thv-spinner></thv-spinner></div>`
-        : nothing}
+      ${
+        this.pending
+          ? html`<div class="pending"><thv-spinner></thv-spinner></div>`
+          : nothing
+      }
     `
   }
 

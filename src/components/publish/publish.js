@@ -65,14 +65,16 @@ class THVPublish extends THVNavigable(LitElement) {
     const isPending = this._publishTask.status === TaskStatus.PENDING
 
     return html`
-      ${!this._canPublish
-        ? html`
-            <thv-status color="orange">
-              you need a browser extension that can sign nostr events!
-              <a href="https://nostr.com" target="_blank">learn more</a>
-            </thv-status>
-          `
-        : nothing}
+      ${
+        !this._canPublish
+          ? html`
+              <thv-status color="orange">
+                you need a browser extension that can sign nostr events!
+                <a href="https://nostr.com" target="_blank">learn more</a>
+              </thv-status>
+            `
+          : nothing
+      }
       ${this._publishTask.render({
         error: (error) => html`<thv-error .error=${error}></thv-error>`,
       })}
