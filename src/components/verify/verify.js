@@ -81,11 +81,15 @@ class THVVerify extends LitElement {
       : html`<span class="empty">&mdash;</span>`
 
     return html`
-      ${this._hasCurrentUserVerified
-        ? html`
-            <thv-status color="green">you have verified this file!</thv-status>
-          `
-        : nothing}
+      ${
+        this._hasCurrentUserVerified
+          ? html`
+              <thv-status color="green"
+                >you have verified this file!</thv-status
+              >
+            `
+          : nothing
+      }
       ${this._subscribeTask.render({
         complete: () =>
           firstEvent
@@ -93,9 +97,11 @@ class THVVerify extends LitElement {
             : html`
                 <thv-status color="orange">
                   this file has not been verified!
-                  ${this._canPublish
-                    ? html`<a href="/publish">add your verification</a>`
-                    : nothing}
+                  ${
+                    this._canPublish
+                      ? html`<a href="/publish">add your verification</a>`
+                      : nothing
+                  }
                 </thv-status>
               `,
         error: (error) => html`<thv-error .error=${error}></thv-error>`,
@@ -112,89 +118,101 @@ class THVVerify extends LitElement {
         <li>
           <div class="key">url</div>
           <div class="value">
-            ${url
-              ? html`<a href=${url} target="_blank">${url}</a>`
-              : pendingOrEmptyValue}
+            ${
+              url
+                ? html`<a href=${url} target="_blank">${url}</a>`
+                : pendingOrEmptyValue
+            }
           </div>
         </li>
         <li class="verified-first">
           <div class="key">verified first</div>
           <div class="value">
-            ${firstEvent
-              ? html`
-                  <thv-user-picture
-                    .pubkeyEncoded=${firstEvent.pubkeyEncoded}
-                    .userEvent=${firstEvent.userEvent}
-                    ?trusted=${this.currentUser?.hasTrusted(firstEvent.pubkey)}
-                  ></thv-user-picture>
-                  <div>
-                    <div class="name">${firstEvent.userDisplayName}</div>
-                    <div>${firstEvent.createdAtDate.toLocaleString()}</div>
-                  </div>
-                `
-              : pendingOrEmptyValue}
+            ${
+              firstEvent
+                ? html`
+                    <thv-user-picture
+                      .pubkeyEncoded=${firstEvent.pubkeyEncoded}
+                      .userEvent=${firstEvent.userEvent}
+                      ?trusted=${this.currentUser?.hasTrusted(firstEvent.pubkey)}
+                    ></thv-user-picture>
+                    <div>
+                      <div class="name">${firstEvent.userDisplayName}</div>
+                      <div>${firstEvent.createdAtDate.toLocaleString()}</div>
+                    </div>
+                  `
+                : pendingOrEmptyValue
+            }
           </div>
         </li>
         <li class="verified-list">
           <div class="key">verified in your web of trust</div>
-          ${this.currentUser
-            ? html`
-                <div class="value">
-                  ${trustedEvents.length
-                    ? html`
-                        <ol>
-                          ${trustedEvents.map(
-                            (event) => html`
-                              <li>
-                                <thv-user-picture
-                                  .pubkeyEncoded=${event.pubkeyEncoded}
-                                  .userEvent=${event.userEvent}
-                                  trusted
-                                  title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                                ></thv-user-picture>
-                              </li>
-                            `,
-                          )}
-                        </ol>
-                      `
-                    : pendingOrEmptyValue}
-                </div>
-              `
-            : nothing}
+          ${
+            this.currentUser
+              ? html`
+                  <div class="value">
+                    ${
+                      trustedEvents.length
+                        ? html`
+                            <ol>
+                              ${trustedEvents.map(
+                                (event) => html`
+                                  <li>
+                                    <thv-user-picture
+                                      .pubkeyEncoded=${event.pubkeyEncoded}
+                                      .userEvent=${event.userEvent}
+                                      trusted
+                                      title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
+                                    ></thv-user-picture>
+                                  </li>
+                                `,
+                              )}
+                            </ol>
+                          `
+                        : pendingOrEmptyValue
+                    }
+                  </div>
+                `
+              : nothing
+          }
           <thv-app-current-user></thv-app-current-user>
         </li>
         <li class="verified-list">
           <div class="key">verified outside your web of trust</div>
           <div class="value">
-            ${untrustedEvents.length
-              ? html`
-                  <ol>
-                    ${untrustedEvents.map(
-                      (event) => html`
-                        <li>
-                          <thv-user-picture
-                            .pubkeyEncoded=${event.pubkeyEncoded}
-                            .userEvent=${event.userEvent}
-                            title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                          ></thv-user-picture>
-                        </li>
-                      `,
-                    )}
-                  </ol>
-                `
-              : pendingOrEmptyValue}
+            ${
+              untrustedEvents.length
+                ? html`
+                    <ol>
+                      ${untrustedEvents.map(
+                        (event) => html`
+                          <li>
+                            <thv-user-picture
+                              .pubkeyEncoded=${event.pubkeyEncoded}
+                              .userEvent=${event.userEvent}
+                              title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
+                            ></thv-user-picture>
+                          </li>
+                        `,
+                      )}
+                    </ol>
+                  `
+                : pendingOrEmptyValue
+            }
           </div>
         </li>
       </ul>
-      ${this._canPublish
-        ? html`
-            <div class="publish">
-              <thv-button>
-                <a href="/publish">add your verification</a>
-              </thv-button>
-            </div>
-          `
-        : nothing}
+      ${
+        this._canPublish
+          ? html`
+              <div class="publish">
+                <thv-button>
+                  <a href="/publish">add your verification</a>
+                </thv-button>
+              </div>
+            `
+          : nothing
+      }
     `
   }
 

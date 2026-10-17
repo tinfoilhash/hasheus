@@ -69,9 +69,11 @@ class THVStart extends LitElement {
 
   render() {
     return html`
-      ${this._error
-        ? html`<thv-error .error=${this._error}></thv-error>`
-        : nothing}
+      ${
+        this._error
+          ? html`<thv-error .error=${this._error}></thv-error>`
+          : nothing
+      }
       <h2>
         <div>verify the integrity of a file</div>
         <div>with the largest decentralized</div>
