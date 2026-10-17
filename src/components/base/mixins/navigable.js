@@ -1,9 +1,9 @@
 const THVNavigable = (superClass) =>
   class THVNavigableElement extends superClass {
-    navigate(url, { back = false } = {}) {
+    navigate(url, { replace = false, back = false } = {}) {
       this.dispatchEvent(
         new CustomEvent('thv-navigate', {
-          detail: { url, back },
+          detail: { url, replace, back },
           bubbles: true,
           composed: true,
         }),
