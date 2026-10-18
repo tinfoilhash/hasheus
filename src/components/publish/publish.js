@@ -104,7 +104,13 @@ class THVPublish extends THVNavigable(LitElement) {
           <li>
             <div class="key">url</div>
             <div class="value">
-              <input type="url" name="url" required maxlength="1000" />
+              <input
+                type="url"
+                name="url"
+                required
+                pattern="https?://.+"
+                maxlength="1000"
+              />
             </div>
           </li>
         </ul>
