@@ -14,7 +14,9 @@ class CurrentUser {
   }
 
   hasTrusted(pubkey) {
-    return this.pubkey === pubkey || this.followListEvent.includes(pubkey)
+    return (
+      this.pubkey === pubkey || Boolean(this.followListEvent?.includes(pubkey))
+    )
   }
 }
 
