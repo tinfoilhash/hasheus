@@ -91,14 +91,23 @@ class CurrentUserConnection extends EventTarget {
       return null
     }
 
-    const parsed = JSON.parse(serialized)
+    // a stored user that can't be read (corrupted or from an older version) is
+    // removed, since it would otherwise fail every connect until cleared.
+    try {
+      const parsed = JSON.parse(serialized)
 
-    return new CurrentUser({
-      ...parsed,
-      userEvent: new UserEvent(parsed.userEvent),
-      followListEvent:
-        parsed.followListEvent && new FollowListEvent(parsed.followListEvent),
-    })
+      return new CurrentUser({
+        ...parsed,
+        userEvent: new UserEvent(parsed.userEvent),
+        followListEvent:
+          parsed.followListEvent && new FollowListEvent(parsed.followListEvent),
+      })
+    } catch (error) {
+      console.error(error)
+      this.removeFromStorage()
+
+      return null
+    }
   }
 
   saveToStorage(currentUser) {
