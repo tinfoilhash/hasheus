@@ -18,6 +18,7 @@ class THVVerify extends LitElement {
   }
 
   _subscribeTask = this._constructSubscribeTask()
+  _subscriber = null
 
   constructor() {
     super()
@@ -25,15 +26,26 @@ class THVVerify extends LitElement {
     this._events = []
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback()
+
+    this._subscriber?.close()
+  }
+
+  // the element is reused when navigating between hashes, so the previous
+  // hash's subscriber and events are dropped before subscribing to the new one.
   _constructSubscribeTask() {
     return new Task(this, {
       task: async ([hash]) => {
-        const subscriber = new FileSubscriber({
+        this._subscriber?.close()
+        this._events = []
+
+        this._subscriber = new FileSubscriber({
           hash,
           onChange: (events) => (this._events = events),
         })
 
-        return await subscriber.subscribe()
+        return await this._subscriber.subscribe()
       },
       args: () => [this.hash],
     })
