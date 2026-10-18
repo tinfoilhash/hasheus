@@ -19,7 +19,9 @@ class FilePublisher {
       created_at: Math.floor(Date.now() / 1000),
       tags: [
         ['x', this.file.hash],
-        ['m', this.file.type],
+        // browsers report an empty type for unknown files, but nip-94
+        // requires a mime type.
+        ['m', this.file.type || 'application/octet-stream'],
         ['size', this.file.size.toString()],
         ['url', this.url],
       ],
