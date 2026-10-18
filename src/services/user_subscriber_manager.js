@@ -62,7 +62,7 @@ class UserSubscriberManager extends EventTarget {
     }
 
     this.subscribe({ pubkey }).catch(() => {
-      // Ignore to allow this to be called synchronously.
+      // ignore to allow this to be called synchronously.
     })
 
     return null
