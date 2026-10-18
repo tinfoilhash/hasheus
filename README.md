@@ -49,6 +49,21 @@ start the development server:
 npm run dev
 ```
 
+### tests
+
+[vitest](https://vitest.dev/) runs the unit tests, which sit next to the modules
+they test (`file.js` → `file.test.js`). to run them once:
+
+```bash
+npm test
+```
+
+or to rerun them as files change:
+
+```bash
+npm run test:watch
+```
+
 ### code style & linting
 
 [prettier](https://prettier.io/) is setup to enforce a consistent code style.

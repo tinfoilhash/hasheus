@@ -21,6 +21,8 @@
     "lint:quality:fix": "eslint --fix .",
     "lint:style": "stylelint '**/*.js'",
     "lint:style:fix": "stylelint --fix '**/*.js'",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "release": "release-it --only-version"
   },
   "dependencies": {
@@ -44,7 +46,8 @@
     "stylelint": "^17.16.0",
     "stylelint-config-recess-order": "^7.8.0",
     "stylelint-config-standard": "^40.0.0",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.2"
   },
   "engines": {
     "node": "24.x",
