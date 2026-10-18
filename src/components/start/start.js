@@ -8,6 +8,7 @@ class THVStart extends LitElement {
   static properties = {
     _error: { state: true },
     _isDispatchingFile: { state: true },
+    _hashProgress: { state: true },
   }
 
   constructor() {
@@ -38,12 +39,21 @@ class THVStart extends LitElement {
   }
 
   async _dispatchFile(file) {
+    // large files can take a while to hash, so another file dropped in the
+    // meantime is ignored rather than hashed alongside it.
+    if (this._isDispatchingFile) {
+      return
+    }
+
     this._isDispatchingFile = true
+    this._hashProgress = null
 
     try {
       this.dispatchEvent(
         new CustomEvent('thv-file', {
-          detail: await THVFile.build(file),
+          detail: await THVFile.build(file, {
+            onProgress: (progress) => (this._hashProgress = progress),
+          }),
           bubbles: true,
           composed: true,
         }),
@@ -88,7 +98,20 @@ class THVStart extends LitElement {
               @change=${this._dispatchFileFromInput}
           /></label>
         </form>
-        ${this._isDispatchingFile ? html`<thv-spinner></thv-spinner>` : nothing}
+        ${
+          this._isDispatchingFile
+            ? html`
+                <span class="hashing">
+                  <thv-spinner></thv-spinner>
+                  ${
+                    this._hashProgress === null
+                      ? nothing
+                      : `${Math.floor(this._hashProgress * 100)}%`
+                  }
+                </span>
+              `
+            : nothing
+        }
       </h3>
     `
   }
@@ -138,7 +161,7 @@ class THVStart extends LitElement {
         border-bottom: 2px solid var(--thv-color-700);
       }
 
-      h3 thv-spinner {
+      h3 .hashing {
         color: var(--thv-color-100);
       }
 
