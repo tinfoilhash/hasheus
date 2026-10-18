@@ -4,7 +4,6 @@
 /.gitattributes
 /.gitignore
 /.nvmrc
-/.prettierrc.json
 /.release-it.json
 /.vscode
 /dist
@@ -13,5 +12,6 @@
 /jsconfig.json
 /LICENSE
 /node_modules
+/prettier.config.js
 /README.md
 /stylelint.config.js
