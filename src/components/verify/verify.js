@@ -83,31 +83,65 @@ class THVVerify extends LitElement {
     })
   }
 
-  get _eventsSorted() {
-    const [first, ...rest] = this._firstEventPerPubkey
+  get _trustedEvents() {
+    return this._firstEventPerPubkey.filter((event) =>
+      this.currentUser?.hasTrusted(event.pubkey),
+    )
+  }
 
-    if (!this.currentUser) {
-      return [first, [], rest]
-    }
+  get _untrustedEvents() {
+    return this._firstEventPerPubkey.filter(
+      (event) => !this.currentUser?.hasTrusted(event.pubkey),
+    )
+  }
 
-    const trusted = []
-    const untrusted = []
+  // anyone can backdate a verification, so the description and url come from
+  // the url most trusted verifiers agree on, with ties going to the earliest.
+  get _source() {
+    const trustedEvents = this._trustedEvents
 
-    for (const event of rest) {
-      if (this.currentUser.hasTrusted(event.pubkey)) {
-        trusted.push(event)
-      } else {
-        untrusted.push(event)
+    if (!trustedEvents.length) {
+      return {
+        event: this._firstEventPerPubkey[0],
+        isConfirmed: false,
+        agreementCount: 0,
       }
     }
 
-    return [first, trusted, untrusted]
+    const eventsByURL = Map.groupBy(
+      trustedEvents.filter((event) => event.url),
+      (event) => new URL(event.url).href,
+    )
+    let agreeingEvents = []
+
+    for (const events of eventsByURL.values()) {
+      if (events.length > agreeingEvents.length) {
+        agreeingEvents = events
+      }
+    }
+
+    return {
+      event: agreeingEvents[0] ?? trustedEvents[0],
+      isConfirmed: true,
+      agreementCount: agreeingEvents.length,
+    }
+  }
+
+  _renderUnconfirmedTag(isUnconfirmed) {
+    return isUnconfirmed
+      ? html`<span class="unconfirmed">unconfirmed</span>`
+      : nothing
   }
 
   render() {
     const isPending = this._subscribeTask.status === TaskStatus.PENDING
-    const [firstEvent, trustedEvents, untrustedEvents] = this._eventsSorted
-    const url = firstEvent?.url
+    const trustedEvents = this._trustedEvents
+    const untrustedEvents = this._untrustedEvents
+    const { event: sourceEvent, isConfirmed, agreementCount } = this._source
+    // labeled whenever it shows, even while loading, so an untrusted source is
+    // never shown unlabeled.
+    const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
+    const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<thv-spinner></thv-spinner>`
       : html`<span class="empty">&mdash;</span>`
@@ -123,19 +157,35 @@ class THVVerify extends LitElement {
           : nothing
       }
       ${this._subscribeTask.render({
-        complete: () =>
-          firstEvent
-            ? nothing
-            : html`
-                <thv-status color="orange">
-                  this file has not been verified!
-                  ${
-                    this._canPublish
-                      ? html`<a href="/publish">add your verification</a>`
-                      : nothing
-                  }
-                </thv-status>
-              `,
+        complete: () => {
+          if (!sourceEvent) {
+            return html`
+              <thv-status color="orange">
+                this file has not been verified!
+                ${
+                  this._canPublish
+                    ? html`<a href="/publish">add your verification</a>`
+                    : nothing
+                }
+              </thv-status>
+            `
+          }
+
+          if (isUnconfirmed && !this._hasCurrentUserVerified) {
+            return html`
+              <thv-status color="orange">
+                ${
+                  this.currentUser
+                    ? 'no one in your web of trust has verified this file.'
+                    : 'connect to see if anyone in your web of trust has verified this file.'
+                }
+                its description and url are unconfirmed.
+              </thv-status>
+            `
+          }
+
+          return nothing
+        },
         error: (error) => html`<thv-error .error=${error}></thv-error>`,
       })}
       <ul>
@@ -144,33 +194,46 @@ class THVVerify extends LitElement {
           <div class="value">${this.hash}</div>
         </li>
         <li>
-          <div class="key">description</div>
-          <div class="value">${firstEvent?.content ?? pendingOrEmptyValue}</div>
+          <div class="key">
+            description${this._renderUnconfirmedTag(isUnconfirmed)}
+          </div>
+          <div class="value">
+            ${sourceEvent?.content ?? pendingOrEmptyValue}
+          </div>
         </li>
         <li>
-          <div class="key">url</div>
+          <div class="key">url${this._renderUnconfirmedTag(isUnconfirmed)}</div>
           <div class="value">
             ${
               url
                 ? html`<a href=${url} target="_blank">${url}</a>`
                 : pendingOrEmptyValue
             }
+            ${
+              isConfirmed && url
+                ? html`
+                    <div class="agreement">
+                      linked by ${agreementCount} in your web of trust
+                    </div>
+                  `
+                : nothing
+            }
           </div>
         </li>
-        <li class="verified-first">
-          <div class="key">verified first</div>
+        <li class="source">
+          <div class="key">source</div>
           <div class="value">
             ${
-              firstEvent
+              sourceEvent
                 ? html`
                     <thv-user-picture
-                      .pubkeyEncoded=${firstEvent.pubkeyEncoded}
-                      .userEvent=${firstEvent.userEvent}
-                      ?trusted=${this.currentUser?.hasTrusted(firstEvent.pubkey)}
+                      .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
+                      .userEvent=${sourceEvent.userEvent}
+                      ?trusted=${isConfirmed}
                     ></thv-user-picture>
                     <div>
-                      <div class="name">${firstEvent.userDisplayName}</div>
-                      <div>${firstEvent.createdAtDate.toLocaleString()}</div>
+                      <div class="name">${sourceEvent.userDisplayName}</div>
+                      <div>${sourceEvent.createdAtDate.toLocaleString()}</div>
                     </div>
                   `
                 : pendingOrEmptyValue
@@ -283,12 +346,25 @@ class THVVerify extends LitElement {
         color: inherit;
       }
 
-      ul li.verified-first .value {
+      ul li .key .unconfirmed {
+        padding: 0 0.375rem;
+        margin-left: 0.5rem;
+        color: var(--thv-color-100);
+        background: var(--thv-color-orange);
+      }
+
+      ul li .value .agreement {
+        margin-top: 0.25rem;
+        font-size: 1rem;
+        color: var(--thv-color-500);
+      }
+
+      ul li.source .value {
         display: flex;
         gap: 0.5rem;
       }
 
-      ul li.verified-first .value .name {
+      ul li.source .value .name {
         margin-bottom: 0.5rem;
       }
 
