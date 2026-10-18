@@ -67,8 +67,24 @@ class THVVerify extends LitElement {
     return this._isFileForHash && !this._hasCurrentUserVerified
   }
 
+  // someone can verify the same file more than once, so only their first
+  // verification is shown. events are already sorted oldest first.
+  get _firstEventPerPubkey() {
+    const seenPubkeys = new Set()
+
+    return this._events.filter((event) => {
+      if (seenPubkeys.has(event.pubkey)) {
+        return false
+      }
+
+      seenPubkeys.add(event.pubkey)
+
+      return true
+    })
+  }
+
   get _eventsSorted() {
-    const [first, ...rest] = this._events
+    const [first, ...rest] = this._firstEventPerPubkey
 
     if (!this.currentUser) {
       return [first, [], rest]
