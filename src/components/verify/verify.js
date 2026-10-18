@@ -6,6 +6,7 @@ import '@/components/base/spinner'
 import '@/components/base/status'
 import '@/components/base/user_picture'
 import FileSubscriber from '@/services/file_subscriber'
+import verificationSorter from '@/services/verification_sorter'
 import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing } from 'lit'
 
@@ -67,50 +68,49 @@ class THVVerify extends LitElement {
     return this._isFileForHash && !this._hasCurrentUserVerified
   }
 
-  // someone can verify the same file more than once, so only their first
-  // verification is shown. events are already sorted oldest first.
-  get _firstEventPerPubkey() {
-    const seenPubkeys = new Set()
-
-    return this._events.filter((event) => {
-      if (seenPubkeys.has(event.pubkey)) {
-        return false
-      }
-
-      seenPubkeys.add(event.pubkey)
-
-      return true
-    })
+  _renderUnconfirmedTag(isUnconfirmed) {
+    return isUnconfirmed
+      ? html`<span class="unconfirmed">unconfirmed</span>`
+      : nothing
   }
 
-  get _eventsSorted() {
-    const [first, ...rest] = this._firstEventPerPubkey
-
-    if (!this.currentUser) {
-      return [first, [], rest]
+  _renderVerifierList(events, { isTrusted = false, emptyValue }) {
+    if (!events.length) {
+      return emptyValue
     }
 
-    const trusted = []
-    const untrusted = []
-
-    for (const event of rest) {
-      if (this.currentUser.hasTrusted(event.pubkey)) {
-        trusted.push(event)
-      } else {
-        untrusted.push(event)
-      }
-    }
-
-    return [first, trusted, untrusted]
+    return html`
+      <ol>
+        ${events.map(
+          (event) => html`
+            <li>
+              <thv-user-picture
+                .pubkeyEncoded=${event.pubkeyEncoded}
+                .userEvent=${event.userEvent}
+                ?trusted=${isTrusted}
+                title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
+              ></thv-user-picture>
+            </li>
+          `,
+        )}
+      </ol>
+    `
   }
 
   render() {
     const isPending = this._subscribeTask.status === TaskStatus.PENDING
-    const [firstEvent, trustedEvents, untrustedEvents] = this._eventsSorted
-    const url = firstEvent?.url
+    const { trustedEvents, untrustedEvents, source } = verificationSorter({
+      events: this._events,
+      currentUser: this.currentUser,
+    })
+    const { event: sourceEvent, isConfirmed, agreementCount } = source
+    // labeled whenever it shows, even while loading, so an untrusted source is
+    // never shown unlabeled.
+    const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
+    const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<thv-spinner></thv-spinner>`
-      : html`<span class="empty">&mdash;</span>`
+      : html`&mdash;`
 
     return html`
       ${
@@ -123,19 +123,35 @@ class THVVerify extends LitElement {
           : nothing
       }
       ${this._subscribeTask.render({
-        complete: () =>
-          firstEvent
-            ? nothing
-            : html`
-                <thv-status color="orange">
-                  this file has not been verified!
-                  ${
-                    this._canPublish
-                      ? html`<a href="/publish">add your verification</a>`
-                      : nothing
-                  }
-                </thv-status>
-              `,
+        complete: () => {
+          if (!sourceEvent) {
+            return html`
+              <thv-status color="orange">
+                this file has not been verified!
+                ${
+                  this._canPublish
+                    ? html`<a href="/publish">add your verification</a>`
+                    : nothing
+                }
+              </thv-status>
+            `
+          }
+
+          if (isUnconfirmed && !this._hasCurrentUserVerified) {
+            return html`
+              <thv-status color="orange">
+                ${
+                  this.currentUser
+                    ? 'no one in your web of trust has verified this file.'
+                    : 'connect to see if anyone in your web of trust has verified this file.'
+                }
+                its description and url are unconfirmed.
+              </thv-status>
+            `
+          }
+
+          return nothing
+        },
         error: (error) => html`<thv-error .error=${error}></thv-error>`,
       })}
       <ul>
@@ -144,33 +160,46 @@ class THVVerify extends LitElement {
           <div class="value">${this.hash}</div>
         </li>
         <li>
-          <div class="key">description</div>
-          <div class="value">${firstEvent?.content ?? pendingOrEmptyValue}</div>
+          <div class="key">
+            description${this._renderUnconfirmedTag(isUnconfirmed)}
+          </div>
+          <div class="value">
+            ${sourceEvent?.content ?? pendingOrEmptyValue}
+          </div>
         </li>
         <li>
-          <div class="key">url</div>
+          <div class="key">url${this._renderUnconfirmedTag(isUnconfirmed)}</div>
           <div class="value">
             ${
               url
                 ? html`<a href=${url} target="_blank">${url}</a>`
                 : pendingOrEmptyValue
             }
+            ${
+              isConfirmed && url
+                ? html`
+                    <div class="agreement">
+                      linked by ${agreementCount} in your web of trust
+                    </div>
+                  `
+                : nothing
+            }
           </div>
         </li>
-        <li class="verified-first">
-          <div class="key">verified first</div>
+        <li class="source">
+          <div class="key">source</div>
           <div class="value">
             ${
-              firstEvent
+              sourceEvent
                 ? html`
                     <thv-user-picture
-                      .pubkeyEncoded=${firstEvent.pubkeyEncoded}
-                      .userEvent=${firstEvent.userEvent}
-                      ?trusted=${this.currentUser?.hasTrusted(firstEvent.pubkey)}
+                      .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
+                      .userEvent=${sourceEvent.userEvent}
+                      ?trusted=${isConfirmed}
                     ></thv-user-picture>
                     <div>
-                      <div class="name">${firstEvent.userDisplayName}</div>
-                      <div>${firstEvent.createdAtDate.toLocaleString()}</div>
+                      <div class="name">${sourceEvent.userDisplayName}</div>
+                      <div>${sourceEvent.createdAtDate.toLocaleString()}</div>
                     </div>
                   `
                 : pendingOrEmptyValue
@@ -183,26 +212,10 @@ class THVVerify extends LitElement {
             this.currentUser
               ? html`
                   <div class="value">
-                    ${
-                      trustedEvents.length
-                        ? html`
-                            <ol>
-                              ${trustedEvents.map(
-                                (event) => html`
-                                  <li>
-                                    <thv-user-picture
-                                      .pubkeyEncoded=${event.pubkeyEncoded}
-                                      .userEvent=${event.userEvent}
-                                      trusted
-                                      title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                                    ></thv-user-picture>
-                                  </li>
-                                `,
-                              )}
-                            </ol>
-                          `
-                        : pendingOrEmptyValue
-                    }
+                    ${this._renderVerifierList(trustedEvents, {
+                      isTrusted: true,
+                      emptyValue: pendingOrEmptyValue,
+                    })}
                   </div>
                 `
               : nothing
@@ -212,25 +225,9 @@ class THVVerify extends LitElement {
         <li class="verified-list">
           <div class="key">verified outside your web of trust</div>
           <div class="value">
-            ${
-              untrustedEvents.length
-                ? html`
-                    <ol>
-                      ${untrustedEvents.map(
-                        (event) => html`
-                          <li>
-                            <thv-user-picture
-                              .pubkeyEncoded=${event.pubkeyEncoded}
-                              .userEvent=${event.userEvent}
-                              title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                            ></thv-user-picture>
-                          </li>
-                        `,
-                      )}
-                    </ol>
-                  `
-                : pendingOrEmptyValue
-            }
+            ${this._renderVerifierList(untrustedEvents, {
+              emptyValue: pendingOrEmptyValue,
+            })}
           </div>
         </li>
       </ul>
@@ -283,12 +280,25 @@ class THVVerify extends LitElement {
         color: inherit;
       }
 
-      ul li.verified-first .value {
+      ul li .key .unconfirmed {
+        padding: 0 0.375rem;
+        margin-left: 0.5rem;
+        color: var(--thv-color-100);
+        background: var(--thv-color-orange);
+      }
+
+      ul li .value .agreement {
+        margin-top: 0.25rem;
+        font-size: 1rem;
+        color: var(--thv-color-500);
+      }
+
+      ul li.source .value {
         display: flex;
         gap: 0.5rem;
       }
 
-      ul li.verified-first .value .name {
+      ul li.source .value .name {
         margin-bottom: 0.5rem;
       }
 
