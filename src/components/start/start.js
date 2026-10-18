@@ -70,7 +70,9 @@ class THVStart extends LitElement {
   }
 
   _dispatchFileFromInput(event) {
-    this._dispatchFile(event.target.files[0])
+    if (event.target.files.length) {
+      this._dispatchFile(event.target.files[0])
+    }
   }
 
   render() {

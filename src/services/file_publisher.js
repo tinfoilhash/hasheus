@@ -28,7 +28,13 @@ class FilePublisher {
       content: this.description,
     })
 
-    await Promise.all(relayPool.publish(FILE_RELAY_URLS, event))
+    // the event only needs to reach one file relay, and if none accept it, the
+    // first relay's error is more useful than a generic aggregate one.
+    try {
+      await Promise.any(relayPool.publish(FILE_RELAY_URLS, event))
+    } catch (error) {
+      throw error.errors?.[0] ?? error
+    }
 
     const fileEvent = new FileEvent(event)
 
