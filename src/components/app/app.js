@@ -52,18 +52,13 @@ class THVApp extends LitElement {
     this.removeEventListener('thv-navigate', this._navigateFromEvent)
   }
 
-  willUpdate(changedProperties) {
-    if (changedProperties.has('_file') && this._file) {
-      this._router.navigate(`/${this._file.hash}`)
-    }
-  }
-
   _setCurrentUserFromConnection(event) {
     this._currentUser = event.detail.currentUser
   }
 
   _setFileFromEvent(event) {
     this._file = event.detail
+    this._router.navigate(`/${this._file.hash}`)
   }
 
   _navigateFromEvent(event) {
