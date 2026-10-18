@@ -58,15 +58,17 @@ class FileSubscriber {
               console.error(error)
             }
           },
-          onclose: async () => {
-            try {
-              if (relayPool.listConnectionStatus().size === 0) {
-                reject(new Error('unable to connect to verify server'))
-              } else {
-                resolve(this.events)
-              }
-            } catch (error) {
-              console.error(error)
+          onclose: (reasons) => {
+            // the pool is shared with user relays, so check this subscription's
+            // close reasons instead of the pool's connection status.
+            const hasReachedEose = reasons.some(
+              ({ reason }) => reason === 'closed automatically on eose',
+            )
+
+            if (hasReachedEose) {
+              resolve(this.events)
+            } else {
+              reject(new Error('unable to connect to verify server'))
             }
           },
         },
