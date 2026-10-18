@@ -6,6 +6,7 @@ import '@/components/base/spinner'
 import '@/components/base/status'
 import '@/components/base/user_picture'
 import FileSubscriber from '@/services/file_subscriber'
+import verificationSorter from '@/services/verification_sorter'
 import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing } from 'lit'
 
@@ -67,84 +68,49 @@ class THVVerify extends LitElement {
     return this._isFileForHash && !this._hasCurrentUserVerified
   }
 
-  // someone can verify the same file more than once, so only their first
-  // verification is shown. events are already sorted oldest first.
-  get _firstEventPerPubkey() {
-    const seenPubkeys = new Set()
-
-    return this._events.filter((event) => {
-      if (seenPubkeys.has(event.pubkey)) {
-        return false
-      }
-
-      seenPubkeys.add(event.pubkey)
-
-      return true
-    })
-  }
-
-  get _trustedEvents() {
-    return this._firstEventPerPubkey.filter((event) =>
-      this.currentUser?.hasTrusted(event.pubkey),
-    )
-  }
-
-  get _untrustedEvents() {
-    return this._firstEventPerPubkey.filter(
-      (event) => !this.currentUser?.hasTrusted(event.pubkey),
-    )
-  }
-
-  // anyone can backdate a verification, so the description and url come from
-  // the url most trusted verifiers agree on, with ties going to the earliest.
-  get _source() {
-    const trustedEvents = this._trustedEvents
-
-    if (!trustedEvents.length) {
-      return {
-        event: this._firstEventPerPubkey[0],
-        isConfirmed: false,
-        agreementCount: 0,
-      }
-    }
-
-    const eventsByURL = Map.groupBy(
-      trustedEvents.filter((event) => event.url),
-      (event) => new URL(event.url).href,
-    )
-    let agreeingEvents = []
-
-    for (const events of eventsByURL.values()) {
-      if (events.length > agreeingEvents.length) {
-        agreeingEvents = events
-      }
-    }
-
-    return {
-      event: agreeingEvents[0] ?? trustedEvents[0],
-      isConfirmed: true,
-      agreementCount: agreeingEvents.length,
-    }
-  }
-
   _renderUnconfirmedTag(isUnconfirmed) {
     return isUnconfirmed
       ? html`<span class="unconfirmed">unconfirmed</span>`
       : nothing
   }
 
+  _renderVerifierList(events, { isTrusted = false, emptyValue }) {
+    if (!events.length) {
+      return emptyValue
+    }
+
+    return html`
+      <ol>
+        ${events.map(
+          (event) => html`
+            <li>
+              <thv-user-picture
+                .pubkeyEncoded=${event.pubkeyEncoded}
+                .userEvent=${event.userEvent}
+                ?trusted=${isTrusted}
+                title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
+              ></thv-user-picture>
+            </li>
+          `,
+        )}
+      </ol>
+    `
+  }
+
   render() {
     const isPending = this._subscribeTask.status === TaskStatus.PENDING
-    const trustedEvents = this._trustedEvents
-    const untrustedEvents = this._untrustedEvents
-    const { event: sourceEvent, isConfirmed, agreementCount } = this._source
+    const { trustedEvents, untrustedEvents, source } = verificationSorter({
+      events: this._events,
+      currentUser: this.currentUser,
+    })
+    const { event: sourceEvent, isConfirmed, agreementCount } = source
     // labeled whenever it shows, even while loading, so an untrusted source is
     // never shown unlabeled.
     const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
     const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<thv-spinner></thv-spinner>`
-      : html`<span class="empty">&mdash;</span>`
+      : html`&mdash;`
 
     return html`
       ${
@@ -246,26 +212,10 @@ class THVVerify extends LitElement {
             this.currentUser
               ? html`
                   <div class="value">
-                    ${
-                      trustedEvents.length
-                        ? html`
-                            <ol>
-                              ${trustedEvents.map(
-                                (event) => html`
-                                  <li>
-                                    <thv-user-picture
-                                      .pubkeyEncoded=${event.pubkeyEncoded}
-                                      .userEvent=${event.userEvent}
-                                      trusted
-                                      title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                                    ></thv-user-picture>
-                                  </li>
-                                `,
-                              )}
-                            </ol>
-                          `
-                        : pendingOrEmptyValue
-                    }
+                    ${this._renderVerifierList(trustedEvents, {
+                      isTrusted: true,
+                      emptyValue: pendingOrEmptyValue,
+                    })}
                   </div>
                 `
               : nothing
@@ -275,25 +225,9 @@ class THVVerify extends LitElement {
         <li class="verified-list">
           <div class="key">verified outside your web of trust</div>
           <div class="value">
-            ${
-              untrustedEvents.length
-                ? html`
-                    <ol>
-                      ${untrustedEvents.map(
-                        (event) => html`
-                          <li>
-                            <thv-user-picture
-                              .pubkeyEncoded=${event.pubkeyEncoded}
-                              .userEvent=${event.userEvent}
-                              title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-                            ></thv-user-picture>
-                          </li>
-                        `,
-                      )}
-                    </ol>
-                  `
-                : pendingOrEmptyValue
-            }
+            ${this._renderVerifierList(untrustedEvents, {
+              emptyValue: pendingOrEmptyValue,
+            })}
           </div>
         </li>
       </ul>
