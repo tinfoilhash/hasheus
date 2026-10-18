@@ -42,16 +42,6 @@ class THVPublish extends THVNavigable(LitElement) {
     })
   }
 
-  // redirects replace the history entry so the back button doesn't land on
-  // this page again and redirect forward in a loop.
-  willUpdate() {
-    if (!this.file) {
-      this.navigate('/', { replace: true })
-    } else if (this.file.hasBeenPublished) {
-      this.navigate(`/${this.file.hash}`, { replace: true })
-    }
-  }
-
   get _canPublish() {
     return Boolean(window.nostr)
   }
@@ -63,11 +53,11 @@ class THVPublish extends THVNavigable(LitElement) {
   }
 
   render() {
-    if (!this.file) {
-      return nothing
-    }
-
     const isPending = this._publishTask.status === TaskStatus.PENDING
+    // stays disabled after publishing until the navigation to the verify page
+    // lands, so the file can't be published twice.
+    const isDisabled =
+      !this._canPublish || isPending || this.file.hasBeenPublished
 
     return html`
       ${
@@ -115,9 +105,7 @@ class THVPublish extends THVNavigable(LitElement) {
           </li>
         </ul>
         <thv-button ?pending=${isPending}>
-          <button type="submit" ?disabled=${!this._canPublish || isPending}>
-            publish
-          </button>
+          <button type="submit" ?disabled=${isDisabled}>publish</button>
         </thv-button>
       </form>
     `
