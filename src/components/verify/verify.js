@@ -39,16 +39,20 @@ class THVVerify extends LitElement {
     })
   }
 
+  get _isFileForHash() {
+    return this.file?.hash === this.hash
+  }
+
   get _hasCurrentUserVerified() {
     return (
-      this.file?.hasBeenPublished ||
+      (this._isFileForHash && this.file.hasBeenPublished) ||
       (this.currentUser &&
         this._events.some((event) => event.pubkey === this.currentUser.pubkey))
     )
   }
 
   get _canPublish() {
-    return this.file?.hash === this.hash && !this._hasCurrentUserVerified
+    return this._isFileForHash && !this._hasCurrentUserVerified
   }
 
   get _eventsSorted() {
