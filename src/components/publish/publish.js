@@ -95,6 +95,7 @@ class THVPublish extends THVNavigable(LitElement) {
             <div class="key">url</div>
             <div class="value">
               <input
+                data-cy="url-input"
                 type="url"
                 name="url"
                 required
@@ -105,7 +106,13 @@ class THVPublish extends THVNavigable(LitElement) {
           </li>
         </ul>
         <thv-button ?pending=${isPending}>
-          <button type="submit" ?disabled=${isDisabled}>publish</button>
+          <button
+            data-cy="publish-button"
+            type="submit"
+            ?disabled=${isDisabled}
+          >
+            publish
+          </button>
         </thv-button>
       </form>
     `

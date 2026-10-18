@@ -31,3 +31,43 @@ jobs:
 
       - name: build
         run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: install dependencies
+        run: npm ci
+
+      # the tests run against a local nak relay, pinned by its checksum.
+      - name: install nak
+        env:
+          NAK_VERSION: v0.21.2
+          NAK_SHA256: 0acd56fea6ab1b9a0a68c8615670c6f8eff9e8878922442e387b94ee15266bb8
+        run: |
+          curl --fail --silent --show-error --location \
+            --output "$RUNNER_TEMP/nak" \
+            "https://github.com/fiatjaf/nak/releases/download/$NAK_VERSION/nak-$NAK_VERSION-linux-amd64"
+          echo "$NAK_SHA256  $RUNNER_TEMP/nak" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/nak"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: install browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: end-to-end tests
+        run: npm run test:e2e
+
+      - name: upload test results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-test-results
+          path: test-results
+          retention-days: 7

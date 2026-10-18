@@ -64,6 +64,28 @@ or to rerun them as files change:
 npm run test:watch
 ```
 
+[playwright](https://playwright.dev/) runs the end-to-end tests in [`e2e`](e2e)
+against chromium, firefox, and webkit. it starts its own
+[nak](https://github.com/fiatjaf/nak) relay and development server on separate
+ports, so `nak` needs to be installed, but nothing needs to be running. install
+the browsers once:
+
+```bash
+npx playwright install
+```
+
+then run the tests:
+
+```bash
+npm run test:e2e
+```
+
+a slower test that hashes a file over 512 mb only runs when asked for:
+
+```bash
+E2E_LARGE_FILE=1 npm run test:e2e
+```
+
 ### code style & linting
 
 [prettier](https://prettier.io/) is setup to enforce a consistent code style.

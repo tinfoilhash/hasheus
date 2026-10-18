@@ -23,6 +23,7 @@
     "lint:style:fix": "stylelint --fix '**/*.js'",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "release": "release-it --only-version"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-lit": "^2.3.1",
