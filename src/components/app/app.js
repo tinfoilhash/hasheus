@@ -67,11 +67,9 @@ class THVApp extends LitElement {
   }
 
   _navigateFromEvent(event) {
-    if (event.detail.back) {
-      this._router.backOrNavigate(event.detail.url)
-    } else {
-      this._router.navigate(event.detail.url)
-    }
+    const { url, replace, back } = event.detail
+
+    this._router.navigate(url, { replace, back })
   }
 
   render() {

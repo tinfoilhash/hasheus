@@ -35,15 +35,20 @@ class THVPublish extends THVNavigable(LitElement) {
       autoRun: false,
       onComplete: (fileEvent) => {
         if (fileEvent) {
-          this.navigate(`/${this.file.hash}`)
+          // going back avoids a duplicate history entry for the verify page.
+          this.navigate(`/${this.file.hash}`, { replace: true, back: true })
         }
       },
     })
   }
 
+  // redirects replace the history entry so the back button doesn't land on
+  // this page again and redirect forward in a loop.
   willUpdate() {
-    if (!this.file || this.file.hasBeenPublished) {
-      this.navigate('/')
+    if (!this.file) {
+      this.navigate('/', { replace: true })
+    } else if (this.file.hasBeenPublished) {
+      this.navigate(`/${this.file.hash}`, { replace: true })
     }
   }
 
@@ -99,7 +104,13 @@ class THVPublish extends THVNavigable(LitElement) {
           <li>
             <div class="key">url</div>
             <div class="value">
-              <input type="url" name="url" required maxlength="1000" />
+              <input
+                type="url"
+                name="url"
+                required
+                pattern="https?://.+"
+                maxlength="1000"
+              />
             </div>
           </li>
         </ul>

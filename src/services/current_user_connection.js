@@ -61,6 +61,10 @@ class CurrentUserConnection extends EventTarget {
       return null
     }
 
+    return this.dispatchCurrentUser()
+  }
+
+  dispatchCurrentUser() {
     const currentUser = new CurrentUser({
       userEvent: this.userEvent,
       followListEvent: this.followListEvent,
@@ -95,7 +99,8 @@ class CurrentUserConnection extends EventTarget {
       return new CurrentUser({
         ...parsed,
         userEvent: new UserEvent(parsed.userEvent),
-        followListEvent: new FollowListEvent(parsed.followListEvent),
+        followListEvent:
+          parsed.followListEvent && new FollowListEvent(parsed.followListEvent),
       })
     } catch (error) {
       console.error(error)
@@ -203,8 +208,9 @@ class CurrentUserConnection extends EventTarget {
         throw new Error('unable to find your profile')
       }
 
+      // a user who hasn't followed anyone yet has no follow list.
       if (!this.followListEvent) {
-        throw new Error('unable to find who you follow')
+        return this.dispatchCurrentUser()
       }
 
       return this.currentUser
