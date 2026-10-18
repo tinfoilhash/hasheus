@@ -11,7 +11,7 @@ class THVError extends LitElement {
     return html`
       <thv-status color="red">
         <strong>an error occurred!</strong>
-        ${this.error.message.toLowerCase()}
+        ${String(this.error?.message ?? this.error).toLowerCase()}
       </thv-status>
     `
   }
