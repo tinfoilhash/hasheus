@@ -38,6 +38,12 @@ class THVStart extends LitElement {
   }
 
   async _dispatchFile(file) {
+    // large files can take a while to hash, so another file dropped in the
+    // meantime is ignored rather than hashed alongside it.
+    if (this._isDispatchingFile) {
+      return
+    }
+
     this._isDispatchingFile = true
 
     try {
