@@ -49,6 +49,30 @@ start the development server:
 npm run dev
 ```
 
+### tests
+
+[vitest](https://vitest.dev/) runs the unit tests, which sit next to the modules
+they test (`file.js` → `file.test.js`). to run them once:
+
+```bash
+npm test
+```
+
+or to rerun them as files change:
+
+```bash
+npm run test:watch
+```
+
+to see how much of `src/services` they cover, with an html report in `coverage`:
+
+```bash
+npm run test:coverage
+```
+
+ci adds the coverage table to each run's summary. components aren't counted,
+since the end-to-end tests cover them.
+
 ### code style & linting
 
 [prettier](https://prettier.io/) is setup to enforce a consistent code style.

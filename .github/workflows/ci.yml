@@ -26,5 +26,20 @@ jobs:
       - name: lint
         run: npm run lint
 
+      # `shell: bash` adds pipefail, so a failing test is caught through tee.
+      # the summary is written either way, then the step fails if tests did.
+      - name: test
+        shell: bash
+        run: |
+          status=0
+          npm run test:coverage | tee "$RUNNER_TEMP/coverage.txt" || status=$?
+          {
+            echo '### unit test coverage'
+            echo '```'
+            sed -n '/% Stmts/,$p' "$RUNNER_TEMP/coverage.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
+
       - name: build
         run: npm run build
