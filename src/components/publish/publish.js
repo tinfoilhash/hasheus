@@ -71,7 +71,8 @@ class THVPublish extends THVNavigable(LitElement) {
           : nothing
       }
       ${this._publishTask.render({
-        error: (error) => html`<thv-error .error=${error}></thv-error>`,
+        error: (error) =>
+          html`<thv-error data-cy="publish-error" .error=${error}></thv-error>`,
       })}
       <form novalidate @submit=${this._publish}>
         <ul>
