@@ -1,9 +1,13 @@
 import FileEvent from '@/services/file_event'
 import FileSubscriber from '@/services/file_subscriber'
 import relayPool from '@/services/relay_pool'
-import UserEvent from '@/services/user_event'
 import userSubscriberManager from '@/services/user_subscriber_manager'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  buildRawFileEvent,
+  buildUserEvent,
+  DEFAULT_HASH,
+} from '@/test/event_builders'
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { subscribeManyEose: vi.fn() },
@@ -14,20 +18,8 @@ vi.mock('@/services/user_subscriber_manager', () => ({
   default: Object.assign(new EventTarget(), { getOrSubscribe: vi.fn() }),
 }))
 
-const HASH = 'f'.repeat(64)
+const HASH = DEFAULT_HASH
 const EOSE_REASON = 'closed automatically on eose'
-
-function buildRawFileEvent({ pubkey, createdAt }) {
-  return {
-    id: `${pubkey}-${createdAt}`,
-    pubkey,
-    created_at: createdAt,
-    kind: FileEvent.KIND,
-    tags: [['x', HASH]],
-    content: 'description',
-    sig: '',
-  }
-}
 
 // replays raw events to the subscription, then closes it with the reasons.
 function respondWith(rawEvents, reasons) {
@@ -73,6 +65,24 @@ describe('FileSubscriber', () => {
     expect(events.map((event) => event.createdAt)).toEqual([1, 2])
   })
 
+  it("skips an event it can't read", async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    onTestFinished(() => consoleError.mockRestore())
+
+    respondWith(
+      [
+        { ...buildRawFileEvent({ createdAt: 1 }), tags: null },
+        buildRawFileEvent({ createdAt: 2 }),
+      ],
+      [{ url: 'wss://file.example', reason: EOSE_REASON }],
+    )
+
+    const events = await new FileSubscriber({ hash: HASH }).subscribe()
+
+    expect(events.map((event) => event.createdAt)).toEqual([2])
+    expect(consoleError).toHaveBeenCalledOnce()
+  })
+
   it('resolves when any relay reached eose', async () => {
     respondWith(
       [],
@@ -111,13 +121,7 @@ describe('FileSubscriber', () => {
 
     userSubscriberManager.dispatchEvent(
       new CustomEvent('change', {
-        detail: new UserEvent({
-          pubkey,
-          created_at: 1,
-          kind: UserEvent.KIND,
-          tags: [],
-          content: '{"name":"alice"}',
-        }),
+        detail: buildUserEvent({ pubkey, name: 'alice' }),
       }),
     )
 
@@ -141,13 +145,7 @@ describe('FileSubscriber', () => {
 
     userSubscriberManager.dispatchEvent(
       new CustomEvent('change', {
-        detail: new UserEvent({
-          pubkey,
-          created_at: 1,
-          kind: UserEvent.KIND,
-          tags: [],
-          content: '{"name":"alice"}',
-        }),
+        detail: buildUserEvent({ pubkey, name: 'alice' }),
       }),
     )
 

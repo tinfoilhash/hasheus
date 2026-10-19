@@ -1,18 +1,5 @@
-import FileEvent from '@/services/file_event'
-import UserEvent from '@/services/user_event'
+import { buildFileEvent, buildUserEvent } from '@/test/event_builders'
 import { describe, expect, it } from 'vitest'
-
-function buildFileEvent({ url } = {}) {
-  return new FileEvent({
-    id: '1'.repeat(64),
-    pubkey: 'a'.repeat(64),
-    created_at: 1,
-    kind: FileEvent.KIND,
-    tags: [['x', 'f'.repeat(64)], ...(url === undefined ? [] : [['url', url]])],
-    content: 'description',
-    sig: '',
-  })
-}
 
 describe('FileEvent', () => {
   describe('url', () => {
@@ -45,13 +32,7 @@ describe('FileEvent', () => {
     it("uses the profile's display name", () => {
       const event = buildFileEvent()
 
-      event.userEvent = new UserEvent({
-        pubkey: event.pubkey,
-        created_at: 1,
-        kind: UserEvent.KIND,
-        tags: [],
-        content: '{"name":"alice"}',
-      })
+      event.userEvent = buildUserEvent({ pubkey: event.pubkey, name: 'alice' })
 
       expect(event.userDisplayName).toBe('alice')
     })

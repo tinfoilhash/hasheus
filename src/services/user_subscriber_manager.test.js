@@ -1,5 +1,5 @@
 import relayPool from '@/services/relay_pool'
-import UserEvent from '@/services/user_event'
+import { buildRawUserEvent, buildUserEvent } from '@/test/event_builders'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/relay_pool', () => ({
@@ -9,25 +9,13 @@ vi.mock('@/services/relay_pool', () => ({
 
 const PUBKEYS = { alice: 'a'.repeat(64), bob: 'b'.repeat(64) }
 
-function buildRawUserEvent(pubkey, name) {
-  return {
-    id: `profile-${pubkey}`,
-    pubkey,
-    created_at: 1,
-    kind: UserEvent.KIND,
-    tags: [],
-    content: JSON.stringify({ name }),
-    sig: '',
-  }
-}
-
 // answers each subscription with the profile of the pubkey it asks for.
 function respondWithProfiles(namesByPubkey) {
   relayPool.subscribeManyEose.mockImplementation(
     (_, { authors: [pubkey] }, { onevent, onclose }) => {
       queueMicrotask(() => {
         if (namesByPubkey[pubkey]) {
-          onevent(buildRawUserEvent(pubkey, namesByPubkey[pubkey]))
+          onevent(buildRawUserEvent({ pubkey, name: namesByPubkey[pubkey] }))
         }
 
         onclose([])
@@ -101,7 +89,7 @@ describe('UserSubscriberManager', () => {
 
       manager.dispatchEvent(
         new CustomEvent('change', {
-          detail: new UserEvent(buildRawUserEvent(PUBKEYS.alice, 'renamed')),
+          detail: buildUserEvent({ pubkey: PUBKEYS.alice, name: 'renamed' }),
         }),
       )
 

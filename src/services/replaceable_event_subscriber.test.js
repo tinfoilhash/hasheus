@@ -3,6 +3,7 @@ import FollowListSubscriber from '@/services/follow_list_subscriber'
 import relayPool from '@/services/relay_pool'
 import UserEvent from '@/services/user_event'
 import UserSubscriber from '@/services/user_subscriber'
+import { buildRawUserEvent } from '@/test/event_builders'
 import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 
 vi.mock('@/services/relay_pool', () => ({
@@ -11,18 +12,6 @@ vi.mock('@/services/relay_pool', () => ({
 }))
 
 const PUBKEY = 'a'.repeat(64)
-
-function buildRawEvent({ kind = UserEvent.KIND, createdAt, content = '{}' }) {
-  return {
-    id: `${kind}-${createdAt}`,
-    pubkey: PUBKEY,
-    created_at: createdAt,
-    kind,
-    tags: [],
-    content,
-    sig: '',
-  }
-}
 
 // replays raw events to the subscription, then closes it.
 function respondWith(...rawEvents) {
@@ -55,8 +44,8 @@ describe('ReplaceableEventSubscriber', () => {
 
   it('resolves with the latest event, regardless of arrival order', async () => {
     respondWith(
-      buildRawEvent({ createdAt: 2, content: '{"name":"new"}' }),
-      buildRawEvent({ createdAt: 1, content: '{"name":"old"}' }),
+      buildRawUserEvent({ createdAt: 2, content: '{"name":"new"}' }),
+      buildRawUserEvent({ createdAt: 1, content: '{"name":"old"}' }),
     )
 
     const event = await new UserSubscriber({ pubkey: PUBKEY }).subscribe()
@@ -69,9 +58,9 @@ describe('ReplaceableEventSubscriber', () => {
     const onChange = vi.fn()
 
     respondWith(
-      buildRawEvent({ createdAt: 1, content: '{"name":"first"}' }),
-      buildRawEvent({ createdAt: 3, content: '{"name":"newest"}' }),
-      buildRawEvent({ createdAt: 2, content: '{"name":"older"}' }),
+      buildRawUserEvent({ createdAt: 1, content: '{"name":"first"}' }),
+      buildRawUserEvent({ createdAt: 3, content: '{"name":"newest"}' }),
+      buildRawUserEvent({ createdAt: 2, content: '{"name":"older"}' }),
     )
 
     await new UserSubscriber({ pubkey: PUBKEY, onChange }).subscribe()
@@ -93,8 +82,8 @@ describe('ReplaceableEventSubscriber', () => {
     onTestFinished(() => consoleError.mockRestore())
 
     respondWith(
-      buildRawEvent({ createdAt: 2, content: '{not json' }),
-      buildRawEvent({ createdAt: 1, content: '{"name":"valid"}' }),
+      buildRawUserEvent({ createdAt: 2, content: '{not json' }),
+      buildRawUserEvent({ createdAt: 1, content: '{"name":"valid"}' }),
     )
 
     const event = await new UserSubscriber({ pubkey: PUBKEY }).subscribe()
@@ -104,7 +93,7 @@ describe('ReplaceableEventSubscriber', () => {
   })
 
   it('subscribes to the relays only once', async () => {
-    respondWith(buildRawEvent({ createdAt: 1 }))
+    respondWith(buildRawUserEvent({ createdAt: 1 }))
 
     const subscriber = new UserSubscriber({ pubkey: PUBKEY })
 

@@ -64,6 +64,15 @@ or to rerun them as files change:
 npm run test:watch
 ```
 
+to see how much of `src/services` they cover, with an html report in `coverage`:
+
+```bash
+npm run test:coverage
+```
+
+ci adds the coverage table to each run's summary. components aren't counted,
+since the end-to-end tests cover them.
+
 [playwright](https://playwright.dev/) runs the end-to-end tests in [`e2e`](e2e)
 against chromium, firefox, and webkit. it starts its own
 [nak](https://github.com/fiatjaf/nak) relay and development server on separate
