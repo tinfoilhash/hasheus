@@ -72,7 +72,10 @@ class THVPublish extends THVNavigable(LitElement) {
       }
       ${this._publishTask.render({
         error: (error) =>
-          html`<thv-error data-cy="publish-error" .error=${error}></thv-error>`,
+          html`<thv-error
+            data-testid="publish-error"
+            .error=${error}
+          ></thv-error>`,
       })}
       <form novalidate @submit=${this._publish}>
         <ul>
@@ -96,7 +99,7 @@ class THVPublish extends THVNavigable(LitElement) {
             <div class="key">url</div>
             <div class="value">
               <input
-                data-cy="url-input"
+                data-testid="url-input"
                 type="url"
                 name="url"
                 required
@@ -108,7 +111,7 @@ class THVPublish extends THVNavigable(LitElement) {
         </ul>
         <thv-button ?pending=${isPending}>
           <button
-            data-cy="publish-button"
+            data-testid="publish-button"
             type="submit"
             ?disabled=${isDisabled}
           >

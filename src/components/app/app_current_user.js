@@ -46,10 +46,10 @@ class THVAppCurrentUser extends LitElement {
     const { currentUser, error } = currentUserConnection
 
     return html`
-      ${error ? html`<thv-error data-cy="connect-error" .error=${error}></thv-error>` : nothing}
+      ${error ? html`<thv-error data-testid="connect-error" .error=${error}></thv-error>` : nothing}
       <thv-button ?pending=${currentUserConnection.isPending}>
         <button
-          data-cy="connect-button"
+          data-testid="connect-button"
           ?disabled=${currentUserConnection.isPending}
           @click=${this._connectOrDisconnect}
         >

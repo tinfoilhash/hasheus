@@ -92,7 +92,7 @@ class THVStart extends LitElement {
         <form>
           <label
             >click to browse<input
-              data-cy="file-input"
+              data-testid="file-input"
               type="file"
               @change=${this._dispatchFileFromInput}
           /></label>

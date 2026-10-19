@@ -11,7 +11,6 @@ export default defineConfig({
   reporter: env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${APP_PORT}`,
-    testIdAttribute: 'data-cy',
     trace: 'retain-on-failure',
   },
   projects: [
