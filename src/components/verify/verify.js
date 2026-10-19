@@ -70,7 +70,9 @@ class THVVerify extends LitElement {
 
   _renderUnconfirmedTag(isUnconfirmed) {
     return isUnconfirmed
-      ? html`<span class="unconfirmed">unconfirmed</span>`
+      ? html`<span class="unconfirmed" data-testid="unconfirmed-tag"
+          >unconfirmed</span
+        >`
       : nothing
   }
 
@@ -116,7 +118,7 @@ class THVVerify extends LitElement {
       ${
         this._hasCurrentUserVerified
           ? html`
-              <thv-status color="green"
+              <thv-status color="green" data-testid="verified-status"
                 >you have verified this file!</thv-status
               >
             `
@@ -126,11 +128,15 @@ class THVVerify extends LitElement {
         complete: () => {
           if (!sourceEvent) {
             return html`
-              <thv-status color="orange">
+              <thv-status color="orange" data-testid="not-verified-status">
                 this file has not been verified!
                 ${
                   this._canPublish
-                    ? html`<a href="/publish">add your verification</a>`
+                    ? html`<a
+                        href="/publish"
+                        data-testid="add-verification-link"
+                        >add your verification</a
+                      >`
                     : nothing
                 }
               </thv-status>
@@ -139,7 +145,7 @@ class THVVerify extends LitElement {
 
           if (isUnconfirmed && !this._hasCurrentUserVerified) {
             return html`
-              <thv-status color="orange">
+              <thv-status color="orange" data-testid="unconfirmed-status">
                 ${
                   this.currentUser
                     ? 'no one in your web of trust has verified this file.'
@@ -152,24 +158,28 @@ class THVVerify extends LitElement {
 
           return nothing
         },
-        error: (error) => html`<thv-error .error=${error}></thv-error>`,
+        error: (error) =>
+          html`<thv-error
+            data-testid="subscribe-error"
+            .error=${error}
+          ></thv-error>`,
       })}
       <ul>
         <li>
           <div class="key">file hash</div>
-          <div class="value">${this.hash}</div>
+          <div class="value" data-testid="file-hash">${this.hash}</div>
         </li>
         <li>
           <div class="key">
             description${this._renderUnconfirmedTag(isUnconfirmed)}
           </div>
-          <div class="value">
+          <div class="value" data-testid="description">
             ${sourceEvent?.content ?? pendingOrEmptyValue}
           </div>
         </li>
         <li>
           <div class="key">url${this._renderUnconfirmedTag(isUnconfirmed)}</div>
-          <div class="value">
+          <div class="value" data-testid="url">
             ${
               url
                 ? html`<a href=${url} target="_blank">${url}</a>`
@@ -178,7 +188,7 @@ class THVVerify extends LitElement {
             ${
               isConfirmed && url
                 ? html`
-                    <div class="agreement">
+                    <div class="agreement" data-testid="agreement">
                       linked by ${agreementCount} in your web of trust
                     </div>
                   `
@@ -188,7 +198,7 @@ class THVVerify extends LitElement {
         </li>
         <li class="source">
           <div class="key">source</div>
-          <div class="value">
+          <div class="value" data-testid="source">
             ${
               sourceEvent
                 ? html`
@@ -211,7 +221,7 @@ class THVVerify extends LitElement {
           ${
             this.currentUser
               ? html`
-                  <div class="value">
+                  <div class="value" data-testid="trusted-verifiers">
                     ${this._renderVerifierList(trustedEvents, {
                       isTrusted: true,
                       emptyValue: pendingOrEmptyValue,

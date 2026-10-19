@@ -10,7 +10,7 @@ export default [
     },
   },
   {
-    ignores: ['coverage', 'dist'],
+    ignores: ['coverage', 'dist', 'playwright-report', 'test-results'],
   },
   js.configs.recommended,
   lit.configs['flat/recommended'],
