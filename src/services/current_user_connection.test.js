@@ -1,5 +1,4 @@
-import FollowListEvent from '@/services/follow_list_event'
-import UserEvent from '@/services/user_event'
+import { buildFollowListEvent, buildUserEvent } from '@/test/event_builders'
 import {
   afterEach,
   beforeEach,
@@ -55,30 +54,6 @@ const PUBKEYS = {
   followed: 'c'.repeat(64),
 }
 
-function buildUserEvent(pubkey, name) {
-  return new UserEvent({
-    id: `profile-${pubkey}`,
-    pubkey,
-    created_at: 1,
-    kind: UserEvent.KIND,
-    tags: [],
-    content: JSON.stringify({ name }),
-    sig: '',
-  })
-}
-
-function buildFollowListEvent(pubkey) {
-  return new FollowListEvent({
-    id: `follows-${pubkey}`,
-    pubkey,
-    created_at: 1,
-    kind: FollowListEvent.KIND,
-    tags: [['p', PUBKEYS.followed]],
-    content: '',
-    sig: '',
-  })
-}
-
 function createStorage() {
   const items = new Map()
 
@@ -101,8 +76,11 @@ describe('CurrentUserConnection', () => {
 
   beforeEach(() => {
     storage = createStorage()
-    relays.userEvent = buildUserEvent(PUBKEYS.me, 'me')
-    relays.followListEvent = buildFollowListEvent(PUBKEYS.me)
+    relays.userEvent = buildUserEvent({ pubkey: PUBKEYS.me, name: 'me' })
+    relays.followListEvent = buildFollowListEvent({
+      pubkey: PUBKEYS.me,
+      follows: [PUBKEYS.followed],
+    })
     relays.gate = Promise.resolve()
 
     vi.stubGlobal('window', {
@@ -210,8 +188,14 @@ describe('CurrentUserConnection', () => {
 
       await connection.connect({ canAskForPubkey: true })
 
-      relays.userEvent = buildUserEvent(PUBKEYS.other, 'other')
-      relays.followListEvent = buildFollowListEvent(PUBKEYS.other)
+      relays.userEvent = buildUserEvent({
+        pubkey: PUBKEYS.other,
+        name: 'other',
+      })
+      relays.followListEvent = buildFollowListEvent({
+        pubkey: PUBKEYS.other,
+        follows: [PUBKEYS.followed],
+      })
 
       const currentUser = await connection.connect({ pubkey: PUBKEYS.other })
 
@@ -226,7 +210,10 @@ describe('CurrentUserConnection', () => {
         'currentUser',
         JSON.stringify({ ...stored, requestedAt: 0 }),
       )
-      relays.userEvent = buildUserEvent(PUBKEYS.me, 'me, renamed')
+      relays.userEvent = buildUserEvent({
+        pubkey: PUBKEYS.me,
+        name: 'me, renamed',
+      })
 
       const restoredConnection = await importConnection()
       const currentUser = await restoredConnection.connect()
@@ -240,8 +227,14 @@ describe('CurrentUserConnection', () => {
     it('replaces a stored user when connecting with a different pubkey', async () => {
       await (await importConnection()).connect({ canAskForPubkey: true })
 
-      relays.userEvent = buildUserEvent(PUBKEYS.other, 'other')
-      relays.followListEvent = buildFollowListEvent(PUBKEYS.other)
+      relays.userEvent = buildUserEvent({
+        pubkey: PUBKEYS.other,
+        name: 'other',
+      })
+      relays.followListEvent = buildFollowListEvent({
+        pubkey: PUBKEYS.other,
+        follows: [PUBKEYS.followed],
+      })
 
       const restoredConnection = await importConnection()
       const currentUser = await restoredConnection.connect({
@@ -286,6 +279,46 @@ describe('CurrentUserConnection', () => {
       expect(connection.currentUser).toBeNull()
       expect(connection.error).toBeNull()
       expect(storage.getItem('currentUser')).toBeNull()
+    })
+
+    it('ignores a pubkey the extension returns after disconnecting', async () => {
+      let returnPubkey
+      window.nostr.getPublicKey = () =>
+        new Promise((resolve) => (returnPubkey = () => resolve(PUBKEYS.me)))
+
+      const connection = await importConnection()
+      const userSubscriberManager = (
+        await import('@/services/user_subscriber_manager')
+      ).default
+
+      userSubscriberManager.subscribe.mockClear()
+
+      const connecting = connection.connect({ canAskForPubkey: true })
+
+      expect(connection.status).toBe('PENDING')
+
+      connection.disconnect()
+      returnPubkey()
+      await connecting
+
+      expect(connection.status).toBe('DISCONNECTED')
+      expect(userSubscriberManager.subscribe).not.toHaveBeenCalled()
+    })
+
+    it('ignores an extension error that arrives after disconnecting', async () => {
+      let rejectPubkey
+      window.nostr.getPublicKey = () =>
+        new Promise((_, reject) => (rejectPubkey = reject))
+
+      const connection = await importConnection()
+      const connecting = connection.connect({ canAskForPubkey: true })
+
+      connection.disconnect()
+      rejectPubkey(new Error('user rejected'))
+      await connecting
+
+      expect(connection.status).toBe('DISCONNECTED')
+      expect(connection.error).toBeNull()
     })
   })
 })

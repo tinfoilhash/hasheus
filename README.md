@@ -64,6 +64,15 @@ or to rerun them as files change:
 npm run test:watch
 ```
 
+to see how much of `src/services` they cover, with an html report in `coverage`:
+
+```bash
+npm run test:coverage
+```
+
+ci adds the coverage table to each run's summary. components aren't counted,
+since the end-to-end tests cover them.
+
 ### code style & linting
 
 [prettier](https://prettier.io/) is setup to enforce a consistent code style.

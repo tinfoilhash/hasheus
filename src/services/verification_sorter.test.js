@@ -1,8 +1,5 @@
-import CurrentUser from '@/services/current_user'
-import FileEvent from '@/services/file_event'
-import FollowListEvent from '@/services/follow_list_event'
-import UserEvent from '@/services/user_event'
 import verificationSorter from '@/services/verification_sorter'
+import { buildCurrentUser, buildFileEvent } from '@/test/event_builders'
 import { describe, expect, it } from 'vitest'
 
 const PUBKEYS = {
@@ -11,37 +8,6 @@ const PUBKEYS = {
   trustedB: 'c'.repeat(64),
   trustedC: 'd'.repeat(64),
   stranger: 'e'.repeat(64),
-}
-
-function buildFileEvent({ pubkey, createdAt, url, content = 'description' }) {
-  return new FileEvent({
-    id: `${pubkey}-${createdAt}`,
-    pubkey,
-    created_at: createdAt,
-    kind: FileEvent.KIND,
-    tags: [['x', 'f'.repeat(64)], ...(url ? [['url', url]] : [])],
-    content,
-    sig: '',
-  })
-}
-
-function buildCurrentUser({ follows = [] } = {}) {
-  return new CurrentUser({
-    userEvent: new UserEvent({
-      pubkey: PUBKEYS.me,
-      created_at: 1,
-      kind: UserEvent.KIND,
-      tags: [],
-      content: '{}',
-    }),
-    followListEvent: new FollowListEvent({
-      pubkey: PUBKEYS.me,
-      created_at: 1,
-      kind: FollowListEvent.KIND,
-      tags: follows.map((pubkey) => ['p', pubkey]),
-      content: '',
-    }),
-  })
 }
 
 describe('verificationSorter', () => {

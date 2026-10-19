@@ -6,4 +6,12 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  test: {
+    coverage: {
+      include: ['src/services/**/*.js'],
+      exclude: ['src/**/*.test.js'],
+      reporter: ['text', 'html'],
+      reportOnFailure: true,
+    },
+  },
 })

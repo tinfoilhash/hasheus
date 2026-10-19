@@ -10,7 +10,7 @@ export default [
     },
   },
   {
-    ignores: ['dist'],
+    ignores: ['coverage', 'dist'],
   },
   js.configs.recommended,
   lit.configs['flat/recommended'],
