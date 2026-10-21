@@ -100,7 +100,7 @@ test('hashes a file too large for web crypto', async ({ page }) => {
   // written outside test-results so ci never uploads it.
   const chunk = Buffer.alloc(1024 * 1024 * 8, 7)
   const CHUNK_COUNT = 65
-  const directory = await mkdtemp(join(tmpdir(), 'verify-e2e-'))
+  const directory = await mkdtemp(join(tmpdir(), 'hasheus-e2e-'))
   const path = join(directory, 'large.iso')
 
   try {
