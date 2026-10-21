@@ -112,7 +112,7 @@ class THVStart extends LitElement {
         margin-bottom: 2rem;
       }
 
-      /* In a monospace font, 30ch fits exactly "verify the integrity of a file"
+      /* in a monospace font, 30ch fits exactly "verify the integrity of a file"
          on the first line. */
       h2 {
         max-width: 30ch;

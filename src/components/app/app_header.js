@@ -1,27 +1,27 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
-const NAME = 'hasheus'
-
-const HELMET = [
-  '        a        ',
-  '       018       ',
-  '       fe5       ',
-  '    72eb8b00b    ',
-  '  c72e95fd9c15c  ',
-  ' 003501bf305b2fd ',
-  ' 9e32hasheus23ff ',
-  'ca018fe572eb8b00b',
-  'c72     e     95f',
-  'd9c15   c   00350',
-  '1bf305b   2fd9e32',
-  '23ffca0   18fe572',
-  ' eb8b00   bc72e9 ',
-  '  5fd9c   15c00  ',
-  '    350   1bf    ',
-]
-
 class THVAppHeader extends LitElement {
+  static NAME = 'hasheus'
+
+  static HELMET = [
+    '        a        ',
+    '       018       ',
+    '       fe5       ',
+    '    72eb8b00b    ',
+    '  c72e95fd9c15c  ',
+    ' 003501bf305b2fd ',
+    ' 9e32hasheus23ff ',
+    'ca018fe572eb8b00b',
+    'c72     e     95f',
+    'd9c15   c   00350',
+    '1bf305b   2fd9e32',
+    '23ffca0   18fe572',
+    ' eb8b00   bc72e9 ',
+    '  5fd9c   15c00  ',
+    '    350   1bf    ',
+  ]
+
   static properties = {
     large: { type: Boolean },
   }
@@ -30,8 +30,8 @@ class THVAppHeader extends LitElement {
     return html`
       <header>
         <a href="/">
-          <h1 aria-label=${NAME}>
-            ${HELMET.map((row) => html`<span class="row">${this._renderRow(row)}</span>`)}
+          <h1 aria-label=${this.constructor.NAME}>
+            ${this.constructor.HELMET.map((row) => html`<span class="row">${this._renderRow(row)}</span>`)}
           </h1>
         </a>
       </header>
@@ -39,6 +39,7 @@ class THVAppHeader extends LitElement {
   }
 
   _renderRow(row) {
+    const { NAME } = this.constructor
     const [before, after] = row.split(NAME)
     if (after === undefined) return this._renderDigits(row)
 
@@ -69,7 +70,7 @@ class THVAppHeader extends LitElement {
       }
 
       /* 6px unless large, so the 15-row helmet doesn't push the page's content
-         too far down. The line height and spacing scale to keep its shape. */
+         too far down. the line height and spacing scale to keep its shape. */
       header a h1 {
         margin: 0;
         font-size: 0.375rem;
@@ -92,7 +93,7 @@ class THVAppHeader extends LitElement {
         color: var(--thv-color-100);
       }
 
-      /* Each digit's shade comes from its value, 0 darkest to f brightest, so
+      /* each digit's shade comes from its value, 0 darkest to f brightest, so
          the hash shades itself. */
       .digit-0 {
         color: #b3552e;

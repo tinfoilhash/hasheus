@@ -12,7 +12,7 @@ const cssVariables = css`
     --thv-color-200: #d2c8b6;
     --thv-color-100: #f1e6d2;
     --thv-color-red: #b00020;
-    /* Leans amber so warnings don't blend in with the logo's terracotta. */
+    /* leans amber so warnings don't blend in with the logo's terracotta. */
     --thv-color-orange: #8a5300;
     --thv-color-green: #1b5e20;
   }
