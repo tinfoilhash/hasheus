@@ -69,7 +69,7 @@ class THVApp extends LitElement {
 
   render() {
     return html`
-      <thv-app-header></thv-app-header>
+      <thv-app-header ?large=${this._router.link() === '/'}></thv-app-header>
       <main>${this._router.outlet()}</main>
     `
   }
