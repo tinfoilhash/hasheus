@@ -31,7 +31,7 @@ class THVAppHeader extends LitElement {
       <header>
         <a href="/">
           <h1 aria-label=${this.constructor.NAME}>
-            ${this.constructor.HELMET.map((row) => html`<span class="row">${this._renderRow(row)}</span>`)}
+            ${this.constructor.HELMET.map((row) => html`<span class="row" aria-hidden="true">${this._renderRow(row)}</span>`)}
           </h1>
         </a>
       </header>
