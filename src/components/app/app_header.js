@@ -89,7 +89,6 @@ class HAppHeader extends LitElement {
       }
 
       .name {
-        font-weight: 700;
         color: var(--h-color-100);
       }
 
