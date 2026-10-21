@@ -3,7 +3,7 @@
 ARG NODE_VERSION=24
 
 FROM node:${NODE_VERSION}-alpine AS build
-WORKDIR /verify
+WORKDIR /hasheus
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 FROM scratch AS export
-COPY --from=build /verify/dist .
+COPY --from=build /hasheus/dist .
 
 FROM lipanski/docker-static-website:2.6.0
 COPY --from=export . .

@@ -2,7 +2,7 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/spinner'
 import { css, html, LitElement, nothing } from 'lit'
 
-class THVButton extends LitElement {
+class HButton extends LitElement {
   static properties = {
     pending: { type: Boolean },
   }
@@ -12,7 +12,7 @@ class THVButton extends LitElement {
       <slot></slot>
       ${
         this.pending
-          ? html`<div class="pending"><thv-spinner></thv-spinner></div>`
+          ? html`<div class="pending"><h-spinner></h-spinner></div>`
           : nothing
       }
     `
@@ -34,21 +34,21 @@ class THVButton extends LitElement {
         color: inherit;
         text-decoration: none;
         cursor: pointer;
-        background: var(--thv-color-700);
+        background: var(--h-color-700);
         border: none;
       }
 
       :host([pending]) ::slotted(:is(button, a)) {
-        color: var(--thv-color-700);
+        color: var(--h-color-700);
       }
 
       ::slotted(:is(button, a):focus) {
         outline: none;
-        background: var(--thv-color-600);
+        background: var(--h-color-600);
       }
 
       ::slotted(button:disabled) {
-        color: var(--thv-color-600);
+        color: var(--h-color-600);
         cursor: auto;
       }
 
@@ -64,6 +64,6 @@ class THVButton extends LitElement {
   ]
 }
 
-customElements.define('thv-button', THVButton)
+customElements.define('h-button', HButton)
 
-export default THVButton
+export default HButton

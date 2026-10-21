@@ -1,4 +1,4 @@
-import THVRouter from '@/services/router'
+import HRouter from '@/services/router'
 import {
   afterAll,
   afterEach,
@@ -21,7 +21,7 @@ afterAll(() => {
 const ROUTES = [{ path: '/' }, { path: '/publish' }, { path: '/:hash' }]
 
 function buildRouter() {
-  const router = new THVRouter(
+  const router = new HRouter(
     { addController: vi.fn(), requestUpdate: vi.fn() },
     ROUTES,
   )
@@ -43,7 +43,7 @@ function buildNavigation({ entries, currentIndex }) {
   }
 }
 
-describe('THVRouter', () => {
+describe('HRouter', () => {
   beforeEach(() => {
     vi.stubGlobal('window', {
       history: { pushState: vi.fn(), replaceState: vi.fn(), back: vi.fn() },

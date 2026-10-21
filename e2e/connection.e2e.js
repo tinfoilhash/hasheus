@@ -49,7 +49,7 @@ test('stays connected after a reload', async ({
   await expect(page.getByTestId('connect-button')).toHaveText('connected: dave')
 })
 
-test('shows an error when the verify relay is unreachable', async ({
+test('shows an error when the hasheus relay is unreachable', async ({
   page,
 }) => {
   await page.routeWebSocket(new RegExp(`:${RELAY_PORT}`), (webSocket) =>
@@ -58,7 +58,7 @@ test('shows an error when the verify relay is unreachable', async ({
   await page.goto(`/${randomHash()}`)
 
   await expect(page.getByTestId('subscribe-error')).toContainText(
-    'unable to connect to verify server',
+    'unable to connect to hasheus server',
   )
   await expect(page.getByTestId('not-verified-status')).toHaveCount(0)
 })

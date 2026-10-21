@@ -1,7 +1,7 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
-class THVStatus extends LitElement {
+class HStatus extends LitElement {
   static properties = {
     color: { type: String },
   }
@@ -20,21 +20,21 @@ class THVStatus extends LitElement {
       }
 
       :host([color='red']) {
-        background: var(--thv-color-red);
+        background: var(--h-color-red);
       }
 
       :host([color='orange']) {
-        background: var(--thv-color-orange);
+        background: var(--h-color-orange);
       }
 
       :host([color='green']) {
-        background: var(--thv-color-green);
+        background: var(--h-color-green);
       }
 
       ::slotted(a) {
         color: inherit;
         text-decoration: none;
-        border-bottom: 2px solid var(--thv-color-100);
+        border-bottom: 2px solid var(--h-color-100);
       }
 
       ::slotted(strong) {
@@ -44,6 +44,6 @@ class THVStatus extends LitElement {
   ]
 }
 
-customElements.define('thv-status', THVStatus)
+customElements.define('h-status', HStatus)
 
-export default THVStatus
+export default HStatus

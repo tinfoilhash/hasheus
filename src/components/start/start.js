@@ -1,10 +1,10 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/error'
 import '@/components/base/spinner'
-import THVFile from '@/services/file'
+import HFile from '@/services/file'
 import { css, html, LitElement, nothing } from 'lit'
 
-class THVStart extends LitElement {
+class HStart extends LitElement {
   static properties = {
     _error: { state: true },
     _isDispatchingFile: { state: true },
@@ -48,8 +48,8 @@ class THVStart extends LitElement {
 
     try {
       this.dispatchEvent(
-        new CustomEvent('thv-file', {
-          detail: await THVFile.build(file),
+        new CustomEvent('h-file', {
+          detail: await HFile.build(file),
           bubbles: true,
           composed: true,
         }),
@@ -77,11 +77,7 @@ class THVStart extends LitElement {
 
   render() {
     return html`
-      ${
-        this._error
-          ? html`<thv-error .error=${this._error}></thv-error>`
-          : nothing
-      }
+      ${this._error ? html`<h-error .error=${this._error}></h-error>` : nothing}
       <h2>
         verify the integrity of a file with the largest decentralized web of
         trust
@@ -96,7 +92,7 @@ class THVStart extends LitElement {
               @change=${this._dispatchFileFromInput}
           /></label>
         </form>
-        ${this._isDispatchingFile ? html`<thv-spinner></thv-spinner>` : nothing}
+        ${this._isDispatchingFile ? html`<h-spinner></h-spinner>` : nothing}
       </h3>
     `
   }
@@ -108,7 +104,7 @@ class THVStart extends LitElement {
         display: block;
       }
 
-      thv-error {
+      h-error {
         margin-bottom: 2rem;
       }
 
@@ -128,7 +124,7 @@ class THVStart extends LitElement {
         font-size: 1.25rem;
         font-weight: inherit;
         line-height: 2rem;
-        color: var(--thv-color-500);
+        color: var(--h-color-500);
       }
 
       h3 form {
@@ -138,11 +134,11 @@ class THVStart extends LitElement {
       h3 form label {
         padding-bottom: 0.25rem;
         cursor: pointer;
-        border-bottom: 2px solid var(--thv-color-700);
+        border-bottom: 2px solid var(--h-color-700);
       }
 
-      h3 thv-spinner {
-        color: var(--thv-color-100);
+      h3 h-spinner {
+        color: var(--h-color-100);
       }
 
       h3 form label input[type='file'] {
@@ -152,6 +148,6 @@ class THVStart extends LitElement {
   ]
 }
 
-customElements.define('thv-start', THVStart)
+customElements.define('h-start', HStart)
 
-export default THVStart
+export default HStart

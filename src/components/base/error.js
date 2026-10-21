@@ -2,17 +2,17 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/status'
 import { css, html, LitElement } from 'lit'
 
-class THVError extends LitElement {
+class HError extends LitElement {
   static properties = {
     error: { attribute: false },
   }
 
   render() {
     return html`
-      <thv-status color="red">
+      <h-status color="red">
         <strong>an error occurred!</strong>
         ${String(this.error?.message ?? this.error).toLowerCase()}
-      </thv-status>
+      </h-status>
     `
   }
 
@@ -26,6 +26,6 @@ class THVError extends LitElement {
   ]
 }
 
-customElements.define('thv-error', THVError)
+customElements.define('h-error', HError)
 
-export default THVError
+export default HError

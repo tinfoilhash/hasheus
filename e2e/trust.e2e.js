@@ -82,7 +82,7 @@ test.describe('a file with a backdated verification', () => {
     await expect(page.getByTestId('unconfirmed-status')).toHaveCount(0)
     await expect(page.getByTestId('unconfirmed-tag')).toHaveCount(0)
     await expect(
-      page.getByTestId('trusted-verifiers').locator('thv-user-picture'),
+      page.getByTestId('trusted-verifiers').locator('h-user-picture'),
     ).toHaveCount(3)
   })
 })

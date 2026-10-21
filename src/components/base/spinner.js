@@ -1,7 +1,7 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
-class THVSpinner extends LitElement {
+class HSpinner extends LitElement {
   render() {
     return html`&mdash;`
   }
@@ -27,6 +27,6 @@ class THVSpinner extends LitElement {
   ]
 }
 
-customElements.define('thv-spinner', THVSpinner)
+customElements.define('h-spinner', HSpinner)
 
-export default THVSpinner
+export default HSpinner
