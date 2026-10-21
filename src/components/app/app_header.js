@@ -1,7 +1,7 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
-class THVAppHeader extends LitElement {
+class HAppHeader extends LitElement {
   static NAME = 'hasheus'
 
   static HELMET = [
@@ -90,7 +90,7 @@ class THVAppHeader extends LitElement {
 
       .name {
         font-weight: 700;
-        color: var(--thv-color-100);
+        color: var(--h-color-100);
       }
 
       /* each digit's shade comes from its value, 0 darkest to f brightest, so
@@ -168,6 +168,6 @@ class THVAppHeader extends LitElement {
   ]
 }
 
-customElements.define('thv-app-header', THVAppHeader)
+customElements.define('h-app-header', HAppHeader)
 
-export default THVAppHeader
+export default HAppHeader

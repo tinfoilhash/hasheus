@@ -1,13 +1,13 @@
 import '@/components/base/button'
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/error'
-import THVNavigable from '@/components/base/mixins/navigable'
+import HNavigable from '@/components/base/mixins/navigable'
 import '@/components/base/status'
 import FilePublisher from '@/services/file_publisher'
 import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing } from 'lit'
 
-class THVPublish extends THVNavigable(LitElement) {
+class HPublish extends HNavigable(LitElement) {
   static properties = {
     file: { attribute: false },
   }
@@ -63,19 +63,16 @@ class THVPublish extends THVNavigable(LitElement) {
       ${
         !this._canPublish
           ? html`
-              <thv-status color="orange">
+              <h-status color="orange">
                 you need a browser extension that can sign nostr events!
                 <a href="https://nostr.com" target="_blank">learn more</a>
-              </thv-status>
+              </h-status>
             `
           : nothing
       }
       ${this._publishTask.render({
         error: (error) =>
-          html`<thv-error
-            data-testid="publish-error"
-            .error=${error}
-          ></thv-error>`,
+          html`<h-error data-testid="publish-error" .error=${error}></h-error>`,
       })}
       <form novalidate @submit=${this._publish}>
         <ul>
@@ -109,7 +106,7 @@ class THVPublish extends THVNavigable(LitElement) {
             </div>
           </li>
         </ul>
-        <thv-button ?pending=${isPending}>
+        <h-button ?pending=${isPending}>
           <button
             data-testid="publish-button"
             type="submit"
@@ -117,7 +114,7 @@ class THVPublish extends THVNavigable(LitElement) {
           >
             publish
           </button>
-        </thv-button>
+        </h-button>
       </form>
     `
   }
@@ -129,8 +126,8 @@ class THVPublish extends THVNavigable(LitElement) {
         display: block;
       }
 
-      thv-status,
-      thv-error {
+      h-status,
+      h-error {
         margin-bottom: 2rem;
       }
 
@@ -146,7 +143,7 @@ class THVPublish extends THVNavigable(LitElement) {
 
       form ul li .key {
         margin-bottom: 0.5rem;
-        color: var(--thv-color-500);
+        color: var(--h-color-500);
       }
 
       form ul li .value {
@@ -160,23 +157,23 @@ class THVPublish extends THVNavigable(LitElement) {
         padding: 0.5rem;
         color: inherit;
         background: none;
-        border: 2px solid var(--thv-color-700);
+        border: 2px solid var(--h-color-700);
         border-top: none;
         border-right: none;
       }
 
       form ul li .value input:focus {
         outline: none;
-        border-color: var(--thv-color-600);
+        border-color: var(--h-color-600);
       }
 
       form ul li .value input:user-invalid {
-        border-color: var(--thv-color-red);
+        border-color: var(--h-color-red);
       }
     `,
   ]
 }
 
-customElements.define('thv-publish', THVPublish)
+customElements.define('h-publish', HPublish)
 
-export default THVPublish
+export default HPublish

@@ -1,7 +1,7 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
-class THVUserPicture extends LitElement {
+class HUserPicture extends LitElement {
   static properties = {
     pubkeyEncoded: { attribute: false },
     userEvent: { attribute: false },
@@ -44,14 +44,14 @@ class THVUserPicture extends LitElement {
         height: 100%;
         overflow: hidden;
         text-decoration: none;
-        border: 2px solid var(--thv-color-700);
+        border: 2px solid var(--h-color-700);
       }
 
       :host([trusted]) a {
         border-image: linear-gradient(
             to top left,
-            var(--thv-color-700),
-            var(--thv-color-green)
+            var(--h-color-700),
+            var(--h-color-green)
           )
           1;
       }
@@ -66,18 +66,18 @@ class THVUserPicture extends LitElement {
       a .text {
         padding: 0.125rem;
         font-size: 0.625rem;
-        color: var(--thv-color-700);
+        color: var(--h-color-700);
         text-align: center;
         word-break: break-all;
       }
 
       a .text .display-name {
-        color: var(--thv-color-600);
+        color: var(--h-color-600);
       }
     `,
   ]
 }
 
-customElements.define('thv-user-picture', THVUserPicture)
+customElements.define('h-user-picture', HUserPicture)
 
-export default THVUserPicture
+export default HUserPicture

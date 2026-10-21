@@ -1,12 +1,12 @@
 import '@/components/app/app_header'
-import thvAppRoutes from '@/components/app/app_routes'
+import hAppRoutes from '@/components/app/app_routes'
 import cssNormalize from '@/components/base/css/css_normalize'
 import cssVariables from '@/components/base/css/css_variables'
 import currentUserConnection from '@/services/current_user_connection'
-import THVRouter from '@/services/router'
+import HRouter from '@/services/router'
 import { css, html, LitElement } from 'lit'
 
-class THVApp extends LitElement {
+class HApp extends LitElement {
   static properties = {
     _currentUser: { state: true },
     _file: { state: true },
@@ -24,7 +24,7 @@ class THVApp extends LitElement {
   }
 
   _constructRouter() {
-    return new THVRouter(this, thvAppRoutes.call(this))
+    return new HRouter(this, hAppRoutes.call(this))
   }
 
   connectedCallback() {
@@ -36,8 +36,8 @@ class THVApp extends LitElement {
     )
     currentUserConnection.connect({ ignoreNoPubkeyError: true })
 
-    this.addEventListener('thv-file', this._setFileFromEvent)
-    this.addEventListener('thv-navigate', this._navigateFromEvent)
+    this.addEventListener('h-file', this._setFileFromEvent)
+    this.addEventListener('h-navigate', this._navigateFromEvent)
   }
 
   disconnectedCallback() {
@@ -48,8 +48,8 @@ class THVApp extends LitElement {
       this._setCurrentUserFromConnection,
     )
 
-    this.removeEventListener('thv-file', this._setFileFromEvent)
-    this.removeEventListener('thv-navigate', this._navigateFromEvent)
+    this.removeEventListener('h-file', this._setFileFromEvent)
+    this.removeEventListener('h-navigate', this._navigateFromEvent)
   }
 
   _setCurrentUserFromConnection(event) {
@@ -69,7 +69,7 @@ class THVApp extends LitElement {
 
   render() {
     return html`
-      <thv-app-header ?large=${this._router.link() === '/'}></thv-app-header>
+      <h-app-header ?large=${this._router.link() === '/'}></h-app-header>
       <main>${this._router.outlet()}</main>
     `
   }
@@ -84,8 +84,8 @@ class THVApp extends LitElement {
         font-family:
           ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas,
           'DejaVu Sans Mono', monospace;
-        color: var(--thv-color-100);
-        background: var(--thv-color-900);
+        color: var(--h-color-100);
+        background: var(--h-color-900);
       }
 
       @media (width >= 40rem) {
@@ -97,6 +97,6 @@ class THVApp extends LitElement {
   ]
 }
 
-customElements.define('thv-app', THVApp)
+customElements.define('h-app', HApp)
 
-export default THVApp
+export default HApp

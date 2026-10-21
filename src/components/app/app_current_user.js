@@ -4,7 +4,7 @@ import '@/components/base/error'
 import currentUserConnection from '@/services/current_user_connection'
 import { css, html, LitElement, nothing } from 'lit'
 
-class THVAppCurrentUser extends LitElement {
+class HAppCurrentUser extends LitElement {
   constructor() {
     super()
 
@@ -46,8 +46,8 @@ class THVAppCurrentUser extends LitElement {
     const { currentUser, error } = currentUserConnection
 
     return html`
-      ${error ? html`<thv-error data-testid="connect-error" .error=${error}></thv-error>` : nothing}
-      <thv-button ?pending=${currentUserConnection.isPending}>
+      ${error ? html`<h-error data-testid="connect-error" .error=${error}></h-error>` : nothing}
+      <h-button ?pending=${currentUserConnection.isPending}>
         <button
           data-testid="connect-button"
           ?disabled=${currentUserConnection.isPending}
@@ -59,7 +59,7 @@ class THVAppCurrentUser extends LitElement {
               : 'connect'
           }
         </button>
-      </thv-button>
+      </h-button>
     `
   }
 
@@ -70,13 +70,13 @@ class THVAppCurrentUser extends LitElement {
         display: block;
       }
 
-      thv-error {
+      h-error {
         margin-bottom: 0.5rem;
       }
     `,
   ]
 }
 
-customElements.define('thv-app-current-user', THVAppCurrentUser)
+customElements.define('h-app-current-user', HAppCurrentUser)
 
-export default THVAppCurrentUser
+export default HAppCurrentUser

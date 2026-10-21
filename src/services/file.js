@@ -1,7 +1,7 @@
 import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
 
-class THVFile {
+class HFile {
   static WEB_CRYPTO_MAX_SIZE_BYTES = 1024 * 1024 * 512
   static HASH_CHUNK_SIZE_BYTES = 1024 * 1024 * 8
 
@@ -73,4 +73,4 @@ class THVFile {
   }
 }
 
-export default THVFile
+export default HFile

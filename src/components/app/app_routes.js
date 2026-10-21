@@ -3,11 +3,11 @@ import '@/components/start/start'
 import '@/components/verify/verify'
 import { html } from 'lit'
 
-function thvAppRoutes() {
+function hAppRoutes() {
   return [
     {
       path: '/',
-      render: () => html`<thv-start></thv-start>`,
+      render: () => html`<h-start></h-start>`,
     },
     {
       path: '/publish',
@@ -26,19 +26,19 @@ function thvAppRoutes() {
 
         return true
       },
-      render: () => html`<thv-publish .file=${this._file}></thv-publish>`,
+      render: () => html`<h-publish .file=${this._file}></h-publish>`,
     },
     {
       path: '/:hash',
       render: ({ hash }) => html`
-        <thv-verify
+        <h-verify
           .currentUser=${this._currentUser}
           .file=${this._file}
           .hash=${hash}
-        ></thv-verify>
+        ></h-verify>
       `,
     },
   ]
 }
 
-export default thvAppRoutes
+export default hAppRoutes

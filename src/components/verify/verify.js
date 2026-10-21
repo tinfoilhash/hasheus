@@ -10,7 +10,7 @@ import verificationSorter from '@/services/verification_sorter'
 import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing } from 'lit'
 
-class THVVerify extends LitElement {
+class HVerify extends LitElement {
   static properties = {
     currentUser: { attribute: false },
     file: { attribute: false },
@@ -86,12 +86,12 @@ class THVVerify extends LitElement {
         ${events.map(
           (event) => html`
             <li>
-              <thv-user-picture
+              <h-user-picture
                 .pubkeyEncoded=${event.pubkeyEncoded}
                 .userEvent=${event.userEvent}
                 ?trusted=${isTrusted}
                 title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
-              ></thv-user-picture>
+              ></h-user-picture>
             </li>
           `,
         )}
@@ -111,15 +111,15 @@ class THVVerify extends LitElement {
     const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
     const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
-      ? html`<thv-spinner></thv-spinner>`
+      ? html`<h-spinner></h-spinner>`
       : html`&mdash;`
 
     return html`
       ${
         this._hasCurrentUserVerified
           ? html`
-              <thv-status color="green" data-testid="verified-status"
-                >you have verified this file!</thv-status
+              <h-status color="green" data-testid="verified-status"
+                >you have verified this file!</h-status
               >
             `
           : nothing
@@ -128,7 +128,7 @@ class THVVerify extends LitElement {
         complete: () => {
           if (!sourceEvent) {
             return html`
-              <thv-status color="orange" data-testid="not-verified-status">
+              <h-status color="orange" data-testid="not-verified-status">
                 this file has not been verified!
                 ${
                   this._canPublish
@@ -139,30 +139,30 @@ class THVVerify extends LitElement {
                       >`
                     : nothing
                 }
-              </thv-status>
+              </h-status>
             `
           }
 
           if (isUnconfirmed && !this._hasCurrentUserVerified) {
             return html`
-              <thv-status color="orange" data-testid="unconfirmed-status">
+              <h-status color="orange" data-testid="unconfirmed-status">
                 ${
                   this.currentUser
                     ? 'no one in your web of trust has verified this file.'
                     : 'connect to see if anyone in your web of trust has verified this file.'
                 }
                 its description and url are unconfirmed.
-              </thv-status>
+              </h-status>
             `
           }
 
           return nothing
         },
         error: (error) =>
-          html`<thv-error
+          html`<h-error
             data-testid="subscribe-error"
             .error=${error}
-          ></thv-error>`,
+          ></h-error>`,
       })}
       <ul>
         <li>
@@ -202,11 +202,11 @@ class THVVerify extends LitElement {
             ${
               sourceEvent
                 ? html`
-                    <thv-user-picture
+                    <h-user-picture
                       .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
                       .userEvent=${sourceEvent.userEvent}
                       ?trusted=${isConfirmed}
-                    ></thv-user-picture>
+                    ></h-user-picture>
                     <div>
                       <div class="name">${sourceEvent.userDisplayName}</div>
                       <div>${sourceEvent.createdAtDate.toLocaleString()}</div>
@@ -230,7 +230,7 @@ class THVVerify extends LitElement {
                 `
               : nothing
           }
-          <thv-app-current-user></thv-app-current-user>
+          <h-app-current-user></h-app-current-user>
         </li>
         <li class="verified-list">
           <div class="key">verified outside your web of trust</div>
@@ -245,9 +245,9 @@ class THVVerify extends LitElement {
         this._canPublish
           ? html`
               <div class="publish">
-                <thv-button>
+                <h-button>
                   <a href="/publish">add your verification</a>
-                </thv-button>
+                </h-button>
               </div>
             `
           : nothing
@@ -262,8 +262,8 @@ class THVVerify extends LitElement {
         display: block;
       }
 
-      thv-status,
-      thv-error {
+      h-status,
+      h-error {
         margin-bottom: 2rem;
       }
 
@@ -278,7 +278,7 @@ class THVVerify extends LitElement {
 
       ul li .key {
         margin-bottom: 0.5rem;
-        color: var(--thv-color-500);
+        color: var(--h-color-500);
       }
 
       ul li .value {
@@ -293,14 +293,14 @@ class THVVerify extends LitElement {
       ul li .key .unconfirmed {
         padding: 0 0.375rem;
         margin-left: 0.5rem;
-        color: var(--thv-color-100);
-        background: var(--thv-color-orange);
+        color: var(--h-color-100);
+        background: var(--h-color-orange);
       }
 
       ul li .value .agreement {
         margin-top: 0.25rem;
         font-size: 1rem;
-        color: var(--thv-color-500);
+        color: var(--h-color-500);
       }
 
       ul li.source .value {
@@ -321,7 +321,7 @@ class THVVerify extends LitElement {
         list-style: none;
       }
 
-      ul li.verified-list thv-app-current-user {
+      ul li.verified-list h-app-current-user {
         margin-top: 0.5rem;
       }
 
@@ -332,6 +332,6 @@ class THVVerify extends LitElement {
   ]
 }
 
-customElements.define('thv-verify', THVVerify)
+customElements.define('h-verify', HVerify)
 
-export default THVVerify
+export default HVerify

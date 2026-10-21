@@ -1,4 +1,4 @@
-# tinfoil hash / verify
+# hasheus
 
 verify the integrity of a file with the largest decentralized web of trust.
 built using [lit](https://lit.dev/) and [vite](https://vitejs.dev/).
@@ -152,10 +152,10 @@ a [`Dockerfile`](Dockerfile) is included that builds and serves the site:
 1. make sure you have docker installed and running.
    [docker desktop](https://www.docker.com/products/docker-desktop) is an easy
    way to get started on your own machine.
-2. build an image named `verify` from the `Dockerfile`:
+2. build an image named `hasheus` from the `Dockerfile`:
 
    ```bash
-   docker build --tag verify .
+   docker build --tag hasheus .
    ```
 
    this generates a production build of the site using
@@ -166,7 +166,7 @@ a [`Dockerfile`](Dockerfile) is included that builds and serves the site:
 3. start a new container using the image, which serves the site on port `3000`:
 
    ```bash
-   docker run --interactive --tty --rm --init --publish 3000:3000 verify
+   docker run --interactive --tty --rm --init --publish 3000:3000 hasheus
    ```
 
 if you're just looking to build the site, but not serve it, you can change the
@@ -174,5 +174,5 @@ if you're just looking to build the site, but not serve it, you can change the
 your host machine:
 
 ```bash
-docker build --target=export --output=dist --tag verify .
+docker build --target=export --output=dist --tag hasheus .
 ```

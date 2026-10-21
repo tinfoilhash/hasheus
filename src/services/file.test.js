@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto'
-import THVFile from '@/services/file'
+import HFile from '@/services/file'
 import { describe, expect, it } from 'vitest'
 
 // shrinks the thresholds so both hashing paths and their chunk boundaries can
 // be tested with tiny files.
-class SmallTHVFile extends THVFile {
+class SmallHFile extends HFile {
   static WEB_CRYPTO_MAX_SIZE_BYTES = 16
   static HASH_CHUNK_SIZE_BYTES = 4
 }
@@ -17,7 +17,7 @@ function sha256Hex(bytes) {
   return createHash('sha256').update(bytes).digest('hex')
 }
 
-describe('THVFile', () => {
+describe('HFile', () => {
   describe('hash', () => {
     it.each([
       ['an empty file', 0],
@@ -29,13 +29,13 @@ describe('THVFile', () => {
     ])('hashes %s', async (_, size) => {
       const bytes = buildBytes(size)
 
-      expect(await SmallTHVFile.hash(new File([bytes], 'file'))).toBe(
+      expect(await SmallHFile.hash(new File([bytes], 'file'))).toBe(
         sha256Hex(bytes),
       )
     })
 
     it('hashes in chunks only above the web crypto limit', async () => {
-      class SpyTHVFile extends SmallTHVFile {
+      class SpyHFile extends SmallHFile {
         static chunkedSizes = []
 
         static async hashInChunks(file) {
@@ -45,18 +45,16 @@ describe('THVFile', () => {
         }
       }
 
-      await SpyTHVFile.hash(new File([buildBytes(16)], 'file'))
-      await SpyTHVFile.hash(new File([buildBytes(17)], 'file'))
+      await SpyHFile.hash(new File([buildBytes(16)], 'file'))
+      await SpyHFile.hash(new File([buildBytes(17)], 'file'))
 
-      expect(SpyTHVFile.chunkedSizes).toEqual([17])
+      expect(SpyHFile.chunkedSizes).toEqual([17])
     })
 
     it('matches the default thresholds on a real-sized file', async () => {
       const bytes = buildBytes(1024 * 1024)
 
-      expect(await THVFile.hash(new File([bytes], 'file'))).toBe(
-        sha256Hex(bytes),
-      )
+      expect(await HFile.hash(new File([bytes], 'file'))).toBe(sha256Hex(bytes))
     })
   })
 
@@ -66,13 +64,13 @@ describe('THVFile', () => {
         type: 'application/octet-stream',
       })
 
-      const thvFile = await THVFile.build(file)
+      const hFile = await HFile.build(file)
 
-      expect(thvFile.hash).toBe(sha256Hex(buildBytes(3)))
-      expect(thvFile.name).toBe('file.bin')
-      expect(thvFile.type).toBe('application/octet-stream')
-      expect(thvFile.size).toBe(3)
-      expect(thvFile.hasBeenPublished).toBe(false)
+      expect(hFile.hash).toBe(sha256Hex(buildBytes(3)))
+      expect(hFile.name).toBe('file.bin')
+      expect(hFile.type).toBe('application/octet-stream')
+      expect(hFile.size).toBe(3)
+      expect(hFile.hasBeenPublished).toBe(false)
     })
   })
 })

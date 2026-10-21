@@ -78,7 +78,7 @@ class FileSubscriber {
             if (hasReachedEose) {
               resolve(this.events)
             } else {
-              reject(new Error('unable to connect to verify server'))
+              reject(new Error('unable to connect to hasheus server'))
             }
           },
         },

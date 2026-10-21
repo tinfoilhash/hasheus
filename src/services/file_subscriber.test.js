@@ -105,7 +105,7 @@ describe('FileSubscriber', () => {
 
     await expect(
       new FileSubscriber({ hash: HASH }).subscribe(),
-    ).rejects.toThrow('unable to connect to verify server')
+    ).rejects.toThrow('unable to connect to hasheus server')
   })
 
   it('fills in profiles as they arrive', async () => {

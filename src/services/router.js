@@ -1,6 +1,6 @@
 import { Router } from '@lit-labs/router'
 
-class THVRouter extends Router {
+class HRouter extends Router {
   navigate(path, { replace = false, back = false } = {}) {
     if (back && this._isPreviousEntry(path)) {
       window.history.back()
@@ -35,4 +35,4 @@ class THVRouter extends Router {
   }
 }
 
-export default THVRouter
+export default HRouter
