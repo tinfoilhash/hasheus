@@ -83,9 +83,8 @@ class THVStart extends LitElement {
           : nothing
       }
       <h2>
-        <div>verify the integrity of a file</div>
-        <div>with the largest decentralized</div>
-        <div>web of trust</div>
+        verify the integrity of a file with the largest decentralized web of
+        trust
       </h2>
       <h3>
         drop a file to start or
@@ -113,20 +112,15 @@ class THVStart extends LitElement {
         margin-bottom: 2rem;
       }
 
+      /* In a monospace font, 30ch fits exactly "verify the integrity of a file"
+         on the first line. */
       h2 {
+        max-width: 30ch;
         margin: 0;
         margin-bottom: 2rem;
         font-size: 1.75rem;
         font-weight: inherit;
         line-height: 2.5rem;
-      }
-
-      h2 div:nth-of-type(2) {
-        margin-left: 1.05rem;
-      }
-
-      h2 div:nth-of-type(3) {
-        margin-left: 2.1rem;
       }
 
       h3 {

@@ -2,17 +2,18 @@ import { css } from 'lit'
 
 const cssVariables = css`
   :host {
-    --thv-color-900: #201218;
-    --thv-color-800: #35272d;
-    --thv-color-700: #4b3e44;
-    --thv-color-600: #63575b;
-    --thv-color-500: #7b7074;
-    --thv-color-400: #948b8f;
-    --thv-color-300: #aea7a9;
-    --thv-color-200: #c8c4c5;
-    --thv-color-100: #e3e1e2;
+    --thv-color-900: #17110e;
+    --thv-color-800: #2d2622;
+    --thv-color-700: #453e37;
+    --thv-color-600: #60584f;
+    --thv-color-500: #7a7167;
+    --thv-color-400: #978d80;
+    --thv-color-300: #b4aa9b;
+    --thv-color-200: #d2c8b6;
+    --thv-color-100: #f1e6d2;
     --thv-color-red: #b00020;
-    --thv-color-orange: #92400e;
+    /* Leans amber so warnings don't blend in with the logo's terracotta. */
+    --thv-color-orange: #8a5300;
     --thv-color-green: #1b5e20;
   }
 `
