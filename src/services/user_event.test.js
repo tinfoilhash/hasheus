@@ -45,6 +45,28 @@ describe('UserEvent', () => {
 
       expect(event.displayName).toBe(event.pubkeyEncodedTruncated)
     })
+
+    it('falls back to the truncated npub when the names are only whitespace', () => {
+      const event = buildUserEvent({
+        content: '{"display_name":"  ","name":"\\t"}',
+      })
+
+      expect(event.displayName).toBe(event.pubkeyEncodedTruncated)
+    })
+
+    it('falls back to the truncated npub when the names are not strings', () => {
+      const event = buildUserEvent({
+        content: '{"display_name":42,"name":{"first":"alice"}}',
+      })
+
+      expect(event.displayName).toBe(event.pubkeyEncodedTruncated)
+    })
+
+    it('trims the name', () => {
+      const event = buildUserEvent({ content: '{"name":" alice "}' })
+
+      expect(event.displayName).toBe('alice')
+    })
   })
 
   it('exposes the picture', () => {
