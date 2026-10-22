@@ -1,5 +1,22 @@
 import { expect, randomHash, test } from './fixtures.js'
 
+test('a verification with an empty description shows the empty value', async ({
+  page,
+  relay,
+}) => {
+  const hash = randomHash()
+
+  await relay.publishVerification(await relay.createUser({ name: 'alice' }), {
+    hash,
+    url: 'https://example.com/a.iso',
+    description: '',
+  })
+
+  await page.goto(`/${hash}`)
+  await expect(page.getByTestId('source')).toContainText('alice')
+  await expect(page.getByTestId('description')).toHaveText('—')
+})
+
 test("switching straight to another file's page shows only that file's verifications", async ({
   page,
   relay,

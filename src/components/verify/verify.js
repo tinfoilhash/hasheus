@@ -174,7 +174,7 @@ class HVerify extends LitElement {
             description${this._renderUnconfirmedTag(isUnconfirmed)}
           </div>
           <div class="value" data-testid="description">
-            ${sourceEvent?.content ?? pendingOrEmptyValue}
+            ${sourceEvent?.descriptionTrimmed || pendingOrEmptyValue}
           </div>
         </li>
         <li>

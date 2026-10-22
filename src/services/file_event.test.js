@@ -2,6 +2,18 @@ import { buildFileEvent, buildUserEvent } from '@/test/event_builders'
 import { describe, expect, it } from 'vitest'
 
 describe('FileEvent', () => {
+  describe('descriptionTrimmed', () => {
+    it('trims the description', () => {
+      expect(buildFileEvent({ content: ' a file ' }).descriptionTrimmed).toBe(
+        'a file',
+      )
+    })
+
+    it('is empty when the description is only whitespace', () => {
+      expect(buildFileEvent({ content: ' \t\n' }).descriptionTrimmed).toBe('')
+    })
+  })
+
   describe('url', () => {
     it.each([
       'https://example.com/file.iso',

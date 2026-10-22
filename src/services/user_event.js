@@ -11,11 +11,23 @@ class UserEvent extends NostrEvent {
     return parsed !== null && typeof parsed === 'object' ? parsed : {}
   }
 
+  // a profile's fields are untrusted too, so a name that isn't a string is
+  // ignored instead of breaking rendering when it's trimmed.
+  get displayNameTrimmed() {
+    const { display_name: displayName } = this.content
+
+    return typeof displayName === 'string' ? displayName.trim() : ''
+  }
+
+  get nameTrimmed() {
+    const { name } = this.content
+
+    return typeof name === 'string' ? name.trim() : ''
+  }
+
   get displayName() {
     return (
-      this.content.display_name ||
-      this.content.name ||
-      this.pubkeyEncodedTruncated
+      this.displayNameTrimmed || this.nameTrimmed || this.pubkeyEncodedTruncated
     )
   }
 

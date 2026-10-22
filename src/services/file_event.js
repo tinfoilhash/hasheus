@@ -9,6 +9,10 @@ class FileEvent extends NostrEvent {
     return this.userEvent?.displayName ?? this.pubkeyEncodedTruncated
   }
 
+  get descriptionTrimmed() {
+    return this.content.trim()
+  }
+
   // anyone can publish this event, so only web urls are allowed to keep a
   // javascript: url from running script when the link is clicked.
   get url() {
