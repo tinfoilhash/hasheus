@@ -109,7 +109,6 @@ class HVerify extends LitElement {
     // labeled whenever it shows, even while loading, so an untrusted source is
     // never shown unlabeled.
     const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
-    const description = sourceEvent?.content.trim()
     const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<h-spinner></h-spinner>`
@@ -175,7 +174,7 @@ class HVerify extends LitElement {
             description${this._renderUnconfirmedTag(isUnconfirmed)}
           </div>
           <div class="value" data-testid="description">
-            ${description || pendingOrEmptyValue}
+            ${sourceEvent?.descriptionTrimmed || pendingOrEmptyValue}
           </div>
         </li>
         <li>
