@@ -20,7 +20,7 @@ describe('verificationSorter', () => {
     expect(untrustedEvents).toEqual([])
     expect(source).toEqual({
       event: undefined,
-      isConfirmed: false,
+      isTrusted: false,
       agreementCount: 0,
     })
   })
@@ -60,7 +60,7 @@ describe('verificationSorter', () => {
     expect(untrustedEvents).toEqual([untrusted])
   })
 
-  it('falls back to the earliest event, unconfirmed, without trusted verifiers', () => {
+  it('falls back to the earliest event, untrusted, without trusted verifiers', () => {
     const backdated = buildFileEvent({
       pubkey: PUBKEYS.stranger,
       createdAt: 1,
@@ -76,7 +76,7 @@ describe('verificationSorter', () => {
 
     expect(source).toEqual({
       event: backdated,
-      isConfirmed: false,
+      isTrusted: false,
       agreementCount: 0,
     })
   })
@@ -100,7 +100,7 @@ describe('verificationSorter', () => {
 
     expect(source).toEqual({
       event: trusted,
-      isConfirmed: true,
+      isTrusted: true,
       agreementCount: 1,
     })
   })
@@ -132,7 +132,7 @@ describe('verificationSorter', () => {
 
     expect(source).toEqual({
       event: officialB,
-      isConfirmed: true,
+      isTrusted: true,
       agreementCount: 2,
     })
   })
@@ -178,7 +178,7 @@ describe('verificationSorter', () => {
 
     expect(source).toEqual({
       event: withURL,
-      isConfirmed: true,
+      isTrusted: true,
       agreementCount: 1,
     })
   })
@@ -196,7 +196,7 @@ describe('verificationSorter', () => {
 
     expect(source).toEqual({
       event: earliest,
-      isConfirmed: true,
+      isTrusted: true,
       agreementCount: 0,
     })
   })

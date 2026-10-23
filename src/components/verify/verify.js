@@ -68,10 +68,10 @@ class HVerify extends LitElement {
     return this._isFileForHash && !this._hasCurrentUserVerified
   }
 
-  _renderUnconfirmedTag(isUnconfirmed) {
-    return isUnconfirmed
-      ? html`<span class="unconfirmed" data-testid="unconfirmed-tag"
-          >unconfirmed</span
+  _renderUntrustedTag(isUntrusted) {
+    return isUntrusted
+      ? html`<span class="untrusted" data-testid="untrusted-tag"
+          >untrusted</span
         >`
       : nothing
   }
@@ -105,10 +105,10 @@ class HVerify extends LitElement {
       events: this._events,
       currentUser: this.currentUser,
     })
-    const { event: sourceEvent, isConfirmed, agreementCount } = source
+    const { event: sourceEvent, isTrusted, agreementCount } = source
     // labeled whenever it shows, even while loading, so an untrusted source is
     // never shown unlabeled.
-    const isUnconfirmed = Boolean(sourceEvent) && !isConfirmed
+    const isUntrusted = Boolean(sourceEvent) && !isTrusted
     const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<h-spinner></h-spinner>`
@@ -143,15 +143,15 @@ class HVerify extends LitElement {
             `
           }
 
-          if (isUnconfirmed && !this._hasCurrentUserVerified) {
+          if (isUntrusted && !this._hasCurrentUserVerified) {
             return html`
-              <h-status color="orange" data-testid="unconfirmed-status">
+              <h-status color="orange" data-testid="untrusted-status">
                 ${
                   this.currentUser
                     ? 'no one in your web of trust has verified this file.'
                     : 'connect to see if anyone in your web of trust has verified this file.'
                 }
-                its description and url are unconfirmed.
+                its description and url are untrusted.
               </h-status>
             `
           }
@@ -171,14 +171,14 @@ class HVerify extends LitElement {
         </li>
         <li>
           <div class="key">
-            description${this._renderUnconfirmedTag(isUnconfirmed)}
+            description${this._renderUntrustedTag(isUntrusted)}
           </div>
           <div class="value" data-testid="description">
             ${sourceEvent?.descriptionTrimmed || pendingOrEmptyValue}
           </div>
         </li>
         <li>
-          <div class="key">url${this._renderUnconfirmedTag(isUnconfirmed)}</div>
+          <div class="key">url${this._renderUntrustedTag(isUntrusted)}</div>
           <div class="value" data-testid="url">
             ${
               url
@@ -186,7 +186,7 @@ class HVerify extends LitElement {
                 : pendingOrEmptyValue
             }
             ${
-              isConfirmed && url
+              isTrusted && url
                 ? html`
                     <div class="agreement" data-testid="agreement">
                       linked by ${agreementCount} in your web of trust
@@ -205,7 +205,7 @@ class HVerify extends LitElement {
                     <h-user-picture
                       .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
                       .userEvent=${sourceEvent.userEvent}
-                      ?trusted=${isConfirmed}
+                      ?trusted=${isTrusted}
                     ></h-user-picture>
                     <div>
                       <div class="name">${sourceEvent.userDisplayName}</div>
@@ -290,7 +290,7 @@ class HVerify extends LitElement {
         color: inherit;
       }
 
-      ul li .key .unconfirmed {
+      ul li .key .untrusted {
         padding: 0 0.375rem;
         margin-left: 0.5rem;
         color: var(--h-color-100);
