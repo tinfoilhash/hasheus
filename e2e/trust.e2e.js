@@ -63,6 +63,7 @@ test.describe('a file with a backdated verification', () => {
     )
     await expect(page.getByTestId('url')).toContainText(EVIL_URL)
     await expect(page.getByTestId('untrusted-tag')).toHaveCount(2)
+    await expect(page.getByTestId('trusted-tag')).toHaveCount(0)
   })
 
   test('is replaced by the url trusted verifiers agree on once connected', async ({
@@ -74,13 +75,12 @@ test.describe('a file with a backdated verification', () => {
     await page.getByTestId('connect-button').click()
 
     await expect(page.getByTestId('url')).toContainText(GOOD_URL)
-    await expect(page.getByTestId('agreement')).toHaveText(
-      'linked by 2 in your web of trust',
-    )
+    await expect(page.getByTestId('agreement-tag')).toHaveText('+1 trusted')
     await expect(page.getByTestId('description')).toHaveText('from alice')
     await expect(page.getByTestId('source')).toContainText('alice')
     await expect(page.getByTestId('untrusted-status')).toHaveCount(0)
     await expect(page.getByTestId('untrusted-tag')).toHaveCount(0)
+    await expect(page.getByTestId('trusted-tag')).toHaveCount(1)
     await expect(
       page.getByTestId('trusted-verifiers').locator('h-user-picture'),
     ).toHaveCount(3)

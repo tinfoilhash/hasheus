@@ -76,7 +76,24 @@ class HVerify extends LitElement {
       : nothing
   }
 
-  _renderVerifierList(events, { isTrusted = false, emptyValue }) {
+  _renderTrustedTag(isTrusted) {
+    return isTrusted
+      ? html`<span class="trusted" data-testid="trusted-tag">trusted</span>`
+      : nothing
+  }
+
+  // the source is one of the agreeing verifiers, so only others are counted.
+  _renderAgreementTag(agreementCount) {
+    const otherCount = agreementCount - 1
+
+    return otherCount > 0
+      ? html`<span class="trusted" data-testid="agreement-tag"
+          >+${otherCount} trusted</span
+        >`
+      : nothing
+  }
+
+  _renderVerifierList(events, { emptyValue }) {
     if (!events.length) {
       return emptyValue
     }
@@ -89,7 +106,6 @@ class HVerify extends LitElement {
               <h-user-picture
                 .pubkeyEncoded=${event.pubkeyEncoded}
                 .userEvent=${event.userEvent}
-                ?trusted=${isTrusted}
                 title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
               ></h-user-picture>
             </li>
@@ -151,7 +167,7 @@ class HVerify extends LitElement {
                     ? 'no one in your web of trust has verified this file.'
                     : 'connect to see if anyone in your web of trust has verified this file.'
                 }
-                its description and url are untrusted.
+                its source and url are untrusted.
               </h-status>
             `
           }
@@ -170,34 +186,31 @@ class HVerify extends LitElement {
           <div class="value" data-testid="file-hash">${this.hash}</div>
         </li>
         <li>
-          <div class="key">
-            description${this._renderUntrustedTag(isUntrusted)}
-          </div>
+          <div class="key">description</div>
           <div class="value" data-testid="description">
             ${sourceEvent?.descriptionTrimmed || pendingOrEmptyValue}
           </div>
         </li>
         <li>
-          <div class="key">url${this._renderUntrustedTag(isUntrusted)}</div>
+          <div class="key">
+            url${this._renderUntrustedTag(isUntrusted)}${this._renderAgreementTag(
+              agreementCount,
+            )}
+          </div>
           <div class="value" data-testid="url">
             ${
               url
                 ? html`<a href=${url} target="_blank">${url}</a>`
                 : pendingOrEmptyValue
             }
-            ${
-              isTrusted && url
-                ? html`
-                    <div class="agreement" data-testid="agreement">
-                      linked by ${agreementCount} in your web of trust
-                    </div>
-                  `
-                : nothing
-            }
           </div>
         </li>
         <li class="source">
-          <div class="key">source</div>
+          <div class="key">
+            source${this._renderUntrustedTag(isUntrusted)}${this._renderTrustedTag(
+              isTrusted,
+            )}
+          </div>
           <div class="value" data-testid="source">
             ${
               sourceEvent
@@ -205,7 +218,6 @@ class HVerify extends LitElement {
                     <h-user-picture
                       .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
                       .userEvent=${sourceEvent.userEvent}
-                      ?trusted=${isTrusted}
                     ></h-user-picture>
                     <div>
                       <div class="name">${sourceEvent.userDisplayName}</div>
@@ -223,7 +235,6 @@ class HVerify extends LitElement {
               ? html`
                   <div class="value" data-testid="trusted-verifiers">
                     ${this._renderVerifierList(trustedEvents, {
-                      isTrusted: true,
                       emptyValue: pendingOrEmptyValue,
                     })}
                   </div>
@@ -290,17 +301,19 @@ class HVerify extends LitElement {
         color: inherit;
       }
 
-      ul li .key .untrusted {
+      ul li .key .untrusted,
+      ul li .key .trusted {
         padding: 0 0.375rem;
         margin-left: 0.5rem;
         color: var(--h-color-100);
+      }
+
+      ul li .key .untrusted {
         background: var(--h-color-orange);
       }
 
-      ul li .value .agreement {
-        margin-top: 0.25rem;
-        font-size: 1rem;
-        color: var(--h-color-500);
+      ul li .key .trusted {
+        background: var(--h-color-green);
       }
 
       ul li.source .value {

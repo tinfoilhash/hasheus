@@ -5,7 +5,6 @@ class HUserPicture extends LitElement {
   static properties = {
     pubkeyEncoded: { attribute: false },
     userEvent: { attribute: false },
-    trusted: { type: Boolean },
   }
 
   render() {
@@ -45,15 +44,6 @@ class HUserPicture extends LitElement {
         overflow: hidden;
         text-decoration: none;
         border: 2px solid var(--h-color-700);
-      }
-
-      :host([trusted]) a {
-        border-image: linear-gradient(
-            to top left,
-            var(--h-color-700),
-            var(--h-color-green)
-          )
-          1;
       }
 
       a img {
