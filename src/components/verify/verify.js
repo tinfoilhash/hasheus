@@ -105,10 +105,10 @@ class HVerify extends LitElement {
       events: this._events,
       currentUser: this.currentUser,
     })
-    const { event: sourceEvent, isConfirmed, agreementCount } = source
+    const { event: sourceEvent, isTrusted, agreementCount } = source
     // labeled whenever it shows, even while loading, so an untrusted source is
     // never shown unlabeled.
-    const isUntrusted = Boolean(sourceEvent) && !isConfirmed
+    const isUntrusted = Boolean(sourceEvent) && !isTrusted
     const url = sourceEvent?.url
     const pendingOrEmptyValue = isPending
       ? html`<h-spinner></h-spinner>`
@@ -186,7 +186,7 @@ class HVerify extends LitElement {
                 : pendingOrEmptyValue
             }
             ${
-              isConfirmed && url
+              isTrusted && url
                 ? html`
                     <div class="agreement" data-testid="agreement">
                       linked by ${agreementCount} in your web of trust
@@ -205,7 +205,7 @@ class HVerify extends LitElement {
                     <h-user-picture
                       .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
                       .userEvent=${sourceEvent.userEvent}
-                      ?trusted=${isConfirmed}
+                      ?trusted=${isTrusted}
                     ></h-user-picture>
                     <div>
                       <div class="name">${sourceEvent.userDisplayName}</div>

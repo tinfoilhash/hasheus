@@ -20,7 +20,7 @@ function pickSource({ verifierEvents, trustedEvents }) {
   if (!trustedEvents.length) {
     return {
       event: verifierEvents[0],
-      isConfirmed: false,
+      isTrusted: false,
       agreementCount: 0,
     }
   }
@@ -39,7 +39,7 @@ function pickSource({ verifierEvents, trustedEvents }) {
 
   return {
     event: agreeingEvents[0] ?? trustedEvents[0],
-    isConfirmed: true,
+    isTrusted: true,
     agreementCount: agreeingEvents.length,
   }
 }
