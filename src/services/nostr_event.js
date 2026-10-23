@@ -55,6 +55,18 @@ class NostrEvent {
     return new Date(this.createdAt * 1000)
   }
 
+  // anyone can set created_at, so one too large for a date shows as the raw
+  // unix timestamp instead of "Invalid Date".
+  get createdAtLocaleString() {
+    const { createdAtDate } = this
+
+    if (Number.isNaN(createdAtDate.getTime())) {
+      return String(this.createdAt)
+    }
+
+    return createdAtDate.toLocaleString()
+  }
+
   getFirstTagValue(name) {
     return this.tags.get(name)?.[0]?.[0]
   }

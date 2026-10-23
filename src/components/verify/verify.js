@@ -106,7 +106,7 @@ class HVerify extends LitElement {
               <h-user-picture
                 .pubkeyEncoded=${event.pubkeyEncoded}
                 .userEvent=${event.userEvent}
-                title=${`${event.userDisplayName}\n${event.createdAtDate.toLocaleString()}`}
+                title=${`${event.userDisplayName}\n${event.createdAtLocaleString}`}
               ></h-user-picture>
             </li>
           `,
@@ -221,7 +221,7 @@ class HVerify extends LitElement {
                     ></h-user-picture>
                     <div>
                       <div class="name">${sourceEvent.userDisplayName}</div>
-                      <div>${sourceEvent.createdAtDate.toLocaleString()}</div>
+                      <div>${sourceEvent.createdAtLocaleString}</div>
                     </div>
                   `
                 : pendingOrEmptyValue
