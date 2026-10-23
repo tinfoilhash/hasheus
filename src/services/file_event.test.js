@@ -12,6 +12,18 @@ describe('FileEvent', () => {
     it('is empty when the description is only whitespace', () => {
       expect(buildFileEvent({ content: ' \t\n' }).descriptionTrimmed).toBe('')
     })
+
+    it('removes bidi controls from the description', () => {
+      expect(
+        buildFileEvent({ content: 'file\u202eosi.exe' }).descriptionTrimmed,
+      ).toBe('fileosi.exe')
+    })
+
+    it('is empty when the description is only bidi controls and whitespace', () => {
+      expect(
+        buildFileEvent({ content: '\u202e \u2066' }).descriptionTrimmed,
+      ).toBe('')
+    })
   })
 
   describe('url', () => {

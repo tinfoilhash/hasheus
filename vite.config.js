@@ -8,7 +8,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      include: ['src/services/**/*.js'],
+      include: ['src/lib/**/*.js', 'src/services/**/*.js'],
       exclude: ['src/**/*.test.js'],
       reporter: ['text', 'html'],
       reportOnFailure: true,

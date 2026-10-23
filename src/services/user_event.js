@@ -1,3 +1,4 @@
+import bidiControlStripper from '@/lib/bidi_control_stripper'
 import NostrEvent from '@/services/nostr_event'
 
 class UserEvent extends NostrEvent {
@@ -16,13 +17,15 @@ class UserEvent extends NostrEvent {
   get displayNameTrimmed() {
     const { display_name: displayName } = this.content
 
-    return typeof displayName === 'string' ? displayName.trim() : ''
+    return typeof displayName === 'string'
+      ? bidiControlStripper(displayName).trim()
+      : ''
   }
 
   get nameTrimmed() {
     const { name } = this.content
 
-    return typeof name === 'string' ? name.trim() : ''
+    return typeof name === 'string' ? bidiControlStripper(name).trim() : ''
   }
 
   get displayName() {

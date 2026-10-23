@@ -67,6 +67,28 @@ describe('UserEvent', () => {
 
       expect(event.displayName).toBe('alice')
     })
+
+    it('removes bidi controls from the name', () => {
+      const event = buildUserEvent({ content: '{"name":"file\\u202eosi.exe"}' })
+
+      expect(event.displayName).toBe('fileosi.exe')
+    })
+
+    it('falls back to name when display_name is only bidi controls', () => {
+      const event = buildUserEvent({
+        content: '{"display_name":"\\u202e","name":"alice"}',
+      })
+
+      expect(event.displayName).toBe('alice')
+    })
+
+    it('falls back to the truncated npub when the names are only bidi controls and whitespace', () => {
+      const event = buildUserEvent({
+        content: '{"display_name":"\\u202e \\u2066","name":"\\u200f"}',
+      })
+
+      expect(event.displayName).toBe(event.pubkeyEncodedTruncated)
+    })
   })
 
   it('exposes the picture', () => {
