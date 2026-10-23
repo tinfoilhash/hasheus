@@ -167,7 +167,7 @@ class HVerify extends LitElement {
                     ? 'no one in your web of trust has verified this file.'
                     : 'connect to see if anyone in your web of trust has verified this file.'
                 }
-                its description and url are untrusted.
+                its source and url are untrusted.
               </h-status>
             `
           }
