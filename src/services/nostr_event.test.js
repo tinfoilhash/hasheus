@@ -38,6 +38,23 @@ describe('NostrEvent', () => {
     expect(event.createdAtDate).toEqual(new Date(1_700_000_000 * 1000))
   })
 
+  it('formats created_at as a locale string', () => {
+    const event = new NostrEvent(RAW_EVENT)
+
+    expect(event.createdAtLocaleString).toBe(
+      new Date(1_700_000_000 * 1000).toLocaleString(),
+    )
+  })
+
+  it('shows the raw unix timestamp when created_at is too large for a date', () => {
+    const event = new NostrEvent({
+      ...RAW_EVENT,
+      created_at: Number.MAX_SAFE_INTEGER,
+    })
+
+    expect(event.createdAtLocaleString).toBe('9007199254740991')
+  })
+
   it('encodes the pubkey as an npub, and truncates it for display', () => {
     const event = new NostrEvent(RAW_EVENT)
 

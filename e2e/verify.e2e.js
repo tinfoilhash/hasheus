@@ -33,6 +33,22 @@ test('a verification with a bidi override in its description shows it without th
   await expect(page.getByTestId('description')).toHaveText('fileosi.exe')
 })
 
+test('a verification dated too far out for a date shows its raw timestamp', async ({
+  page,
+  relay,
+}) => {
+  const hash = randomHash()
+
+  await relay.publishVerification(await relay.createUser({ name: 'alice' }), {
+    hash,
+    url: 'https://example.com/a.iso',
+    createdAt: Number.MAX_SAFE_INTEGER,
+  })
+
+  await page.goto(`/${hash}`)
+  await expect(page.getByTestId('source')).toContainText('9007199254740991')
+})
+
 test("switching straight to another file's page shows only that file's verifications", async ({
   page,
   relay,
