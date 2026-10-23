@@ -1,3 +1,4 @@
+import bidiControlStripper from '@/services/bidi_control_stripper'
 import NostrEvent from '@/services/nostr_event'
 
 class FileEvent extends NostrEvent {
@@ -10,7 +11,7 @@ class FileEvent extends NostrEvent {
   }
 
   get descriptionTrimmed() {
-    return this.content.trim()
+    return bidiControlStripper(this.content).trim()
   }
 
   // anyone can publish this event, so only web urls are allowed to keep a

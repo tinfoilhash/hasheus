@@ -17,6 +17,22 @@ test('a verification with an empty description shows the empty value', async ({
   await expect(page.getByTestId('description')).toHaveText('—')
 })
 
+test('a verification with a bidi override in its description shows it without the override', async ({
+  page,
+  relay,
+}) => {
+  const hash = randomHash()
+
+  await relay.publishVerification(await relay.createUser({ name: 'alice' }), {
+    hash,
+    url: 'https://example.com/a.iso',
+    description: 'file\u202eosi.exe',
+  })
+
+  await page.goto(`/${hash}`)
+  await expect(page.getByTestId('description')).toHaveText('fileosi.exe')
+})
+
 test("switching straight to another file's page shows only that file's verifications", async ({
   page,
   relay,
