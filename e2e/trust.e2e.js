@@ -50,19 +50,19 @@ test.describe('a file with a backdated verification', () => {
     })
   })
 
-  test('is labeled unconfirmed for visitors who aren’t connected', async ({
+  test('is labeled untrusted for visitors who aren’t connected', async ({
     page,
   }) => {
     await page.goto(`/${hash}`)
 
-    await expect(page.getByTestId('unconfirmed-status')).toContainText(
+    await expect(page.getByTestId('untrusted-status')).toContainText(
       'connect to see if anyone in your web of trust has verified this file',
     )
     await expect(page.getByTestId('description')).toHaveText(
       'official download',
     )
     await expect(page.getByTestId('url')).toContainText(EVIL_URL)
-    await expect(page.getByTestId('unconfirmed-tag')).toHaveCount(2)
+    await expect(page.getByTestId('untrusted-tag')).toHaveCount(2)
   })
 
   test('is replaced by the url trusted verifiers agree on once connected', async ({
@@ -79,8 +79,8 @@ test.describe('a file with a backdated verification', () => {
     )
     await expect(page.getByTestId('description')).toHaveText('from alice')
     await expect(page.getByTestId('source')).toContainText('alice')
-    await expect(page.getByTestId('unconfirmed-status')).toHaveCount(0)
-    await expect(page.getByTestId('unconfirmed-tag')).toHaveCount(0)
+    await expect(page.getByTestId('untrusted-status')).toHaveCount(0)
+    await expect(page.getByTestId('untrusted-tag')).toHaveCount(0)
     await expect(
       page.getByTestId('trusted-verifiers').locator('h-user-picture'),
     ).toHaveCount(3)
@@ -100,7 +100,7 @@ test('warns when no one in your web of trust has verified the file', async ({
   await page.goto(`/${hash}`)
   await page.getByTestId('connect-button').click()
 
-  await expect(page.getByTestId('unconfirmed-status')).toContainText(
+  await expect(page.getByTestId('untrusted-status')).toContainText(
     'no one in your web of trust has verified this file',
   )
 })

@@ -60,7 +60,7 @@ describe('verificationSorter', () => {
     expect(untrustedEvents).toEqual([untrusted])
   })
 
-  it('falls back to the earliest event, unconfirmed, without trusted verifiers', () => {
+  it('falls back to the earliest event, untrusted, without trusted verifiers', () => {
     const backdated = buildFileEvent({
       pubkey: PUBKEYS.stranger,
       createdAt: 1,
