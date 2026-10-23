@@ -1,4 +1,4 @@
-import bidiControlStripper from '@/services/bidi_control_stripper'
+import bidiControlStripper from '@/lib/bidi_control_stripper'
 import NostrEvent from '@/services/nostr_event'
 
 class FileEvent extends NostrEvent {
