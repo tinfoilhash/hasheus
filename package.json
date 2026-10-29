@@ -12,6 +12,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:relay": "nak serve --events dev/seed.jsonl",
+    "dev:seed": "node dev/seed.js",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "npm run lint:format && npm run lint:quality && npm run lint:style",
