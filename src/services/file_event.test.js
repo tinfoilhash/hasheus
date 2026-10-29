@@ -27,12 +27,23 @@ describe('FileEvent', () => {
   })
 
   describe('url', () => {
-    it.each([
-      'https://example.com/file.iso',
-      'http://example.com/file.iso',
-      'HTTPS://example.com/file.iso',
-    ])('allows %s', (url) => {
-      expect(buildFileEvent({ url }).url).toBe(url)
+    it.each(['https://example.com/file.iso', 'http://example.com/file.iso'])(
+      'allows %s',
+      (url) => {
+        expect(buildFileEvent({ url }).url).toBe(url)
+      },
+    )
+
+    it('normalizes the url', () => {
+      expect(buildFileEvent({ url: 'HTTPS://Example.com' }).url).toBe(
+        'https://example.com/',
+      )
+    })
+
+    it('percent-encodes a bidi control', () => {
+      expect(
+        buildFileEvent({ url: 'https://example.com/\u202eosi.exe' }).url,
+      ).toBe('https://example.com/%E2%80%AEosi.exe')
     })
 
     it.each([

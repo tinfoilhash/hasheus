@@ -27,7 +27,7 @@ function pickSource({ verifierEvents, trustedEvents }) {
 
   const eventsByURL = Map.groupBy(
     trustedEvents.filter((event) => event.url),
-    (event) => new URL(event.url).href,
+    (event) => event.url,
   )
   let agreeingEvents = []
 
