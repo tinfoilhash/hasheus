@@ -15,7 +15,8 @@ class FileEvent extends NostrEvent {
   }
 
   // anyone can publish this event, so only web urls are allowed to keep a
-  // javascript: url from running script when the link is clicked.
+  // javascript: url from running script when the link is clicked. it's
+  // normalized so a bidi control is percent-encoded rather than shown.
   get url() {
     const url = this.getFirstTagValue('url')
 
@@ -23,9 +24,9 @@ class FileEvent extends NostrEvent {
       return null
     }
 
-    const { protocol } = new URL(url)
+    const { protocol, href } = new URL(url)
 
-    return protocol === 'https:' || protocol === 'http:' ? url : null
+    return protocol === 'https:' || protocol === 'http:' ? href : null
   }
 }
 
