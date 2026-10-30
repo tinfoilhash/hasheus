@@ -229,7 +229,7 @@ class HVerify extends LitElement {
           </div>
         </li>
         <li class="verified-list">
-          <div class="key">verified in your web of trust</div>
+          <div class="key">trusted verifiers</div>
           ${
             this.currentUser
               ? html`
@@ -244,7 +244,7 @@ class HVerify extends LitElement {
           <h-app-current-user></h-app-current-user>
         </li>
         <li class="verified-list">
-          <div class="key">verified outside your web of trust</div>
+          <div class="key">other verifiers</div>
           <div class="value">
             ${this._renderVerifierList(untrustedEvents, {
               emptyValue: pendingOrEmptyValue,
