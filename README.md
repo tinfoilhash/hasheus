@@ -79,6 +79,9 @@ so never use them anywhere real:
 | mallory  | untrusted, with escape codes and a bidi override in their display name | `npub1x6ldzxyhvlsgy73xxwwg4gqc48djfa2uv9j93fl8n6nlxqj5kjws3zy6mj` | `nsec17r9px2nv9yhnz2p5938395v4ytuqc54e4n28s2nfr3uy35cejpes8jtkrp` |
 | newcomer | no profile or follow list, for publishing as someone new               | `npub1fm8jeugesk6wfqx9njrgdsdv2cpns46vmkddja2g0lev6pz0hdlqyhgjve` | `nsec16s9vd47k5g648qw3593arhgwm5apswa8s8tw402ss83dqap4pr0s8f6tlm` |
 
+to test hasheus-cli as dev against the relay, source
+[`dev/cli.env`](dev/cli.env).
+
 to change the sample data, edit [`dev/seed.js`](dev/seed.js) or the files, then
 regenerate it:
 
