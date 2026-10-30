@@ -230,18 +230,11 @@ class HVerify extends LitElement {
         </li>
         <li class="verified-list">
           <div class="key">trusted verifiers</div>
-          ${
-            this.currentUser
-              ? html`
-                  <div class="value" data-testid="trusted-verifiers">
-                    ${this._renderVerifierList(trustedEvents, {
-                      emptyValue: pendingOrEmptyValue,
-                    })}
-                  </div>
-                `
-              : nothing
-          }
-          <h-app-current-user></h-app-current-user>
+          <div class="value" data-testid="trusted-verifiers">
+            ${this._renderVerifierList(trustedEvents, {
+              emptyValue: pendingOrEmptyValue,
+            })}
+          </div>
         </li>
         <li class="verified-list">
           <div class="key">untrusted verifiers</div>
@@ -252,17 +245,18 @@ class HVerify extends LitElement {
           </div>
         </li>
       </ul>
-      ${
-        this._canPublish
-          ? html`
-              <div class="publish">
+      <div class="actions">
+        ${
+          this._canPublish
+            ? html`
                 <h-button>
                   <a href="/publish">add your verification</a>
                 </h-button>
-              </div>
-            `
-          : nothing
-      }
+              `
+            : nothing
+        }
+        <h-app-current-user></h-app-current-user>
+      </div>
     `
   }
 
@@ -334,11 +328,11 @@ class HVerify extends LitElement {
         list-style: none;
       }
 
-      ul li.verified-list h-app-current-user {
-        margin-top: 0.5rem;
-      }
-
-      .publish {
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
         margin-top: 1.5rem;
       }
     `,

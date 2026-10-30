@@ -46,7 +46,6 @@ class HAppCurrentUser extends LitElement {
     const { currentUser, error } = currentUserConnection
 
     return html`
-      ${error ? html`<h-error data-testid="connect-error" .error=${error}></h-error>` : nothing}
       <h-button ?pending=${currentUserConnection.isPending}>
         <button
           data-testid="connect-button"
@@ -60,6 +59,7 @@ class HAppCurrentUser extends LitElement {
           }
         </button>
       </h-button>
+      ${error ? html`<h-error data-testid="connect-error" .error=${error}></h-error>` : nothing}
     `
   }
 
@@ -71,7 +71,7 @@ class HAppCurrentUser extends LitElement {
       }
 
       h-error {
-        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
       }
     `,
   ]
