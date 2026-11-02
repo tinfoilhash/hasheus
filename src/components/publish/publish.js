@@ -1,3 +1,4 @@
+import '@/components/app/app_current_user'
 import '@/components/base/button'
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/error'
@@ -9,6 +10,7 @@ import { css, html, LitElement, nothing } from 'lit'
 
 class HPublish extends HNavigable(LitElement) {
   static properties = {
+    currentUser: { attribute: false },
     file: { attribute: false },
   }
 
@@ -17,7 +19,11 @@ class HPublish extends HNavigable(LitElement) {
   _constructPublishTask() {
     return new Task(this, {
       task: async ([form]) => {
-        if (!this._canPublish || form.matches(':invalid')) {
+        if (
+          !this._canPublish ||
+          !this.currentUser ||
+          form.matches(':invalid')
+        ) {
           return
         }
 
@@ -27,6 +33,7 @@ class HPublish extends HNavigable(LitElement) {
           file: this.file,
           description: formData.get('description'),
           url: formData.get('url'),
+          pubkey: this.currentUser.pubkey,
         })
 
         return await publisher.publish()
@@ -52,12 +59,28 @@ class HPublish extends HNavigable(LitElement) {
     this._publishTask.run([event.target])
   }
 
+  // the npub stays next to the name, since anyone can copy a name.
+  _renderVerifiedBy() {
+    if (!this.currentUser) {
+      return html`<h-app-current-user></h-app-current-user>`
+    }
+
+    const { displayName, pubkeyEncodedTruncated } = this.currentUser.userEvent
+
+    return displayName === pubkeyEncodedTruncated
+      ? displayName
+      : `${displayName} (${pubkeyEncodedTruncated})`
+  }
+
   render() {
     const isPending = this._publishTask.status === TaskStatus.PENDING
     // stays disabled after publishing until the navigation to the verify page
     // lands, so the file can't be published twice.
     const isDisabled =
-      !this._canPublish || isPending || this.file.hasBeenPublished
+      !this._canPublish ||
+      !this.currentUser ||
+      isPending ||
+      this.file.hasBeenPublished
 
     return html`
       ${
@@ -103,6 +126,12 @@ class HPublish extends HNavigable(LitElement) {
                 pattern="https?://.+"
                 maxlength="1000"
               />
+            </div>
+          </li>
+          <li>
+            <div class="key">verified by</div>
+            <div class="value" data-testid="verified-by">
+              ${this._renderVerifiedBy()}
             </div>
           </li>
         </ul>
