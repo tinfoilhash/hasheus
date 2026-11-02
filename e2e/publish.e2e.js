@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer'
 import { createHash } from 'node:crypto'
+import { npubEncode } from 'nostr-tools/nip19'
 import { expect, test } from './fixtures.js'
 import { RELAY_PORT } from './test_servers.js'
 
@@ -18,14 +19,26 @@ async function chooseFile(page) {
   return hash
 }
 
+async function openConnectedForm(page) {
+  const hash = await chooseFile(page)
+
+  await page.getByTestId('add-verification-link').click()
+  await page.getByTestId('verified-by').getByTestId('connect-button').click()
+  await expect(page.getByTestId('publish-button')).toBeEnabled()
+
+  return hash
+}
+
 test.describe('publishing', () => {
+  let publisher
+
   test.beforeEach(async ({ relay, installExtension }) => {
-    await installExtension(await relay.createUser({ name: 'publisher' }))
+    publisher = await relay.createUser({ name: 'publisher' })
+    await installExtension(publisher)
   })
 
   test('shows the verification as yours', async ({ page }) => {
-    await chooseFile(page)
-    await page.getByTestId('add-verification-link').click()
+    await openConnectedForm(page)
     await page.getByTestId('url-input').fill('https://example.com/file.txt')
     await page.getByTestId('publish-button').click()
 
@@ -39,12 +52,27 @@ test.describe('publishing', () => {
     )
   })
 
+  test('only enables publishing once connected', async ({ page }) => {
+    await chooseFile(page)
+    await page.getByTestId('add-verification-link').click()
+
+    await expect(page.getByTestId('publish-button')).toBeDisabled()
+
+    await page.getByTestId('verified-by').getByTestId('connect-button').click()
+
+    const npub = npubEncode(publisher.pubkey)
+
+    await expect(page.getByTestId('verified-by')).toHaveText(
+      `publisher (${npub.slice(0, 8)}…${npub.slice(-8)})`,
+    )
+    await expect(page.getByTestId('publish-button')).toBeEnabled()
+  })
+
   test('back returns to the start page instead of the form', async ({
     page,
   }) => {
-    const hash = await chooseFile(page)
+    const hash = await openConnectedForm(page)
 
-    await page.getByTestId('add-verification-link').click()
     await page.getByTestId('url-input').fill('https://example.com/file.txt')
     await page.getByTestId('publish-button').click()
     await expect(page.getByTestId('verified-status')).toBeVisible()
@@ -56,8 +84,7 @@ test.describe('publishing', () => {
   })
 
   test('only accepts web urls', async ({ page }) => {
-    await chooseFile(page)
-    await page.getByTestId('add-verification-link').click()
+    await openConnectedForm(page)
     await page.getByTestId('url-input').fill('javascript:alert(1)')
     await page.getByTestId('publish-button').click()
 
@@ -88,8 +115,7 @@ test.describe('publishing', () => {
       })
     })
 
-    await chooseFile(page)
-    await page.getByTestId('add-verification-link').click()
+    await openConnectedForm(page)
     await page.getByTestId('url-input').fill('https://example.com/file.txt')
     await page.getByTestId('publish-button').click()
 

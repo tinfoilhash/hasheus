@@ -1,4 +1,3 @@
-import currentUserConnection from '@/services/current_user_connection'
 import FileEvent from '@/services/file_event'
 import FilePublisher from '@/services/file_publisher'
 import relayPool from '@/services/relay_pool'
@@ -7,10 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@/services/relay_pool', () => ({
   default: { publish: vi.fn() },
   FILE_RELAY_URLS: ['wss://file-a.example', 'wss://file-b.example'],
-}))
-
-vi.mock('@/services/current_user_connection', () => ({
-  default: { connect: vi.fn() },
 }))
 
 const PUBKEY = 'a'.repeat(64)
@@ -25,13 +20,13 @@ function buildPublisher(file) {
     file,
     description: 'my file',
     url: 'https://example.com/file.txt',
+    pubkey: PUBKEY,
   })
 }
 
 describe('FilePublisher', () => {
   beforeEach(() => {
     relayPool.publish.mockReset().mockReturnValue([Promise.resolve('ok')])
-    currentUserConnection.connect.mockReset()
 
     vi.stubGlobal('window', {
       nostr: {
@@ -73,7 +68,7 @@ describe('FilePublisher', () => {
     expect(tags).toContainEqual(['m', 'application/octet-stream'])
   })
 
-  it('publishes to the file relays, marks the file published, and connects', async () => {
+  it('publishes to the file relays and marks the file published', async () => {
     const file = buildFile()
 
     const fileEvent = await buildPublisher(file).publish()
@@ -84,9 +79,23 @@ describe('FilePublisher', () => {
     )
     expect(fileEvent).toBeInstanceOf(FileEvent)
     expect(file.publishedFileEvent).toBe(fileEvent)
-    expect(currentUserConnection.connect).toHaveBeenCalledWith({
-      pubkey: PUBKEY,
-    })
+  })
+
+  it('throws without publishing when the extension signs with another account', async () => {
+    window.nostr.signEvent.mockImplementation(async (template) => ({
+      ...template,
+      id: '1'.repeat(64),
+      pubkey: 'b'.repeat(64),
+      sig: '2'.repeat(128),
+    }))
+
+    const file = buildFile()
+
+    await expect(buildPublisher(file).publish()).rejects.toThrow(
+      'your browser extension signed with a different account than the one connected',
+    )
+    expect(relayPool.publish).not.toHaveBeenCalled()
+    expect(file.publishedFileEvent).toBeNull()
   })
 
   it('succeeds when any relay accepts the event', async () => {
@@ -114,7 +123,6 @@ describe('FilePublisher', () => {
       'connection failed',
     )
     expect(file.publishedFileEvent).toBeNull()
-    expect(currentUserConnection.connect).not.toHaveBeenCalled()
   })
 
   it('rethrows an error thrown while publishing', async () => {

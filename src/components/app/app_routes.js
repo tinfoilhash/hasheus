@@ -26,7 +26,12 @@ function hAppRoutes() {
 
         return true
       },
-      render: () => html`<h-publish .file=${this._file}></h-publish>`,
+      render: () => html`
+        <h-publish
+          .currentUser=${this._currentUser}
+          .file=${this._file}
+        ></h-publish>
+      `,
     },
     {
       path: '/:hash',
