@@ -129,6 +129,10 @@ class HPublish extends HNavigable(LitElement) {
             </div>
           </li>
           <li>
+            <div class="key">mime type</div>
+            <div class="value" data-testid="mime-type">${this.file.type}</div>
+          </li>
+          <li>
             <div class="key">verified by</div>
             <div class="value" data-testid="verified-by">
               ${this._renderVerifiedBy()}

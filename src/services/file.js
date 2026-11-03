@@ -1,3 +1,4 @@
+import mimeTypeGuesser, { GENERIC_MIME_TYPE } from '@/lib/mime_type_guesser'
 import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
 
@@ -60,8 +61,16 @@ class HFile {
     return this.file.name
   }
 
+  // browsers report an empty or generic type for files they don't know, like
+  // .dmg, so those are guessed from the extension instead.
   get type() {
-    return this.file.type
+    const { type } = this.file
+
+    if (type && type !== GENERIC_MIME_TYPE) {
+      return type
+    }
+
+    return mimeTypeGuesser(this.name)
   }
 
   get size() {

@@ -73,4 +73,26 @@ describe('HFile', () => {
       expect(hFile.hasBeenPublished).toBe(false)
     })
   })
+
+  describe('type', () => {
+    it("guesses from the extension when the browser doesn't know it", () => {
+      const hFile = new HFile({ file: new File([], 'app.dmg'), hash: '' })
+
+      expect(hFile.type).toBe('application/x-apple-diskimage')
+    })
+
+    it('guesses from the extension when the browser reports the generic type', () => {
+      const file = new File([], 'app.dmg', { type: 'application/octet-stream' })
+
+      expect(new HFile({ file, hash: '' }).type).toBe(
+        'application/x-apple-diskimage',
+      )
+    })
+
+    it('keeps a specific type the browser reports', () => {
+      const file = new File([], 'notes.dmg', { type: 'text/plain' })
+
+      expect(new HFile({ file, hash: '' }).type).toBe('text/plain')
+    })
+  })
 })

@@ -1,3 +1,4 @@
+import HFile from '@/services/file'
 import FileEvent from '@/services/file_event'
 import FilePublisher from '@/services/file_publisher'
 import relayPool from '@/services/relay_pool'
@@ -60,12 +61,14 @@ describe('FilePublisher', () => {
     })
   })
 
-  it('falls back to a generic mime type when the browser reports none', async () => {
-    await buildPublisher(buildFile({ type: '' })).publish()
+  it("publishes a guessed mime type when the browser doesn't know it", async () => {
+    const file = new HFile({ file: new File([], 'app.dmg'), hash: HASH })
+
+    await buildPublisher(file).publish()
 
     const [{ tags }] = window.nostr.signEvent.mock.calls[0]
 
-    expect(tags).toContainEqual(['m', 'application/octet-stream'])
+    expect(tags).toContainEqual(['m', 'application/x-apple-diskimage'])
   })
 
   it('publishes to the file relays and marks the file published', async () => {
