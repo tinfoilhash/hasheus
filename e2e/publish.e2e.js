@@ -4,14 +4,17 @@ import { npubEncode } from 'nostr-tools/nip19'
 import { expect, test } from './fixtures.js'
 import { RELAY_PORT } from './test_servers.js'
 
-async function chooseFile(page) {
+async function chooseFile(
+  page,
+  { name = 'file.txt', mimeType = 'text/plain' } = {},
+) {
   const contents = Buffer.from(`publish ${Math.random()}`)
   const hash = createHash('sha256').update(contents).digest('hex')
 
   await page.goto('/')
   await page.getByTestId('file-input').setInputFiles({
-    name: 'file.txt',
-    mimeType: 'text/plain',
+    name,
+    mimeType,
     buffer: contents,
   })
   await expect(page).toHaveURL(`/${hash}`)
@@ -49,6 +52,20 @@ test.describe('publishing', () => {
     await expect(page.getByTestId('source')).toContainText('publisher')
     await expect(page.getByTestId('connect-button')).toHaveText(
       'connected: publisher',
+    )
+  })
+
+  test('shows the mime type, guessed when the browser reports the generic one', async ({
+    page,
+  }) => {
+    await chooseFile(page, {
+      name: 'app.dmg',
+      mimeType: 'application/octet-stream',
+    })
+    await page.getByTestId('add-verification-link').click()
+
+    await expect(page.getByTestId('mime-type')).toHaveText(
+      'application/x-apple-diskimage',
     )
   })
 
