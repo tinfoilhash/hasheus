@@ -83,15 +83,19 @@ class HStart extends LitElement {
         trust
       </h2>
       <h3>
-        drop a file to start or
+        drop a file to start,
         <form>
           <label
             >click to browse<input
               data-testid="file-input"
               type="file"
-              @change=${this._dispatchFileFromInput}
-          /></label>
+              @change=${this._dispatchFileFromInput} /></label
+          >,
         </form>
+        or
+        <a href="https://github.com/tinfoilhash/hasheus-cli" target="_blank"
+          >use the cli</a
+        >
         ${this._isDispatchingFile ? html`<h-spinner></h-spinner>` : nothing}
       </h3>
     `
@@ -131,10 +135,16 @@ class HStart extends LitElement {
         display: inline-block;
       }
 
-      h3 form label {
+      h3 form label,
+      h3 a {
         padding-bottom: 0.25rem;
         cursor: pointer;
         border-bottom: 2px solid var(--h-color-700);
+      }
+
+      h3 a {
+        color: inherit;
+        text-decoration: none;
       }
 
       h3 h-spinner {
