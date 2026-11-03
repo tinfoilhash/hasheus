@@ -122,3 +122,12 @@ test('hashes a file too large for web crypto', async ({ page }) => {
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test('links to the cli', async ({ page }) => {
+  await page.goto('/')
+
+  await expect(page.getByRole('link', { name: 'use the cli' })).toHaveAttribute(
+    'href',
+    'https://github.com/tinfoilhash/hasheus-cli',
+  )
+})
