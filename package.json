@@ -24,7 +24,8 @@
     "test:watch": "vp test watch",
     "test:coverage": "vp test --coverage",
     "test:e2e": "playwright test",
-    "release": "release-it --only-version"
+    "release": "release-it --only-version",
+    "prepare": "vp config"
   },
   "dependencies": {
     "@lit-labs/router": "^0.1.4",
