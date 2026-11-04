@@ -32,3 +32,6 @@ peerDependencyRules:
   allowedVersions:
     vite: '*'
     vitest: '*'
+# re-indents multi-line comments in lit styles: https://github.com/43081j/postcss-lit/issues/58
+patchedDependencies:
+  postcss-lit@1.4.1: patches/postcss-lit@1.4.1.patch

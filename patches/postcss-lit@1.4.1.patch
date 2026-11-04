@@ -1,0 +1,18 @@
+diff --git a/lib/stringify.js b/lib/stringify.js
+index 6b35628464481723a60dfbe1e5ff4904421812db..471b6d5b704ab348a50b73513acad15a2ba2ced3 100644
+--- a/lib/stringify.js
++++ b/lib/stringify.js
+@@ -95,6 +95,13 @@ class LitStringifier extends stringifier_1.default {
+         this.builder(node.raws.codeAfter ?? '', node, 'end');
+     }
+     /** @inheritdoc */
++    comment(node) {
++        const left = this.raw(node, 'left', 'commentLeft');
++        const right = this.raw(node, 'right', 'commentRight');
++        const text = this.rawValue(node, 'text');
++        this.builder(`/*${left}${text}${right}*/`, node);
++    }
++    /** @inheritdoc */
+     raw(node, own, detect) {
+         const root = node.root();
+         const baseIndentations = root.raws['litBaseIndentations'];
