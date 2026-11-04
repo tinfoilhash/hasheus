@@ -3,6 +3,8 @@ import { defineConfig } from 'vite-plus'
 
 export default defineConfig({
   fmt: {
+    // `vp config` rewrites the vite+ section of AGENTS.md unwrapped on every install.
+    overrides: [{ files: ['AGENTS.md'], options: { proseWrap: 'preserve' } }],
     proseWrap: 'always',
     semi: false,
     singleQuote: true,
