@@ -2,7 +2,7 @@ import HFile from '@/services/file'
 import FileEvent from '@/services/file_event'
 import FilePublisher from '@/services/file_publisher'
 import relayPool from '@/services/relay_pool'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { publish: vi.fn() },

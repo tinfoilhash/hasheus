@@ -1,5 +1,5 @@
 import { buildFileEvent, buildUserEvent } from '@/test/event_builders'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 describe('FileEvent', () => {
   describe('descriptionTrimmed', () => {

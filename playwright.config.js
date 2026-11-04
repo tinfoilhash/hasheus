@@ -27,7 +27,7 @@ export default defineConfig({
       reuseExistingServer: !env.CI,
     },
     {
-      command: `npx vite --port ${APP_PORT} --strictPort`,
+      command: `npx vp dev --port ${APP_PORT} --strictPort`,
       port: APP_PORT,
       env: { VITE_FILE_RELAY_URLS: RELAY_URL, VITE_USER_RELAY_URLS: RELAY_URL },
       reuseExistingServer: !env.CI,

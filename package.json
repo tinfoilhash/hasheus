@@ -1,7 +1,6 @@
 {
   "name": "@tinfoilhash/hasheus",
   "version": "2.1.0",
-  "type": "module",
   "private": true,
   "description": "verify the integrity of a file with the largest decentralized web of trust",
   "bugs": "https://github.com/tinfoilhash/hasheus/issues",
@@ -10,22 +9,20 @@
     "type": "git",
     "url": "git+https://github.com/tinfoilhash/hasheus.git"
   },
+  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vp dev",
     "dev:relay": "nak serve --events dev/seed.jsonl",
     "dev:seed": "node dev/seed.js",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "npm run lint:format && npm run lint:quality && npm run lint:style",
-    "lint:format": "prettier --check .",
-    "lint:format:fix": "prettier --write .",
-    "lint:quality": "eslint .",
-    "lint:quality:fix": "eslint --fix .",
+    "build": "vp build",
+    "preview": "vp preview",
+    "lint": "vp check && vp run lint:style",
+    "lint:fix": "vp check --fix && vp run lint:style:fix",
     "lint:style": "stylelint '**/*.js'",
     "lint:style:fix": "stylelint --fix '**/*.js'",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test": "vp test",
+    "test:watch": "vp test watch",
+    "test:coverage": "vp test --coverage",
     "test:e2e": "playwright test",
     "release": "release-it --only-version"
   },
@@ -39,25 +36,31 @@
     "urlpattern-polyfill": "^10.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.1",
-    "@vitest/coverage-v8": "^5.1.0",
-    "eslint": "^10.14.0",
-    "eslint-config-prettier": "^10.1.8",
+    "@vitest/coverage-v8": "5.1.0",
     "eslint-plugin-lit": "^2.3.1",
-    "globals": "^17.14.0",
     "postcss-lit": "^1.4.1",
-    "prettier": "3.9.10",
     "release-it": "^21.1.2",
     "stylelint": "^17.16.0",
     "stylelint-config-recess-order": "^7.10.0",
     "stylelint-config-standard": "^40.0.0",
-    "vite": "^8.3.5",
-    "vitest": "^5.1.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
+    "vite-plus": "1.5.0",
+    "vitest": "5.1.0"
   },
-  "engines": {
-    "node": "26.x",
-    "npm": "11.x"
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
+    "vitest": "5.1.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "11.x"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "26.x"
+    }
   },
   "allowScripts": {
     "fsevents": false

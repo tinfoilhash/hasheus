@@ -79,7 +79,7 @@ async function installExtension(page, user) {
 }
 
 const test = base.extend({
-  // eslint-disable-next-line no-empty-pattern -- playwright requires fixtures to destructure their dependencies.
+  // oxlint-disable-next-line no-empty-pattern -- playwright requires fixtures to destructure their dependencies.
   relay: async ({}, use) => {
     const pool = new SimplePool()
 

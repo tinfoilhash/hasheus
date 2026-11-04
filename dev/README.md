@@ -1,6 +1,6 @@
 # sample data
 
-`npm run dev:relay` loads [`seed.jsonl`](seed.jsonl) into an in-memory relay, so
+`vp run dev:relay` loads [`seed.jsonl`](seed.jsonl) into an in-memory relay, so
 it starts fresh each time. it has verifications of the files in
 [`files`](files), one for each case:
 
@@ -33,5 +33,5 @@ to change the sample data, edit [`seed.js`](seed.js) or the files, then
 regenerate it:
 
 ```bash
-npm run dev:seed
+vp run dev:seed
 ```

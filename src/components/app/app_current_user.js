@@ -52,11 +52,7 @@ class HAppCurrentUser extends LitElement {
           ?disabled=${currentUserConnection.isPending}
           @click=${this._connectOrDisconnect}
         >
-          ${
-            currentUser
-              ? `connected: ${currentUser.userEvent.displayName}`
-              : 'connect'
-          }
+          ${currentUser ? `connected: ${currentUser.userEvent.displayName}` : 'connect'}
         </button>
       </h-button>
       ${error ? html`<h-error data-testid="connect-error" .error=${error}></h-error>` : nothing}

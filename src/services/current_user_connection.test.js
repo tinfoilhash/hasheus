@@ -7,7 +7,7 @@ import {
   it,
   onTestFinished,
   vi,
-} from 'vitest'
+} from 'vite-plus/test'
 
 // what the mocked relays return, and a gate that holds them until released.
 const relays = vi.hoisted(() => ({

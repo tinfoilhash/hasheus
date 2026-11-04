@@ -1,6 +1,6 @@
 import relayPool from '@/services/relay_pool'
 import { buildRawUserEvent, buildUserEvent } from '@/test/event_builders'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { subscribeManyEose: vi.fn() },
