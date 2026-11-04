@@ -1,15 +1,12 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=26
-
-FROM node:${NODE_VERSION}-alpine AS build
+# vp provisions the node.js and pnpm versions in `devEngines`.
+FROM ghcr.io/voidzero-dev/vite-plus:1.5.0 AS build
 WORKDIR /hasheus
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --include=dev
-COPY . .
-RUN npm run build
+COPY --chown=vp:vp package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN vp install --frozen-lockfile
+COPY --chown=vp:vp . .
+RUN vp build
 
 FROM scratch AS export
 COPY --from=build /hasheus/dist .
