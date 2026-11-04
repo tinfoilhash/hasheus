@@ -119,6 +119,13 @@ or to fix what can be fixed automatically:
 vp run lint:fix
 ```
 
+a pre-commit hook also fixes what it can in staged files. it's installed by `vp install`, and can be
+turned off in your clone:
+
+```bash
+vp hooks disable
+```
+
 ## deployment
 
 ### release

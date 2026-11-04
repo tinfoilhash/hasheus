@@ -24,6 +24,12 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  // `vp staged` in the pre-commit hook runs these one glob at a time, since
+  // both fix `.js` files.
+  staged: {
+    '*': 'vp check --fix',
+    '*.js': 'stylelint --fix',
+  },
   test: {
     coverage: {
       include: ['src/lib/**/*.js', 'src/services/**/*.js'],
