@@ -12,22 +12,6 @@ const DAY_SECONDS = 60 * 60 * 24
 // so both the web app & the cli show the raw timestamp.
 const FAR_FUTURE_AT = (100_000_000 + 1) * DAY_SECONDS
 
-interface User {
-  name: string
-  secretKey: Uint8Array
-  pubkey: string
-  profile?: Record<string, string>
-}
-
-interface Verification {
-  file: string
-  user: User
-  day?: number
-  createdAt?: number
-  url?: string
-  description?: string
-}
-
 // each key comes from the user's name, so it's the same every time. they're
 // public, so they must never be used anywhere real.
 function createUser(name: string, profile?: Record<string, string>) {
@@ -35,6 +19,8 @@ function createUser(name: string, profile?: Record<string, string>) {
 
   return { name, secretKey, pubkey: getPublicKey(secretKey), profile }
 }
+
+type User = ReturnType<typeof createUser>
 
 const dev = createUser('dev', { name: 'dev' })
 const alice = createUser('alice', { name: 'alice' })
@@ -49,6 +35,15 @@ const newcomer = createUser('newcomer')
 
 const USERS = [dev, alice, bob, carol, mallory, newcomer]
 const FOLLOWS = new Map([[dev, [alice, bob, carol]]])
+
+interface Verification {
+  file: string
+  user: User
+  day?: number
+  createdAt?: number
+  url?: string
+  description?: string
+}
 
 const VERIFICATIONS: Verification[] = [
   // alice & bob agree on the url.

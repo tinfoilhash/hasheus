@@ -2,8 +2,6 @@ import TypedEventTarget from '@/lib/typed_event_target'
 import type UserEvent from '@/services/user_event'
 import UserSubscriber from '@/services/user_subscriber'
 
-type ChangeListener = (event: CustomEvent<UserEvent>) => void
-
 class UserSubscriberManager extends TypedEventTarget<{ change: CustomEvent<UserEvent> }> {
   readonly subscribers = new Map<string, UserSubscriber>()
 
@@ -26,8 +24,8 @@ class UserSubscriberManager extends TypedEventTarget<{ change: CustomEvent<UserE
     pubkey: string
     onChange?: ((userEvent: UserEvent) => void) | null
   }) {
-    const listener: ChangeListener | null = onChange
-      ? ({ detail: userEvent }) => {
+    const listener = onChange
+      ? ({ detail: userEvent }: CustomEvent<UserEvent>) => {
           if (pubkey === userEvent.pubkey) {
             onChange(userEvent)
           }

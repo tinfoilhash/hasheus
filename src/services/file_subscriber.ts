@@ -3,14 +3,12 @@ import relayPool, { FILE_RELAY_URLS } from '@/services/relay_pool'
 import type UserEvent from '@/services/user_event'
 import userSubscriberManager from '@/services/user_subscriber_manager'
 
-type OnChange = (events: FileEvent[]) => void
-
 class FileSubscriber {
   readonly hash: string
-  onChange: OnChange | null = null
+  onChange: ((events: FileEvent[]) => void) | null = null
   events: FileEvent[] = []
 
-  constructor({ hash, onChange = null }: { hash: string; onChange?: OnChange | null }) {
+  constructor({ hash, onChange = null }: { hash: string; onChange?: FileSubscriber['onChange'] }) {
     this.hash = hash
     this.onChange = onChange
   }

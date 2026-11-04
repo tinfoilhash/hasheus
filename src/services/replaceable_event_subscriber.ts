@@ -22,7 +22,7 @@ abstract class ReplaceableEventSubscriber<TEvent extends NostrEvent<unknown>> {
     onChange = null,
   }: {
     pubkey: string
-    onChange?: ((event: TEvent) => void) | null
+    onChange?: ReplaceableEventSubscriber<TEvent>['onChange']
   }) {
     this.pubkey = pubkey
     this.onChange = onChange
