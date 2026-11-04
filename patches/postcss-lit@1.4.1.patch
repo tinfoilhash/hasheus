@@ -1,18 +1,59 @@
 diff --git a/lib/stringify.js b/lib/stringify.js
-index 6b35628464481723a60dfbe1e5ff4904421812db..471b6d5b704ab348a50b73513acad15a2ba2ced3 100644
+index 6b35628464481723a60dfbe1e5ff4904421812db..e5eda625946300b7900680a23ff0737b6bc792a0 100644
 --- a/lib/stringify.js
 +++ b/lib/stringify.js
-@@ -95,6 +95,13 @@ class LitStringifier extends stringifier_1.default {
+@@ -95,6 +95,15 @@ class LitStringifier extends stringifier_1.default {
          this.builder(node.raws.codeAfter ?? '', node, 'end');
      }
      /** @inheritdoc */
 +    comment(node) {
 +        const left = this.raw(node, 'left', 'commentLeft');
 +        const right = this.raw(node, 'right', 'commentRight');
-+        const text = this.rawValue(node, 'text');
-+        this.builder(`/*${left}${text}${right}*/`, node);
++        // The body's lines can be in `left` and `right` as well as `text`, such
++        // as when the delimiters are on their own lines, so it's corrected whole.
++        const body = `${left}${node.text}${right}`;
++        this.builder(`/*${this._correctIndentation(node, body) ?? body}*/`, node);
 +    }
 +    /** @inheritdoc */
      raw(node, own, detect) {
          const root = node.root();
          const baseIndentations = root.raws['litBaseIndentations'];
+@@ -125,19 +134,30 @@ class LitStringifier extends stringifier_1.default {
+     }
+     /** @inheritdoc */
+     rawValue(node, prop) {
++        const value = node[prop];
++        if (typeof value === 'string') {
++            const correctedValue = this._correctIndentation(node, value);
++            if (correctedValue !== undefined) {
++                return correctedValue;
++            }
++        }
++        return super.rawValue(node, prop);
++    }
++    /**
++     * Restores the template's base indentation to the lines of a multi-line
++     * value from the given node, or returns `undefined` if there's none to
++     * restore.
++     */
++    _correctIndentation(node, value) {
+         const root = node.root();
+         const baseIndentations = root.raws['litBaseIndentations'];
+         const startLine = node.raws['litSourceStartLine'];
+         const endLine = node.raws['litSourceEndLine'];
+-        const value = node[prop];
+-        if (baseIndentations &&
+-            startLine !== undefined &&
+-            typeof value === 'string' &&
+-            value.includes('\n')) {
+-            const originalLineCount = endLine !== undefined ? endLine - startLine + 1 : undefined;
+-            return (0, util_js_1.computeCorrectedString)(value, startLine, baseIndentations, originalLineCount);
++        if (!baseIndentations || startLine === undefined || !value.includes('\n')) {
++            return undefined;
+         }
+-        return super.rawValue(node, prop);
++        const originalLineCount = endLine !== undefined ? endLine - startLine + 1 : undefined;
++        return (0, util_js_1.computeCorrectedString)(value, startLine, baseIndentations, originalLineCount);
+     }
+ }
+ const stringify = (node, builder) => {

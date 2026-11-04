@@ -24,7 +24,7 @@ overrides:
   vitest@*: 5.1.0
 
 patchedDependencies:
-  postcss-lit@1.4.1: ff884bdd31f9c99a4a1d86d460c2d563f642f8c1c59588209cfd3e1621e37312
+  postcss-lit@1.4.1: 53cccc5b88ab9a3350384d92b354aac95b279c0195fb353390b2d3c64caace0e
 
 importers:
 
@@ -63,7 +63,7 @@ importers:
         version: 2.3.1(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2))
       postcss-lit:
         specifier: ^1.4.1
-        version: 1.4.1(patch_hash=ff884bdd31f9c99a4a1d86d460c2d563f642f8c1c59588209cfd3e1621e37312)(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2)
+        version: 1.4.1(patch_hash=53cccc5b88ab9a3350384d92b354aac95b279c0195fb353390b2d3c64caace0e)(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2)
       release-it:
         specifier: ^21.1.2
         version: 21.1.2(magicast@0.5.5)(supports-color@10.2.2)
@@ -4084,7 +4084,7 @@ snapshots:
 
   pngjs@7.0.0: {}
 
-  postcss-lit@1.4.1(patch_hash=ff884bdd31f9c99a4a1d86d460c2d563f642f8c1c59588209cfd3e1621e37312)(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2):
+  postcss-lit@1.4.1(patch_hash=53cccc5b88ab9a3350384d92b354aac95b279c0195fb353390b2d3c64caace0e)(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2):
     dependencies:
       '@babel/generator': 7.29.12
       '@babel/parser': 7.29.12
