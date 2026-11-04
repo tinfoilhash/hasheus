@@ -10,11 +10,7 @@ class HButton extends LitElement {
   render() {
     return html`
       <slot></slot>
-      ${
-        this.pending
-          ? html`<div class="pending"><h-spinner></h-spinner></div>`
-          : nothing
-      }
+      ${this.pending ? html`<div class="pending"><h-spinner></h-spinner></div>` : nothing}
     `
   }
 

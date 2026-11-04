@@ -193,23 +193,15 @@ class HVerify extends LitElement {
         </li>
         <li>
           <div class="key">
-            url${this._renderUntrustedTag(isUntrusted)}${this._renderAgreementTag(
-              agreementCount,
-            )}
+            url${this._renderUntrustedTag(isUntrusted)}${this._renderAgreementTag(agreementCount)}
           </div>
           <div class="value" data-testid="url">
-            ${
-              url
-                ? html`<a href=${url} target="_blank">${url}</a>`
-                : pendingOrEmptyValue
-            }
+            ${url ? html`<a href=${url} target="_blank">${url}</a>` : pendingOrEmptyValue}
           </div>
         </li>
         <li class="source">
           <div class="key">
-            source${this._renderUntrustedTag(isUntrusted)}${this._renderTrustedTag(
-              isTrusted,
-            )}
+            source${this._renderUntrustedTag(isUntrusted)}${this._renderTrustedTag(isTrusted)}
           </div>
           <div class="value" data-testid="source">
             ${

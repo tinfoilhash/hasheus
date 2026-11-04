@@ -7,7 +7,7 @@ import {
   expect,
   it,
   vi,
-} from 'vitest'
+} from 'vite-plus/test'
 
 // @lit-labs/router reads location when it's imported, before any test runs.
 vi.hoisted(() => {

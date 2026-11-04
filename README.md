@@ -1,21 +1,22 @@
 # hasheus
 
 verify the integrity of a file with the largest decentralized web of trust.
-built using [lit](https://lit.dev/) and [vite](https://vitejs.dev/).
+built using [lit](https://lit.dev/) and [vite+](https://viteplus.dev/).
 
 ## development
 
-[vite](https://vitejs.dev/) is used to develop and build the site. see their
-[docs](https://vitejs.dev/guide/) for specifics not covered here.
+[vite+](https://viteplus.dev/) is used to develop, test, lint, and build the
+site. see their [docs](https://viteplus.dev/guide/) for specifics not covered
+here.
 
 ### prerequisites
 
-1. a compatible version of [node.js](https://nodejs.org/) (see `engines.node` in
-   [`package.json`](package.json)). [nvm](https://github.com/nvm-sh/nvm) is the
-   recommended installation method:
+1. the [global `vp` cli](https://viteplus.dev/guide/#install-vp-globally), which
+   picks the [node.js](https://nodejs.org/) and npm versions in `devEngines` in
+   [`package.json`](package.json) automatically:
 
    ```bash
-   nvm install
+   curl -fsSL https://vite.plus | bash
    ```
 
 2. [nak](https://github.com/fiatjaf/nak), whose built-in relay is used for local
@@ -23,16 +24,16 @@ built using [lit](https://lit.dev/) and [vite](https://vitejs.dev/).
 
 ### dependencies
 
-install dependencies with npm:
+install dependencies:
 
 ```bash
-npm install
+vp install
 ```
 
 ### config
 
 configuration is done through environment variables. see
-[vite's guide](https://vitejs.dev/guide/env-and-mode.html) for full details.
+[vite's guide](https://vite.dev/guide/env-and-mode.html) for full details.
 
 [`.env.development`](.env.development) is under version control to quickly
 bootstrap your development environment.
@@ -42,13 +43,13 @@ bootstrap your development environment.
 start a local relay with [sample data](dev/README.md):
 
 ```bash
-npm run dev:relay
+vp run dev:relay
 ```
 
 then, in another terminal, start the development server:
 
 ```bash
-npm run dev
+vp dev
 ```
 
 ### tests
@@ -57,19 +58,19 @@ npm run dev
 they test (`file.js` → `file.test.js`). to run them once:
 
 ```bash
-npm test
+vp test
 ```
 
 or to rerun them as files change:
 
 ```bash
-npm run test:watch
+vp test watch
 ```
 
 to see how much of `src/services` they cover, with an html report in `coverage`:
 
 ```bash
-npm run test:coverage
+vp test --coverage
 ```
 
 ci adds the coverage table to each run's summary. components aren't counted,
@@ -82,44 +83,44 @@ ports, so `nak` needs to be installed, but nothing needs to be running. install
 the browsers once:
 
 ```bash
-npx playwright install
+vp exec playwright install
 ```
 
 then run the tests:
 
 ```bash
-npm run test:e2e
+vp run test:e2e
 ```
 
 a slower test that hashes a file over 512 mb only runs when asked for:
 
 ```bash
-E2E_LARGE_FILE=1 npm run test:e2e
+E2E_LARGE_FILE=1 vp run test:e2e
 ```
 
 ### code style & linting
 
-[prettier](https://prettier.io/) is setup to enforce a consistent code style.
-it's recommended to
-[add an integration to your editor](https://prettier.io/docs/editors.html) that
-automatically formats on save.
-
-[eslint](https://eslint.org/) is setup with the
-["recommended" rules](https://eslint.org/docs/latest/rules/) to enforce a level
-of code quality. it's also recommended to
-[add an integration to your editor](https://eslint.org/docs/latest/use/integrations#editors)
-that automatically formats on save.
-
+[oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) enforces a consistent
+code style, and [oxlint](https://oxc.rs/docs/guide/usage/linter.html) enforces a
+level of code quality, both configured in [`vite.config.js`](vite.config.js).
 [stylelint](https://stylelint.io/) is setup with the
 [standard config](https://github.com/stylelint/stylelint-config-standard) to
-enforce css rules. it's also recommended to
-[add an integration to your editor](https://stylelint.io/awesome-stylelint/#editor-integrations)
-that automatically formats on save.
+enforce css rules. it's recommended to install the
+[vite+ extension pack](https://marketplace.visualstudio.com/items?itemName=VoidZero.vite-plus-extension-pack)
+and a
+[stylelint integration](https://stylelint.io/awesome-stylelint/#editor-integrations)
+for your editor, which format and fix on save.
 
 to run all via the command line:
 
 ```bash
-npm run lint
+vp run lint
+```
+
+or to fix what can be fixed automatically:
+
+```bash
+vp run lint:fix
 ```
 
 ## deployment
@@ -131,7 +132,7 @@ when the `development` branch is ready for release,
 the release process:
 
 ```bash
-npm run release
+vp run release
 ```
 
 once the release process is complete, merge the `development` branch into the
@@ -142,7 +143,7 @@ once the release process is complete, merge the `development` branch into the
 to generate a production build via the command line:
 
 ```bash
-npm run build
+vp build
 ```
 
 this creates a `dist` directory with the files to be deployed.

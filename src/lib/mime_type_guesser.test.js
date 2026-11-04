@@ -1,5 +1,5 @@
 import mimeTypeGuesser from '@/lib/mime_type_guesser'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 describe('mimeTypeGuesser', () => {
   it.each([

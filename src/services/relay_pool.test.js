@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vite-plus/test'
 
 // the relay urls are read when the module loads, so each test loads it fresh.
 async function importRelayPool() {

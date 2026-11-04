@@ -1,5 +1,5 @@
 import bidiControlStripper from '@/lib/bidi_control_stripper'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 describe('bidiControlStripper', () => {
   it.each([

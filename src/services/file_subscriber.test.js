@@ -7,7 +7,14 @@ import {
   buildUserEvent,
   DEFAULT_HASH,
 } from '@/test/event_builders'
-import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from 'vite-plus/test'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { subscribeManyEose: vi.fn() },

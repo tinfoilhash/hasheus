@@ -3,15 +3,12 @@
 /.git
 /.gitattributes
 /.gitignore
-/.nvmrc
 /.release-it.json
 /.vscode
 /dist
 /Dockerfile
-/eslint.config.js
 /jsconfig.json
 /LICENSE
 /node_modules
-/prettier.config.js
 /README.md
 /stylelint.config.js

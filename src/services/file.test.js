@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import HFile from '@/services/file'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 // shrinks the thresholds so both hashing paths and their chunk boundaries can
 // be tested with tiny files.

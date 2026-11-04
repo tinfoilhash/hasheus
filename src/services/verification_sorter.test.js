@@ -1,6 +1,6 @@
 import verificationSorter from '@/services/verification_sorter'
 import { buildCurrentUser, buildFileEvent } from '@/test/event_builders'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 const PUBKEYS = {
   me: 'a'.repeat(64),

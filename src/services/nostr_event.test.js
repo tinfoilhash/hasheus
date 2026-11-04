@@ -1,5 +1,5 @@
 import NostrEvent from '@/services/nostr_event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 
 const RAW_EVENT = {
   id: '1'.repeat(64),
