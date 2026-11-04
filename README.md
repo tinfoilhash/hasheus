@@ -110,13 +110,13 @@ editor, which format and fix on save.
 to run all via the command line:
 
 ```bash
-vp run lint
+vp run check
 ```
 
 or to fix what can be fixed automatically:
 
 ```bash
-vp run lint:fix
+vp run check:fix
 ```
 
 a pre-commit hook also fixes what it can in staged files. it's installed by `vp install`, and can be
