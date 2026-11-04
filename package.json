@@ -37,32 +37,25 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
-    "@vitest/coverage-v8": "5.1.0",
+    "@vitest/coverage-v8": "catalog:",
     "eslint-plugin-lit": "^2.3.1",
     "postcss-lit": "^1.4.1",
     "release-it": "^21.1.2",
     "stylelint": "^17.16.0",
     "stylelint-config-recess-order": "^7.10.0",
     "stylelint-config-standard": "^40.0.0",
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
-    "vite-plus": "1.5.0",
-    "vitest": "5.1.0"
-  },
-  "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
-    "vitest": "5.1.0"
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "devEngines": {
     "packageManager": {
-      "name": "npm",
-      "version": "11.x"
+      "name": "pnpm",
+      "version": "12.x"
     },
     "runtime": {
       "name": "node",
       "version": "26.x"
     }
-  },
-  "allowScripts": {
-    "fsevents": false
   }
 }

@@ -11,8 +11,8 @@ verify the integrity of a file with the largest decentralized web of trust. buil
 ### prerequisites
 
 1. the [global `vp` cli](https://viteplus.dev/guide/#install-vp-globally), which picks the
-   [node.js](https://nodejs.org/) and npm versions in `devEngines` in [`package.json`](package.json)
-   automatically:
+   [node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) versions in `devEngines` in
+   [`package.json`](package.json) automatically:
 
    ```bash
    curl -fsSL https://vite.plus | bash
