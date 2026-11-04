@@ -8,13 +8,13 @@ import type CurrentUser from '@/services/current_user'
 import type HFile from '@/services/file'
 import FilePublisher from '@/services/file_publisher'
 import { Task, TaskStatus } from '@lit/task'
-import { css, html, LitElement, nothing } from 'lit'
+import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HPublish extends HNavigable(LitElement) {
   static properties = {
     currentUser: { attribute: false },
     file: { attribute: false },
-  }
+  } satisfies PropertyDeclarations
 
   declare currentUser?: CurrentUser | null
   // the route only renders this page once there's a file.

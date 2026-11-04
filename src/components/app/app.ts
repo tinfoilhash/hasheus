@@ -6,13 +6,13 @@ import type CurrentUser from '@/services/current_user'
 import currentUserConnection, { type ChangeDetail } from '@/services/current_user_connection'
 import type HFile from '@/services/file'
 import HRouter from '@/services/router'
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HApp extends LitElement {
   static properties = {
     _currentUser: { state: true },
     _file: { state: true },
-  }
+  } satisfies PropertyDeclarations
 
   declare private _currentUser?: CurrentUser | null
   declare private _file?: HFile

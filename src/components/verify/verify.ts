@@ -11,7 +11,7 @@ import type FileEvent from '@/services/file_event'
 import FileSubscriber from '@/services/file_subscriber'
 import verificationSorter from '@/services/verification_sorter'
 import { Task, TaskStatus } from '@lit/task'
-import { css, html, LitElement, nothing, type TemplateResult } from 'lit'
+import { css, html, LitElement, nothing, type PropertyDeclarations, type TemplateResult } from 'lit'
 
 class HVerify extends LitElement {
   static properties = {
@@ -19,7 +19,7 @@ class HVerify extends LitElement {
     file: { attribute: false },
     hash: { attribute: false },
     _events: { state: true },
-  }
+  } satisfies PropertyDeclarations
 
   declare currentUser?: CurrentUser | null
   declare file?: HFile

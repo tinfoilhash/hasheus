@@ -1,11 +1,11 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/status'
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HError extends LitElement {
   static properties = {
     error: { attribute: false },
-  }
+  } satisfies PropertyDeclarations
 
   declare error: unknown
 

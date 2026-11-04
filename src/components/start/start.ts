@@ -2,13 +2,13 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/error'
 import '@/components/base/spinner'
 import HFile from '@/services/file'
-import { css, html, LitElement, nothing } from 'lit'
+import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HStart extends LitElement {
   static properties = {
     _error: { state: true },
     _isDispatchingFile: { state: true },
-  }
+  } satisfies PropertyDeclarations
 
   declare private _error: unknown
   declare private _isDispatchingFile: boolean

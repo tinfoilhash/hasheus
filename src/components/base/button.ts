@@ -1,11 +1,11 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/spinner'
-import { css, html, LitElement, nothing } from 'lit'
+import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HButton extends LitElement {
   static properties = {
     pending: { type: Boolean },
-  }
+  } satisfies PropertyDeclarations
 
   declare pending?: boolean
 

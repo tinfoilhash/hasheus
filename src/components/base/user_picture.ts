@@ -1,12 +1,12 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import type UserEvent from '@/services/user_event'
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HUserPicture extends LitElement {
   static properties = {
     pubkeyEncoded: { attribute: false },
     userEvent: { attribute: false },
-  }
+  } satisfies PropertyDeclarations
 
   declare pubkeyEncoded?: string
   declare userEvent?: UserEvent | null

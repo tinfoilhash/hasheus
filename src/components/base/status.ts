@@ -1,10 +1,10 @@
 import cssNormalize from '@/components/base/css/css_normalize'
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HStatus extends LitElement {
   static properties = {
     color: { type: String },
-  }
+  } satisfies PropertyDeclarations
 
   declare color?: string
 
