@@ -1,12 +1,13 @@
 # hasheus
 
-a web app that verifies the integrity of a file with nostr's web of trust, built with plain
-javascript and [lit](https://lit.dev/). see the [readme](README.md) for setup and every command.
+a web app that verifies the integrity of a file with nostr's web of trust, built with
+[typescript](https://www.typescriptlang.org/) and [lit](https://lit.dev/). see the
+[readme](README.md) for setup and every command.
 
 ## commands
 
-- `vp run check` checks formatting, lints, and runs stylelint. `vp check` alone skips stylelint, so
-  use the script. `vp run check:fix` fixes what it can.
+- `vp run check` checks formatting, lints, checks types, and runs stylelint. `vp check` alone skips
+  stylelint, so use the script. `vp run check:fix` fixes what it can.
 - `vp test` runs the unit tests, and `vp run test:e2e` runs the playwright tests, which need
   [nak](https://github.com/fiatjaf/nak) installed.
 - `vp build` builds the site.
@@ -26,10 +27,13 @@ touches components or user flows.
 
 ## conventions
 
-- javascript only, no typescript or typed jsdoc.
+- typescript at the strictness in [`tsconfig.json`](tsconfig.json).
+- lit properties are declared in `static properties` with a matching `declare` field, since vite+
+  doesn't compile standard decorators yet. reactive state is `private _name`, and every other
+  internal member is `#name`.
 - files are snake_case with one default export.
 - import from `src` through the `@/` alias, not relative paths.
-- unit tests sit next to the module they test (`file.js` → `file.test.js`) and import from
+- unit tests sit next to the module they test (`file.ts` → `file.test.ts`) and import from
   `vite-plus/test`. components are covered by the end-to-end tests instead.
 - copy is lowercase: ui text, comments, docs, commits, and pull requests.
 

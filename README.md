@@ -1,7 +1,8 @@
 # hasheus
 
 verify the integrity of a file with the largest decentralized web of trust. built using
-[lit](https://lit.dev/) and [vite+](https://viteplus.dev/).
+[typescript](https://www.typescriptlang.org/), [lit](https://lit.dev/), and
+[vite+](https://viteplus.dev/).
 
 ## development
 
@@ -54,7 +55,7 @@ vp dev
 ### tests
 
 [vitest](https://vitest.dev/) runs the unit tests, which sit next to the modules they test
-(`file.js` → `file.test.js`). to run them once:
+(`file.ts` → `file.test.ts`). to run them once:
 
 ```bash
 vp test
@@ -99,10 +100,10 @@ E2E_LARGE_FILE=1 vp run test:e2e
 ### code style & linting
 
 [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) enforces a consistent code style, and
-[oxlint](https://oxc.rs/docs/guide/usage/linter.html) enforces a level of code quality, both
-configured in [`vite.config.js`](vite.config.js). [stylelint](https://stylelint.io/) is setup with
-the [standard config](https://github.com/stylelint/stylelint-config-standard) to enforce css rules.
-it's recommended to install the
+[oxlint](https://oxc.rs/docs/guide/usage/linter.html) enforces a level of code quality and checks
+types, both configured in [`vite.config.ts`](vite.config.ts). [stylelint](https://stylelint.io/) is
+setup with the [standard config](https://github.com/stylelint/stylelint-config-standard) to enforce
+css rules. it's recommended to install the
 [vite+ extension pack](https://marketplace.visualstudio.com/items?itemName=VoidZero.vite-plus-extension-pack)
 and a [stylelint integration](https://stylelint.io/awesome-stylelint/#editor-integrations) for your
 editor, which format and fix on save.

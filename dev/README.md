@@ -28,7 +28,7 @@ anywhere real:
 to test [hasheus-cli](https://github.com/tinfoilhash/hasheus-cli) as dev against the relay, source
 [`cli.env`](cli.env).
 
-to change the sample data, edit [`seed.js`](seed.js) or the files, then regenerate it:
+to change the sample data, edit [`seed.ts`](seed.ts) or the files, then regenerate it:
 
 ```bash
 vp run dev:seed

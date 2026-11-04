@@ -7,7 +7,7 @@
 /.vscode
 /dist
 /Dockerfile
-/jsconfig.json
+/tsconfig.json
 /LICENSE
 /node_modules
 /README.md
