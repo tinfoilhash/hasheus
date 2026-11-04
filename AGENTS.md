@@ -5,8 +5,8 @@ javascript and [lit](https://lit.dev/). see the [readme](README.md) for setup an
 
 ## commands
 
-- `vp run check` formats, lints, and runs stylelint. `vp check` alone skips stylelint, so use the
-  script. `vp run check:fix` fixes what it can.
+- `vp run check` checks formatting, lints, and runs stylelint. `vp check` alone skips stylelint, so
+  use the script. `vp run check:fix` fixes what it can.
 - `vp test` runs the unit tests, and `vp run test:e2e` runs the playwright tests, which need
   [nak](https://github.com/fiatjaf/nak) installed.
 - `vp build` builds the site.
