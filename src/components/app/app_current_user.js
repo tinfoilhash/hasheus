@@ -8,26 +8,19 @@ class HAppCurrentUser extends LitElement {
   constructor() {
     super()
 
-    this._requestUpdateOnConnectionChange =
-      this._requestUpdateOnConnectionChange.bind(this)
+    this._requestUpdateOnConnectionChange = this._requestUpdateOnConnectionChange.bind(this)
   }
 
   connectedCallback() {
     super.connectedCallback()
 
-    currentUserConnection.addEventListener(
-      'change',
-      this._requestUpdateOnConnectionChange,
-    )
+    currentUserConnection.addEventListener('change', this._requestUpdateOnConnectionChange)
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
 
-    currentUserConnection.removeEventListener(
-      'change',
-      this._requestUpdateOnConnectionChange,
-    )
+    currentUserConnection.removeEventListener('change', this._requestUpdateOnConnectionChange)
   }
 
   _requestUpdateOnConnectionChange() {

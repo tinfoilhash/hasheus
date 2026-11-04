@@ -50,17 +50,13 @@ test.describe('a file with a backdated verification', () => {
     })
   })
 
-  test('is labeled untrusted for visitors who aren’t connected', async ({
-    page,
-  }) => {
+  test('is labeled untrusted for visitors who aren’t connected', async ({ page }) => {
     await page.goto(`/${hash}`)
 
     await expect(page.getByTestId('untrusted-status')).toContainText(
       'connect to see if anyone in your web of trust has verified this file',
     )
-    await expect(page.getByTestId('description')).toHaveText(
-      'official download',
-    )
+    await expect(page.getByTestId('description')).toHaveText('official download')
     await expect(page.getByTestId('url')).toContainText(EVIL_URL)
     await expect(page.getByTestId('untrusted-tag')).toHaveCount(2)
     await expect(page.getByTestId('trusted-tag')).toHaveCount(0)
@@ -81,9 +77,7 @@ test.describe('a file with a backdated verification', () => {
     await expect(page.getByTestId('untrusted-status')).toHaveCount(0)
     await expect(page.getByTestId('untrusted-tag')).toHaveCount(0)
     await expect(page.getByTestId('trusted-tag')).toHaveCount(1)
-    await expect(
-      page.getByTestId('trusted-verifiers').locator('h-user-picture'),
-    ).toHaveCount(3)
+    await expect(page.getByTestId('trusted-verifiers').locator('h-user-picture')).toHaveCount(3)
   })
 })
 

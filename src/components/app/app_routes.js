@@ -27,20 +27,13 @@ function hAppRoutes() {
         return true
       },
       render: () => html`
-        <h-publish
-          .currentUser=${this._currentUser}
-          .file=${this._file}
-        ></h-publish>
+        <h-publish .currentUser=${this._currentUser} .file=${this._file}></h-publish>
       `,
     },
     {
       path: '/:hash',
       render: ({ hash }) => html`
-        <h-verify
-          .currentUser=${this._currentUser}
-          .file=${this._file}
-          .hash=${hash}
-        ></h-verify>
+        <h-verify .currentUser=${this._currentUser} .file=${this._file} .hash=${hash}></h-verify>
       `,
     },
   ]

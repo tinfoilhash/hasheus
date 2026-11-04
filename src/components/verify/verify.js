@@ -59,8 +59,7 @@ class HVerify extends LitElement {
   get _hasCurrentUserVerified() {
     return (
       (this._isFileForHash && this.file.hasBeenPublished) ||
-      (this.currentUser &&
-        this._events.some((event) => event.pubkey === this.currentUser.pubkey))
+      (this.currentUser && this._events.some((event) => event.pubkey === this.currentUser.pubkey))
     )
   }
 
@@ -70,9 +69,7 @@ class HVerify extends LitElement {
 
   _renderUntrustedTag(isUntrusted) {
     return isUntrusted
-      ? html`<span class="untrusted" data-testid="untrusted-tag"
-          >untrusted</span
-        >`
+      ? html`<span class="untrusted" data-testid="untrusted-tag">untrusted</span>`
       : nothing
   }
 
@@ -87,9 +84,7 @@ class HVerify extends LitElement {
     const otherCount = agreementCount - 1
 
     return otherCount > 0
-      ? html`<span class="trusted" data-testid="agreement-tag"
-          >+${otherCount} trusted</span
-        >`
+      ? html`<span class="trusted" data-testid="agreement-tag">+${otherCount} trusted</span>`
       : nothing
   }
 
@@ -126,9 +121,7 @@ class HVerify extends LitElement {
     // never shown unlabeled.
     const isUntrusted = Boolean(sourceEvent) && !isTrusted
     const url = sourceEvent?.url
-    const pendingOrEmptyValue = isPending
-      ? html`<h-spinner></h-spinner>`
-      : html`&mdash;`
+    const pendingOrEmptyValue = isPending ? html`<h-spinner></h-spinner>` : html`&mdash;`
 
     return html`
       ${
@@ -148,9 +141,7 @@ class HVerify extends LitElement {
                 this file has not been verified!
                 ${
                   this._canPublish
-                    ? html`<a
-                        href="/publish"
-                        data-testid="add-verification-link"
+                    ? html`<a href="/publish" data-testid="add-verification-link"
                         >add your verification</a
                       >`
                     : nothing
@@ -174,11 +165,7 @@ class HVerify extends LitElement {
 
           return nothing
         },
-        error: (error) =>
-          html`<h-error
-            data-testid="subscribe-error"
-            .error=${error}
-          ></h-error>`,
+        error: (error) => html`<h-error data-testid="subscribe-error" .error=${error}></h-error>`,
       })}
       <ul>
         <li>

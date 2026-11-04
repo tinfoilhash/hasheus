@@ -122,9 +122,7 @@ describe('FilePublisher', () => {
 
     const file = buildFile()
 
-    await expect(buildPublisher(file).publish()).rejects.toThrow(
-      'connection failed',
-    )
+    await expect(buildPublisher(file).publish()).rejects.toThrow('connection failed')
     expect(file.publishedFileEvent).toBeNull()
   })
 
@@ -133,8 +131,6 @@ describe('FilePublisher', () => {
       throw new Error('Invalid URL: wss://')
     })
 
-    await expect(buildPublisher(buildFile()).publish()).rejects.toThrow(
-      'Invalid URL: wss://',
-    )
+    await expect(buildPublisher(buildFile()).publish()).rejects.toThrow('Invalid URL: wss://')
   })
 })

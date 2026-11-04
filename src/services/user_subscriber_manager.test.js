@@ -75,9 +75,7 @@ describe('UserSubscriberManager', () => {
         manager.subscribe({ pubkey: PUBKEYS.bob }),
       ])
 
-      expect(onChange.mock.calls.map(([event]) => event.displayName)).toEqual([
-        'alice',
-      ])
+      expect(onChange.mock.calls.map(([event]) => event.displayName)).toEqual(['alice'])
     })
 
     it('stops calling onChange once the subscription resolves', async () => {

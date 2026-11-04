@@ -39,9 +39,7 @@ async function dropFiles(page, files) {
       const contents = text ?? new Uint8Array(size).fill(fill)
 
       dataTransfer.items.add(new File([contents], `file-${index}`))
-      window.dispatchEvent(
-        new DragEvent('drop', { dataTransfer, cancelable: true }),
-      )
+      window.dispatchEvent(new DragEvent('drop', { dataTransfer, cancelable: true }))
     }
   }, files)
 }

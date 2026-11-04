@@ -1,9 +1,6 @@
 import { expect, randomHash, test } from './fixtures.js'
 
-test('a verification with an empty description shows the empty value', async ({
-  page,
-  relay,
-}) => {
+test('a verification with an empty description shows the empty value', async ({ page, relay }) => {
   const hash = randomHash()
 
   await relay.publishVerification(await relay.createUser({ name: 'alice' }), {

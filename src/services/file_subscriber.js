@@ -29,19 +29,13 @@ class FileSubscriber {
   // the relay subscription closes itself on eose, so only the profile listener
   // and change callback need to be stopped.
   close() {
-    userSubscriberManager.removeEventListener(
-      'change',
-      this.setUserEventFromManager,
-    )
+    userSubscriberManager.removeEventListener('change', this.setUserEventFromManager)
 
     this.onChange = null
   }
 
   async subscribe() {
-    userSubscriberManager.addEventListener(
-      'change',
-      this.setUserEventFromManager,
-    )
+    userSubscriberManager.addEventListener('change', this.setUserEventFromManager)
 
     return await new Promise((resolve, reject) => {
       relayPool.subscribeManyEose(
@@ -55,13 +49,9 @@ class FileSubscriber {
             try {
               const fileEvent = new FileEvent(event)
 
-              fileEvent.userEvent = userSubscriberManager.getOrSubscribe(
-                fileEvent.pubkey,
-              )
+              fileEvent.userEvent = userSubscriberManager.getOrSubscribe(fileEvent.pubkey)
 
-              this.events = [...this.events, fileEvent].sort(
-                (a, b) => a.createdAt - b.createdAt,
-              )
+              this.events = [...this.events, fileEvent].sort((a, b) => a.createdAt - b.createdAt)
 
               this.onChange?.(this.events)
             } catch (error) {

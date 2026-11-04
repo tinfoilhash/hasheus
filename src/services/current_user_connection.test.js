@@ -1,13 +1,5 @@
 import { buildFollowListEvent, buildUserEvent } from '@/test/event_builders'
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  onTestFinished,
-  vi,
-} from 'vite-plus/test'
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test'
 
 // what the mocked relays return, and a gate that holds them until released.
 const relays = vi.hoisted(() => ({
@@ -135,9 +127,7 @@ describe('CurrentUserConnection', () => {
 
       await connection.connect({ canAskForPubkey: true })
 
-      expect(connection.error.message).toBe(
-        'unable to connect without nostr browser extension',
-      )
+      expect(connection.error.message).toBe('unable to connect without nostr browser extension')
     })
 
     it('stays disconnected without an error when told to ignore it', async () => {
@@ -155,9 +145,7 @@ describe('CurrentUserConnection', () => {
       await (await importConnection()).connect({ canAskForPubkey: true })
 
       const restoredConnection = await importConnection()
-      const userSubscriberManager = (
-        await import('@/services/user_subscriber_manager')
-      ).default
+      const userSubscriberManager = (await import('@/services/user_subscriber_manager')).default
 
       userSubscriberManager.subscribe.mockClear()
 
@@ -168,9 +156,7 @@ describe('CurrentUserConnection', () => {
     })
 
     it("removes a stored user that can't be read", async () => {
-      const consoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
       onTestFinished(() => consoleError.mockRestore())
       storage.setItem('currentUser', '{not json')
 
@@ -206,10 +192,7 @@ describe('CurrentUserConnection', () => {
       await (await importConnection()).connect({ canAskForPubkey: true })
 
       const stored = JSON.parse(storage.getItem('currentUser'))
-      storage.setItem(
-        'currentUser',
-        JSON.stringify({ ...stored, requestedAt: 0 }),
-      )
+      storage.setItem('currentUser', JSON.stringify({ ...stored, requestedAt: 0 }))
       relays.userEvent = buildUserEvent({
         pubkey: PUBKEYS.me,
         name: 'me, renamed',
@@ -219,9 +202,7 @@ describe('CurrentUserConnection', () => {
       const currentUser = await restoredConnection.connect()
 
       expect(currentUser.userEvent.displayName).toBe('me, renamed')
-      expect(
-        JSON.parse(storage.getItem('currentUser')).requestedAt,
-      ).toBeGreaterThan(0)
+      expect(JSON.parse(storage.getItem('currentUser')).requestedAt).toBeGreaterThan(0)
     })
 
     it('replaces a stored user when connecting with a different pubkey', async () => {
@@ -242,9 +223,7 @@ describe('CurrentUserConnection', () => {
       })
 
       expect(currentUser.pubkey).toBe(PUBKEYS.other)
-      expect(JSON.parse(storage.getItem('currentUser')).userEvent.pubkey).toBe(
-        PUBKEYS.other,
-      )
+      expect(JSON.parse(storage.getItem('currentUser')).userEvent.pubkey).toBe(PUBKEYS.other)
     })
   })
 
@@ -287,9 +266,7 @@ describe('CurrentUserConnection', () => {
         new Promise((resolve) => (returnPubkey = () => resolve(PUBKEYS.me)))
 
       const connection = await importConnection()
-      const userSubscriberManager = (
-        await import('@/services/user_subscriber_manager')
-      ).default
+      const userSubscriberManager = (await import('@/services/user_subscriber_manager')).default
 
       userSubscriberManager.subscribe.mockClear()
 
@@ -307,8 +284,7 @@ describe('CurrentUserConnection', () => {
 
     it('ignores an extension error that arrives after disconnecting', async () => {
       let rejectPubkey
-      window.nostr.getPublicKey = () =>
-        new Promise((_, reject) => (rejectPubkey = reject))
+      window.nostr.getPublicKey = () => new Promise((_, reject) => (rejectPubkey = reject))
 
       const connection = await importConnection()
       const connecting = connection.connect({ canAskForPubkey: true })

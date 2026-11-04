@@ -10,13 +10,7 @@ import UserEvent from '@/services/user_event'
 const DEFAULT_PUBKEY = 'a'.repeat(64)
 const DEFAULT_HASH = 'f'.repeat(64)
 
-function buildRawEvent({
-  kind,
-  pubkey = DEFAULT_PUBKEY,
-  createdAt = 1,
-  tags = [],
-  content = '',
-}) {
+function buildRawEvent({ kind, pubkey = DEFAULT_PUBKEY, createdAt = 1, tags = [], content = '' }) {
   return {
     id: `${kind}-${pubkey}-${createdAt}`,
     pubkey,
@@ -71,16 +65,10 @@ function buildFileEvent(options) {
   return new FileEvent(buildRawFileEvent(options))
 }
 
-function buildCurrentUser({
-  pubkey = DEFAULT_PUBKEY,
-  follows = [],
-  hasFollowList = true,
-} = {}) {
+function buildCurrentUser({ pubkey = DEFAULT_PUBKEY, follows = [], hasFollowList = true } = {}) {
   return new CurrentUser({
     userEvent: buildUserEvent({ pubkey }),
-    followListEvent: hasFollowList
-      ? buildFollowListEvent({ pubkey, follows })
-      : null,
+    followListEvent: hasFollowList ? buildFollowListEvent({ pubkey, follows }) : null,
   })
 }
 

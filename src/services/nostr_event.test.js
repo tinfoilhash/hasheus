@@ -19,10 +19,7 @@ describe('NostrEvent', () => {
   it('groups tags by name, keeping every value', () => {
     const event = new NostrEvent(RAW_EVENT)
 
-    expect(event.tags.get('p')).toEqual([
-      ['b'.repeat(64)],
-      ['c'.repeat(64), 'wss://relay.example'],
-    ])
+    expect(event.tags.get('p')).toEqual([['b'.repeat(64)], ['c'.repeat(64), 'wss://relay.example']])
   })
 
   it('gets the first value of the first tag with a name', () => {
@@ -41,9 +38,7 @@ describe('NostrEvent', () => {
   it('formats created_at as a locale string', () => {
     const event = new NostrEvent(RAW_EVENT)
 
-    expect(event.createdAtLocaleString).toBe(
-      new Date(1_700_000_000 * 1000).toLocaleString(),
-    )
+    expect(event.createdAtLocaleString).toBe(new Date(1_700_000_000 * 1000).toLocaleString())
   })
 
   it('shows the raw unix timestamp when created_at is too large for a date', () => {

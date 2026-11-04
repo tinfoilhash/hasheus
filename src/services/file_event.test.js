@@ -4,9 +4,7 @@ import { describe, expect, it } from 'vite-plus/test'
 describe('FileEvent', () => {
   describe('descriptionTrimmed', () => {
     it('trims the description', () => {
-      expect(buildFileEvent({ content: ' a file ' }).descriptionTrimmed).toBe(
-        'a file',
-      )
+      expect(buildFileEvent({ content: ' a file ' }).descriptionTrimmed).toBe('a file')
     })
 
     it('is empty when the description is only whitespace', () => {
@@ -14,36 +12,29 @@ describe('FileEvent', () => {
     })
 
     it('removes bidi controls from the description', () => {
-      expect(
-        buildFileEvent({ content: 'file\u202eosi.exe' }).descriptionTrimmed,
-      ).toBe('fileosi.exe')
+      expect(buildFileEvent({ content: 'file\u202eosi.exe' }).descriptionTrimmed).toBe(
+        'fileosi.exe',
+      )
     })
 
     it('is empty when the description is only bidi controls and whitespace', () => {
-      expect(
-        buildFileEvent({ content: '\u202e \u2066' }).descriptionTrimmed,
-      ).toBe('')
+      expect(buildFileEvent({ content: '\u202e \u2066' }).descriptionTrimmed).toBe('')
     })
   })
 
   describe('url', () => {
-    it.each(['https://example.com/file.iso', 'http://example.com/file.iso'])(
-      'allows %s',
-      (url) => {
-        expect(buildFileEvent({ url }).url).toBe(url)
-      },
-    )
+    it.each(['https://example.com/file.iso', 'http://example.com/file.iso'])('allows %s', (url) => {
+      expect(buildFileEvent({ url }).url).toBe(url)
+    })
 
     it('normalizes the url', () => {
-      expect(buildFileEvent({ url: 'HTTPS://Example.com' }).url).toBe(
-        'https://example.com/',
-      )
+      expect(buildFileEvent({ url: 'HTTPS://Example.com' }).url).toBe('https://example.com/')
     })
 
     it('percent-encodes a bidi control', () => {
-      expect(
-        buildFileEvent({ url: 'https://example.com/\u202eosi.exe' }).url,
-      ).toBe('https://example.com/%E2%80%AEosi.exe')
+      expect(buildFileEvent({ url: 'https://example.com/\u202eosi.exe' }).url).toBe(
+        'https://example.com/%E2%80%AEosi.exe',
+      )
     })
 
     it.each([

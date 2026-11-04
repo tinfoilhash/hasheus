@@ -1,11 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import { test as base, expect } from '@playwright/test'
 import { SimplePool } from 'nostr-tools/pool'
-import {
-  finalizeEvent,
-  generateSecretKey,
-  getPublicKey,
-} from 'nostr-tools/pure'
+import { finalizeEvent, generateSecretKey, getPublicKey } from 'nostr-tools/pure'
 import { RELAY_URL } from './test_servers.js'
 
 const now = () => Math.floor(Date.now() / 1000)
@@ -14,9 +10,7 @@ const now = () => Math.floor(Date.now() / 1000)
 // would, so each test can set up exactly the verifications it needs.
 function createRelay(pool) {
   async function publish(secretKey, template) {
-    await Promise.all(
-      pool.publish([RELAY_URL], finalizeEvent(template, secretKey)),
-    )
+    await Promise.all(pool.publish([RELAY_URL], finalizeEvent(template, secretKey)))
   }
 
   return {
@@ -45,10 +39,7 @@ function createRelay(pool) {
       return user
     },
 
-    async publishVerification(
-      user,
-      { hash, url, createdAt = now(), description = 'a file' },
-    ) {
+    async publishVerification(user, { hash, url, createdAt = now(), description = 'a file' }) {
       await publish(user.secretKey, {
         kind: 1063,
         created_at: createdAt,
