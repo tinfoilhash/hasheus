@@ -29,9 +29,7 @@ describe('HFile', () => {
     ])('hashes %s', async (_, size) => {
       const bytes = buildBytes(size)
 
-      expect(await SmallHFile.hash(new File([bytes], 'file'))).toBe(
-        sha256Hex(bytes),
-      )
+      expect(await SmallHFile.hash(new File([bytes], 'file'))).toBe(sha256Hex(bytes))
     })
 
     it('hashes in chunks only above the web crypto limit', async () => {
@@ -84,9 +82,7 @@ describe('HFile', () => {
     it('guesses from the extension when the browser reports the generic type', () => {
       const file = new File([], 'app.dmg', { type: 'application/octet-stream' })
 
-      expect(new HFile({ file, hash: '' }).type).toBe(
-        'application/x-apple-diskimage',
-      )
+      expect(new HFile({ file, hash: '' }).type).toBe('application/x-apple-diskimage')
     })
 
     it('keeps a specific type the browser reports', () => {

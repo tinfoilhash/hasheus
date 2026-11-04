@@ -4,14 +4,7 @@ import relayPool from '@/services/relay_pool'
 import UserEvent from '@/services/user_event'
 import UserSubscriber from '@/services/user_subscriber'
 import { buildRawUserEvent } from '@/test/event_builders'
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  onTestFinished,
-  vi,
-} from 'vite-plus/test'
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { subscribeManyEose: vi.fn() },
@@ -22,14 +15,12 @@ const PUBKEY = 'a'.repeat(64)
 
 // replays raw events to the subscription, then closes it.
 function respondWith(...rawEvents) {
-  relayPool.subscribeManyEose.mockImplementation(
-    (_, __, { onevent, onclose }) => {
-      queueMicrotask(() => {
-        rawEvents.forEach(onevent)
-        onclose([])
-      })
-    },
-  )
+  relayPool.subscribeManyEose.mockImplementation((_, __, { onevent, onclose }) => {
+    queueMicrotask(() => {
+      rawEvents.forEach(onevent)
+      onclose([])
+    })
+  })
 }
 
 describe('ReplaceableEventSubscriber', () => {
@@ -72,10 +63,7 @@ describe('ReplaceableEventSubscriber', () => {
 
     await new UserSubscriber({ pubkey: PUBKEY, onChange }).subscribe()
 
-    expect(onChange.mock.calls.map(([event]) => event.displayName)).toEqual([
-      'first',
-      'newest',
-    ])
+    expect(onChange.mock.calls.map(([event]) => event.displayName)).toEqual(['first', 'newest'])
   })
 
   it('resolves with null when no event exists', async () => {

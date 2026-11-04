@@ -4,10 +4,7 @@ import { npubEncode } from 'nostr-tools/nip19'
 import { expect, test } from './fixtures.js'
 import { RELAY_PORT } from './test_servers.js'
 
-async function chooseFile(
-  page,
-  { name = 'file.txt', mimeType = 'text/plain' } = {},
-) {
+async function chooseFile(page, { name = 'file.txt', mimeType = 'text/plain' } = {}) {
   const contents = Buffer.from(`publish ${Math.random()}`)
   const hash = createHash('sha256').update(contents).digest('hex')
 
@@ -46,13 +43,9 @@ test.describe('publishing', () => {
     await page.getByTestId('publish-button').click()
 
     await expect(page.getByTestId('verified-status')).toBeVisible()
-    await expect(page.getByTestId('url')).toContainText(
-      'https://example.com/file.txt',
-    )
+    await expect(page.getByTestId('url')).toContainText('https://example.com/file.txt')
     await expect(page.getByTestId('source')).toContainText('publisher')
-    await expect(page.getByTestId('connect-button')).toHaveText(
-      'connected: publisher',
-    )
+    await expect(page.getByTestId('connect-button')).toHaveText('connected: publisher')
   })
 
   test('shows the mime type, guessed when the browser reports the generic one', async ({
@@ -64,9 +57,7 @@ test.describe('publishing', () => {
     })
     await page.getByTestId('add-verification-link').click()
 
-    await expect(page.getByTestId('mime-type')).toHaveText(
-      'application/x-apple-diskimage',
-    )
+    await expect(page.getByTestId('mime-type')).toHaveText('application/x-apple-diskimage')
   })
 
   test('only enables publishing once connected', async ({ page }) => {
@@ -85,9 +76,7 @@ test.describe('publishing', () => {
     await expect(page.getByTestId('publish-button')).toBeEnabled()
   })
 
-  test('back returns to the start page instead of the form', async ({
-    page,
-  }) => {
+  test('back returns to the start page instead of the form', async ({ page }) => {
     const hash = await openConnectedForm(page)
 
     await page.getByTestId('url-input').fill('https://example.com/file.txt')
@@ -106,10 +95,7 @@ test.describe('publishing', () => {
     await page.getByTestId('publish-button').click()
 
     await expect(page).toHaveURL('/publish')
-    await expect(page.getByTestId('url-input')).toHaveJSProperty(
-      'validity.valid',
-      false,
-    )
+    await expect(page.getByTestId('url-input')).toHaveJSProperty('validity.valid', false)
   })
 
   test('shows why the relay rejected the verification', async ({ page }) => {
@@ -122,9 +108,7 @@ test.describe('publishing', () => {
         const [type, event] = JSON.parse(message)
 
         if (type === 'EVENT' && event.kind === 1063) {
-          webSocket.send(
-            JSON.stringify(['OK', event.id, false, 'blocked: try again later']),
-          )
+          webSocket.send(JSON.stringify(['OK', event.id, false, 'blocked: try again later']))
           return
         }
 
@@ -136,17 +120,13 @@ test.describe('publishing', () => {
     await page.getByTestId('url-input').fill('https://example.com/file.txt')
     await page.getByTestId('publish-button').click()
 
-    await expect(page.getByTestId('publish-error')).toContainText(
-      'blocked: try again later',
-    )
+    await expect(page.getByTestId('publish-error')).toContainText('blocked: try again later')
     await expect(page).toHaveURL('/publish')
     await expect(page.getByTestId('publish-button')).toBeEnabled()
   })
 })
 
-test('opening the form without a file redirects to the start page', async ({
-  page,
-}) => {
+test('opening the form without a file redirects to the start page', async ({ page }) => {
   await page.goto('/publish')
 
   await expect(page).toHaveURL('/')

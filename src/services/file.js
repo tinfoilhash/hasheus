@@ -33,10 +33,7 @@ class HFile {
   }
 
   static async hashWithWebCrypto(file) {
-    const hashBuffer = await crypto.subtle.digest(
-      'SHA-256',
-      await file.arrayBuffer(),
-    )
+    const hashBuffer = await crypto.subtle.digest('SHA-256', await file.arrayBuffer())
 
     return bytesToHex(new Uint8Array(hashBuffer))
   }
@@ -44,11 +41,7 @@ class HFile {
   static async hashInChunks(file) {
     const hasher = sha256.create()
 
-    for (
-      let offset = 0;
-      offset < file.size;
-      offset += this.HASH_CHUNK_SIZE_BYTES
-    ) {
+    for (let offset = 0; offset < file.size; offset += this.HASH_CHUNK_SIZE_BYTES) {
       const chunk = file.slice(offset, offset + this.HASH_CHUNK_SIZE_BYTES)
 
       hasher.update(new Uint8Array(await chunk.arrayBuffer()))

@@ -1,13 +1,5 @@
 import HRouter from '@/services/router'
-import {
-  afterAll,
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vite-plus/test'
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 
 // @lit-labs/router reads location when it's imported, before any test runs.
 vi.hoisted(() => {
@@ -21,10 +13,7 @@ afterAll(() => {
 const ROUTES = [{ path: '/' }, { path: '/publish' }, { path: '/:hash' }]
 
 function buildRouter() {
-  const router = new HRouter(
-    { addController: vi.fn(), requestUpdate: vi.fn() },
-    ROUTES,
-  )
+  const router = new HRouter({ addController: vi.fn(), requestUpdate: vi.fn() }, ROUTES)
 
   vi.spyOn(router, 'goto').mockResolvedValue()
 
@@ -99,17 +88,11 @@ describe('HRouter', () => {
       [
         'the previous entry is in another document',
         {
-          entries: [
-            { path: '/abc', sameDocument: false },
-            { path: '/publish' },
-          ],
+          entries: [{ path: '/abc', sameDocument: false }, { path: '/publish' }],
           currentIndex: 1,
         },
       ],
-      [
-        'there is no previous entry',
-        { entries: [{ path: '/publish' }], currentIndex: 0 },
-      ],
+      ['there is no previous entry', { entries: [{ path: '/publish' }], currentIndex: 0 }],
     ])('navigates instead of going back when %s', (_, navigation) => {
       window.navigation = buildNavigation(navigation)
 

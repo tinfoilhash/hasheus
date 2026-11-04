@@ -70,7 +70,7 @@ class HAppHeader extends LitElement {
       }
 
       /* 6px unless large, so the 15-row helmet doesn't push the page's content
-         too far down. the line height and spacing scale to keep its shape. */
+     too far down. the line height and spacing scale to keep its shape. */
       header a h1 {
         margin: 0;
         font-size: 0.375rem;
@@ -93,7 +93,7 @@ class HAppHeader extends LitElement {
       }
 
       /* each digit's shade comes from its value, 0 darkest to f brightest, so
-         the hash shades itself. */
+     the hash shades itself. */
       .digit-0 {
         color: #b3552e;
       }

@@ -19,11 +19,7 @@ class HPublish extends HNavigable(LitElement) {
   _constructPublishTask() {
     return new Task(this, {
       task: async ([form]) => {
-        if (
-          !this._canPublish ||
-          !this.currentUser ||
-          form.matches(':invalid')
-        ) {
+        if (!this._canPublish || !this.currentUser || form.matches(':invalid')) {
           return
         }
 
@@ -77,10 +73,7 @@ class HPublish extends HNavigable(LitElement) {
     // stays disabled after publishing until the navigation to the verify page
     // lands, so the file can't be published twice.
     const isDisabled =
-      !this._canPublish ||
-      !this.currentUser ||
-      isPending ||
-      this.file.hasBeenPublished
+      !this._canPublish || !this.currentUser || isPending || this.file.hasBeenPublished
 
     return html`
       ${
@@ -94,8 +87,7 @@ class HPublish extends HNavigable(LitElement) {
           : nothing
       }
       ${this._publishTask.render({
-        error: (error) =>
-          html`<h-error data-testid="publish-error" .error=${error}></h-error>`,
+        error: (error) => html`<h-error data-testid="publish-error" .error=${error}></h-error>`,
       })}
       <form novalidate @submit=${this._publish}>
         <ul>
@@ -134,17 +126,11 @@ class HPublish extends HNavigable(LitElement) {
           </li>
           <li>
             <div class="key">verified by</div>
-            <div class="value" data-testid="verified-by">
-              ${this._renderVerifiedBy()}
-            </div>
+            <div class="value" data-testid="verified-by">${this._renderVerifiedBy()}</div>
           </li>
         </ul>
         <h-button ?pending=${isPending}>
-          <button
-            data-testid="publish-button"
-            type="submit"
-            ?disabled=${isDisabled}
-          >
+          <button data-testid="publish-button" type="submit" ?disabled=${isDisabled}>
             publish
           </button>
         </h-button>

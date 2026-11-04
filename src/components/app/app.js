@@ -17,8 +17,7 @@ class HApp extends LitElement {
   constructor() {
     super()
 
-    this._setCurrentUserFromConnection =
-      this._setCurrentUserFromConnection.bind(this)
+    this._setCurrentUserFromConnection = this._setCurrentUserFromConnection.bind(this)
     this._setFileFromEvent = this._setFileFromEvent.bind(this)
     this._navigateFromEvent = this._navigateFromEvent.bind(this)
   }
@@ -30,10 +29,7 @@ class HApp extends LitElement {
   connectedCallback() {
     super.connectedCallback()
 
-    currentUserConnection.addEventListener(
-      'change',
-      this._setCurrentUserFromConnection,
-    )
+    currentUserConnection.addEventListener('change', this._setCurrentUserFromConnection)
     currentUserConnection.connect({ ignoreNoPubkeyError: true })
 
     this.addEventListener('h-file', this._setFileFromEvent)
@@ -43,10 +39,7 @@ class HApp extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback()
 
-    currentUserConnection.removeEventListener(
-      'change',
-      this._setCurrentUserFromConnection,
-    )
+    currentUserConnection.removeEventListener('change', this._setCurrentUserFromConnection)
 
     this.removeEventListener('h-file', this._setFileFromEvent)
     this.removeEventListener('h-navigate', this._navigateFromEvent)
@@ -82,8 +75,8 @@ class HApp extends LitElement {
         display: block;
         padding: 1.25rem;
         font-family:
-          ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas,
-          'DejaVu Sans Mono', monospace;
+          ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono',
+          monospace;
         color: var(--h-color-100);
         background: var(--h-color-900);
       }

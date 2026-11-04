@@ -28,10 +28,7 @@ class ReplaceableEventSubscriber {
             try {
               const replaceableEvent = new EventClass(event)
 
-              if (
-                !this.event ||
-                replaceableEvent.createdAt > this.event.createdAt
-              ) {
+              if (!this.event || replaceableEvent.createdAt > this.event.createdAt) {
                 this.event = replaceableEvent
 
                 this.onChange?.(replaceableEvent)

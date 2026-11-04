@@ -1,21 +1,20 @@
 # sample data
 
-`vp run dev:relay` loads [`seed.jsonl`](seed.jsonl) into an in-memory relay, so
-it starts fresh each time. it has verifications of the files in
-[`files`](files), one for each case:
+`vp run dev:relay` loads [`seed.jsonl`](seed.jsonl) into an in-memory relay, so it starts fresh each
+time. it has verifications of the files in [`files`](files), one for each case:
 
 - `trusted.txt`: alice & bob agree on the url.
-- `yours.txt`: dev verified it, and mallory's verification is dated past the
-  last date javascript can show.
+- `yours.txt`: dev verified it, and mallory's verification is dated past the last date javascript
+  can show.
 - `untrusted.txt`: only mallory verified it.
 - `disagreed.txt`: bob & carol outnumber alice on the url.
 - `backdated.txt`: mallory backdated a different url before alice's.
-- `hostile.txt`: a carriage return & bidi overrides in the description and url,
-  plus a `javascript:` url. mallory's display name has escape codes too.
+- `hostile.txt`: a carriage return & bidi overrides in the description and url, plus a `javascript:`
+  url. mallory's display name has escape codes too.
 - `unverified.txt`: no one has verified it.
 
-sign in as dev to see the files through a web of trust. these keys are public,
-so never use them anywhere real:
+sign in as dev to see the files through a web of trust. these keys are public, so never use them
+anywhere real:
 
 | user     | notes                                                                  | npub                                                              | nsec                                                              |
 | -------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -26,11 +25,10 @@ so never use them anywhere real:
 | mallory  | untrusted, with escape codes and a bidi override in their display name | `npub1x6ldzxyhvlsgy73xxwwg4gqc48djfa2uv9j93fl8n6nlxqj5kjws3zy6mj` | `nsec17r9px2nv9yhnz2p5938395v4ytuqc54e4n28s2nfr3uy35cejpes8jtkrp` |
 | newcomer | no profile or follow list, for publishing as someone new               | `npub1fm8jeugesk6wfqx9njrgdsdv2cpns46vmkddja2g0lev6pz0hdlqyhgjve` | `nsec16s9vd47k5g648qw3593arhgwm5apswa8s8tw402ss83dqap4pr0s8f6tlm` |
 
-to test [hasheus-cli](https://github.com/tinfoilhash/hasheus-cli) as dev against
-the relay, source [`cli.env`](cli.env).
+to test [hasheus-cli](https://github.com/tinfoilhash/hasheus-cli) as dev against the relay, source
+[`cli.env`](cli.env).
 
-to change the sample data, edit [`seed.js`](seed.js) or the files, then
-regenerate it:
+to change the sample data, edit [`seed.js`](seed.js) or the files, then regenerate it:
 
 ```bash
 vp run dev:seed

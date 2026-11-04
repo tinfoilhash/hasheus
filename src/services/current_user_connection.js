@@ -74,9 +74,7 @@ class CurrentUserConnection extends EventTarget {
   }
 
   shouldRefresh(currentUser) {
-    return (
-      currentUser.requestedAt <= Date.now() - this.constructor.REFRESH_AFTER_MS
-    )
+    return currentUser.requestedAt <= Date.now() - this.constructor.REFRESH_AFTER_MS
   }
 
   loadFromStorage() {
@@ -94,8 +92,7 @@ class CurrentUserConnection extends EventTarget {
       return new CurrentUser({
         ...parsed,
         userEvent: new UserEvent(parsed.userEvent),
-        followListEvent:
-          parsed.followListEvent && new FollowListEvent(parsed.followListEvent),
+        followListEvent: parsed.followListEvent && new FollowListEvent(parsed.followListEvent),
       })
     } catch (error) {
       console.error(error)
@@ -106,10 +103,7 @@ class CurrentUserConnection extends EventTarget {
   }
 
   saveToStorage(currentUser) {
-    return window.localStorage.setItem(
-      this.constructor.STORAGE_KEY,
-      JSON.stringify(currentUser),
-    )
+    return window.localStorage.setItem(this.constructor.STORAGE_KEY, JSON.stringify(currentUser))
   }
 
   removeFromStorage() {
@@ -182,11 +176,7 @@ class CurrentUserConnection extends EventTarget {
 
   // each connect gets an id, and disconnecting or connecting again changes the
   // current one, so results from an earlier connect that land late are ignored.
-  async connect({
-    pubkey = null,
-    canAskForPubkey = false,
-    ignoreNoPubkeyError = false,
-  } = {}) {
+  async connect({ pubkey = null, canAskForPubkey = false, ignoreNoPubkeyError = false } = {}) {
     const connectionID = ++this.connectionID
 
     try {

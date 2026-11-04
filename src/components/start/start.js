@@ -78,10 +78,7 @@ class HStart extends LitElement {
   render() {
     return html`
       ${this._error ? html`<h-error .error=${this._error}></h-error>` : nothing}
-      <h2>
-        verify the integrity of a file with the largest decentralized web of
-        trust
-      </h2>
+      <h2>verify the integrity of a file with the largest decentralized web of trust</h2>
       <h3>
         drop a file to start,
         <form>
@@ -93,9 +90,7 @@ class HStart extends LitElement {
           >,
         </form>
         or
-        <a href="https://github.com/tinfoilhash/hasheus-cli" target="_blank"
-          >use the cli</a
-        >
+        <a href="https://github.com/tinfoilhash/hasheus-cli" target="_blank">use the cli</a>
         ${this._isDispatchingFile ? html`<h-spinner></h-spinner>` : nothing}
       </h3>
     `
@@ -113,7 +108,7 @@ class HStart extends LitElement {
       }
 
       /* in a monospace font, "verify the integrity of a file" is 30ch, so it's
-         the first line. the extra 1ch is slack against rounding. */
+     the first line. the extra 1ch is slack against rounding. */
       h2 {
         max-width: 31ch;
         margin: 0;

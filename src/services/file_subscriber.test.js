@@ -2,19 +2,8 @@ import FileEvent from '@/services/file_event'
 import FileSubscriber from '@/services/file_subscriber'
 import relayPool from '@/services/relay_pool'
 import userSubscriberManager from '@/services/user_subscriber_manager'
-import {
-  buildRawFileEvent,
-  buildUserEvent,
-  DEFAULT_HASH,
-} from '@/test/event_builders'
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  onTestFinished,
-  vi,
-} from 'vite-plus/test'
+import { buildRawFileEvent, buildUserEvent, DEFAULT_HASH } from '@/test/event_builders'
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test'
 
 vi.mock('@/services/relay_pool', () => ({
   default: { subscribeManyEose: vi.fn() },
@@ -30,14 +19,12 @@ const EOSE_REASON = 'closed automatically on eose'
 
 // replays raw events to the subscription, then closes it with the reasons.
 function respondWith(rawEvents, reasons) {
-  relayPool.subscribeManyEose.mockImplementation(
-    (_, __, { onevent, onclose }) => {
-      queueMicrotask(() => {
-        rawEvents.forEach(onevent)
-        onclose(reasons)
-      })
-    },
-  )
+  relayPool.subscribeManyEose.mockImplementation((_, __, { onevent, onclose }) => {
+    queueMicrotask(() => {
+      rawEvents.forEach(onevent)
+      onclose(reasons)
+    })
+  })
 }
 
 describe('FileSubscriber', () => {
@@ -77,10 +64,7 @@ describe('FileSubscriber', () => {
     onTestFinished(() => consoleError.mockRestore())
 
     respondWith(
-      [
-        { ...buildRawFileEvent({ createdAt: 1 }), tags: null },
-        buildRawFileEvent({ createdAt: 2 }),
-      ],
+      [{ ...buildRawFileEvent({ createdAt: 1 }), tags: null }, buildRawFileEvent({ createdAt: 2 })],
       [{ url: 'wss://file.example', reason: EOSE_REASON }],
     )
 
@@ -99,20 +83,15 @@ describe('FileSubscriber', () => {
       ],
     )
 
-    await expect(
-      new FileSubscriber({ hash: HASH }).subscribe(),
-    ).resolves.toEqual([])
+    await expect(new FileSubscriber({ hash: HASH }).subscribe()).resolves.toEqual([])
   })
 
   it('rejects when no relay reached eose', async () => {
-    respondWith(
-      [],
-      [{ url: 'wss://file.example', reason: 'connection failed' }],
-    )
+    respondWith([], [{ url: 'wss://file.example', reason: 'connection failed' }])
 
-    await expect(
-      new FileSubscriber({ hash: HASH }).subscribe(),
-    ).rejects.toThrow('unable to connect to hasheus server')
+    await expect(new FileSubscriber({ hash: HASH }).subscribe()).rejects.toThrow(
+      'unable to connect to hasheus server',
+    )
   })
 
   it('fills in profiles as they arrive', async () => {

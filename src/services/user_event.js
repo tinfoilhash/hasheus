@@ -17,9 +17,7 @@ class UserEvent extends NostrEvent {
   get displayNameTrimmed() {
     const { display_name: displayName } = this.content
 
-    return typeof displayName === 'string'
-      ? bidiControlStripper(displayName).trim()
-      : ''
+    return typeof displayName === 'string' ? bidiControlStripper(displayName).trim() : ''
   }
 
   get nameTrimmed() {
@@ -29,9 +27,7 @@ class UserEvent extends NostrEvent {
   }
 
   get displayName() {
-    return (
-      this.displayNameTrimmed || this.nameTrimmed || this.pubkeyEncodedTruncated
-    )
+    return this.displayNameTrimmed || this.nameTrimmed || this.pubkeyEncodedTruncated
   }
 
   get picture() {

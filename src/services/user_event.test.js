@@ -17,9 +17,7 @@ describe('UserEvent', () => {
     )
 
     it("throws on content that isn't json", () => {
-      expect(() => buildUserEvent({ content: '{not json' })).toThrow(
-        SyntaxError,
-      )
+      expect(() => buildUserEvent({ content: '{not json' })).toThrow(SyntaxError)
     })
   })
 

@@ -3,7 +3,6 @@ import { defineConfig } from 'vite-plus'
 
 export default defineConfig({
   fmt: {
-    printWidth: 80,
     proseWrap: 'always',
     semi: false,
     singleQuote: true,
@@ -14,10 +13,7 @@ export default defineConfig({
     categories: {
       correctness: 'error',
     },
-    jsPlugins: [
-      'eslint-plugin-lit',
-      { name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' },
-    ],
+    jsPlugins: ['eslint-plugin-lit', { name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
     rules: {
       ...lit.configs['flat/recommended'].rules,
       'vite-plus/prefer-vite-plus-imports': 'error',

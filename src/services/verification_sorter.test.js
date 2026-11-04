@@ -160,8 +160,8 @@ describe('verificationSorter', () => {
   })
 
   it("doesn't let trusted events without a url outvote one with a url", () => {
-    const withoutURL = [PUBKEYS.trustedA, PUBKEYS.trustedB].map(
-      (pubkey, index) => buildFileEvent({ pubkey, createdAt: index + 1 }),
+    const withoutURL = [PUBKEYS.trustedA, PUBKEYS.trustedB].map((pubkey, index) =>
+      buildFileEvent({ pubkey, createdAt: index + 1 }),
     )
     const withURL = buildFileEvent({
       pubkey: PUBKEYS.trustedC,

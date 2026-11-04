@@ -15,9 +15,7 @@ const FAR_FUTURE_AT = (100_000_000 + 1) * DAY_SECONDS
 // each key comes from the user's name, so it's the same every time. they're
 // public, so they must never be used anywhere real.
 function createUser(name, profile) {
-  const secretKey = createHash('sha256')
-    .update(`hasheus dev user: ${name}`)
-    .digest()
+  const secretKey = createHash('sha256').update(`hasheus dev user: ${name}`).digest()
 
   return { name, secretKey, pubkey: getPublicKey(secretKey), profile }
 }
@@ -85,10 +83,7 @@ function seed() {
     ...VERIFICATIONS.map(buildVerification),
   ].map((event) => ({ ...event, sig: signatures.get(event.id) ?? event.sig }))
 
-  writeFileSync(
-    SEED_URL,
-    events.map((event) => JSON.stringify(event)).join('\n') + '\n',
-  )
+  writeFileSync(SEED_URL, events.map((event) => JSON.stringify(event)).join('\n') + '\n')
   printUsers()
 }
 
@@ -162,9 +157,7 @@ function buildVerification({
 
 function printUsers() {
   for (const user of USERS) {
-    console.log(
-      `${user.name}\t${npubEncode(user.pubkey)}\t${nsecEncode(user.secretKey)}`,
-    )
+    console.log(`${user.name}\t${npubEncode(user.pubkey)}\t${nsecEncode(user.secretKey)}`)
   }
 }
 

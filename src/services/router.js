@@ -25,13 +25,9 @@ class HRouter extends Router {
       return false
     }
 
-    const previousEntry =
-      navigation.entries()[navigation.currentEntry.index - 1]
+    const previousEntry = navigation.entries()[navigation.currentEntry.index - 1]
 
-    return (
-      Boolean(previousEntry?.sameDocument) &&
-      new URL(previousEntry.url).pathname === path
-    )
+    return Boolean(previousEntry?.sameDocument) && new URL(previousEntry.url).pathname === path
   }
 }
 
