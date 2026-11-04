@@ -4,6 +4,7 @@
 FROM ghcr.io/voidzero-dev/vite-plus:1.5.0 AS build
 WORKDIR /hasheus
 COPY --chown=vp:vp package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --chown=vp:vp patches patches
 RUN vp install --frozen-lockfile
 COPY --chown=vp:vp . .
 RUN vp build
