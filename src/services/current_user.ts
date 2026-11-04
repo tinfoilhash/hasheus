@@ -2,8 +2,8 @@ import type FollowListEvent from '@/services/follow_list_event'
 import type UserEvent from '@/services/user_event'
 
 class CurrentUser {
-  userEvent: UserEvent
-  followListEvent: FollowListEvent | null
+  readonly userEvent: UserEvent
+  readonly followListEvent: FollowListEvent | null
   requestedAt: number
 
   constructor({

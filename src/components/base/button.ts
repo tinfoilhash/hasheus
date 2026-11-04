@@ -3,20 +3,20 @@ import '@/components/base/spinner'
 import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HButton extends LitElement {
-  static properties = {
+  static override properties = {
     pending: { type: Boolean },
   } satisfies PropertyDeclarations
 
   declare pending?: boolean
 
-  render() {
+  override render() {
     return html`
       <slot></slot>
       ${this.pending ? html`<div class="pending"><h-spinner></h-spinner></div>` : nothing}
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

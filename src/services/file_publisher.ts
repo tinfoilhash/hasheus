@@ -3,10 +3,10 @@ import FileEvent from '@/services/file_event'
 import relayPool, { FILE_RELAY_URLS } from '@/services/relay_pool'
 
 class FilePublisher {
-  file: HFile
-  description: string
-  url: string
-  pubkey: string
+  readonly file: HFile
+  readonly description: string
+  readonly url: string
+  readonly pubkey: string
 
   constructor({
     file,

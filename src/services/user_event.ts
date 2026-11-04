@@ -4,11 +4,11 @@ import NostrEvent from '@/services/nostr_event'
 type Profile = Record<string, unknown>
 
 class UserEvent extends NostrEvent<Profile> {
-  static KIND = 0
+  static readonly KIND = 0
 
   // anyone can publish a profile, so content that isn't an object (like
   // "null") is treated as an empty profile instead of breaking rendering.
-  parseContent(content: string) {
+  override parseContent(content: string) {
     const parsed: unknown = JSON.parse(content)
 
     return parsed !== null && typeof parsed === 'object' ? (parsed as Profile) : {}

@@ -1,6 +1,6 @@
 // nip-94 requires a mime type, so an unknown extension gets the generic one,
 // like the cli does.
-export const GENERIC_MIME_TYPE = 'application/octet-stream'
+const GENERIC_MIME_TYPE = 'application/octet-stream'
 const MIME_TYPES_BY_EXTENSION = new Map([
   ['7z', 'application/x-7z-compressed'],
   ['apk', 'application/vnd.android.package-archive'],
@@ -36,5 +36,7 @@ function mimeTypeGuesser(filename: string) {
 
   return MIME_TYPES_BY_EXTENSION.get(extension) ?? GENERIC_MIME_TYPE
 }
+
+export { GENERIC_MIME_TYPE }
 
 export default mimeTypeGuesser

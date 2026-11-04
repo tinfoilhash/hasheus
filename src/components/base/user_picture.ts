@@ -3,7 +3,7 @@ import type UserEvent from '@/services/user_event'
 import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HUserPicture extends LitElement {
-  static properties = {
+  static override properties = {
     pubkeyEncoded: { attribute: false },
     userEvent: { attribute: false },
   } satisfies PropertyDeclarations
@@ -11,7 +11,7 @@ class HUserPicture extends LitElement {
   declare pubkeyEncoded?: string
   declare userEvent?: UserEvent | null
 
-  render() {
+  override render() {
     return html`
       <a href=${`https://njump.to/${this.pubkeyEncoded}`} target="_blank">
         ${
@@ -28,7 +28,7 @@ class HUserPicture extends LitElement {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

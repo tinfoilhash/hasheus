@@ -5,13 +5,13 @@ import currentUserConnection from '@/services/current_user_connection'
 import { css, html, LitElement, nothing } from 'lit'
 
 class HAppCurrentUser extends LitElement {
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
 
     currentUserConnection.addEventListener('change', this.#requestUpdateOnConnectionChange)
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
 
     currentUserConnection.removeEventListener('change', this.#requestUpdateOnConnectionChange)
@@ -29,7 +29,7 @@ class HAppCurrentUser extends LitElement {
     }
   }
 
-  render() {
+  override render() {
     const { currentUser, error } = currentUserConnection
 
     return html`
@@ -46,7 +46,7 @@ class HAppCurrentUser extends LitElement {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

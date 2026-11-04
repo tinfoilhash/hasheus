@@ -2,17 +2,17 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HStatus extends LitElement {
-  static properties = {
+  static override properties = {
     color: { type: String },
   } satisfies PropertyDeclarations
 
-  declare color?: string
+  declare color?: 'red' | 'orange' | 'green'
 
-  render() {
+  override render() {
     return html`<slot></slot>`
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

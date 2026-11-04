@@ -12,7 +12,7 @@ interface ReplaceableEventClass<TEvent> {
 abstract class ReplaceableEventSubscriber<TEvent extends NostrEvent<unknown>> {
   abstract readonly EventClass: ReplaceableEventClass<TEvent>
 
-  pubkey: string
+  readonly pubkey: string
   onChange: ((event: TEvent) => void) | null = null
   event: TEvent | null = null
   promise: Promise<TEvent | null> | null = null

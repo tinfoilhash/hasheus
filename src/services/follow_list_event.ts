@@ -1,9 +1,9 @@
 import NostrEvent from '@/services/nostr_event'
 
 class FollowListEvent extends NostrEvent {
-  static KIND = 3
+  static readonly KIND = 3
 
-  pubkeys = this.mapPubkeys()
+  readonly pubkeys = this.mapPubkeys()
 
   mapPubkeys() {
     const followTags = this.tags.get('p')

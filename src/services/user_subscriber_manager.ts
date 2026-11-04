@@ -1,28 +1,11 @@
+import TypedEventTarget from '@/lib/typed_event_target'
 import type UserEvent from '@/services/user_event'
 import UserSubscriber from '@/services/user_subscriber'
 
 type ChangeListener = (event: CustomEvent<UserEvent>) => void
 
-// adds a typed `change` event to EventTarget's listeners, the way the dom types
-// do for elements. the base class implements them, so nothing goes uninitialized.
-// oxlint-disable-next-line typescript/no-unsafe-declaration-merging
-interface UserSubscriberManager {
-  addEventListener(
-    type: 'change',
-    listener: ChangeListener,
-    options?: boolean | AddEventListenerOptions,
-  ): void
-  addEventListener(...args: Parameters<EventTarget['addEventListener']>): void
-  removeEventListener(
-    type: 'change',
-    listener: ChangeListener,
-    options?: boolean | EventListenerOptions,
-  ): void
-  removeEventListener(...args: Parameters<EventTarget['removeEventListener']>): void
-}
-
-class UserSubscriberManager extends EventTarget {
-  subscribers = new Map<string, UserSubscriber>()
+class UserSubscriberManager extends TypedEventTarget<{ change: CustomEvent<UserEvent> }> {
+  readonly subscribers = new Map<string, UserSubscriber>()
 
   has(pubkey: string) {
     return this.subscribers.has(pubkey)

@@ -11,7 +11,7 @@ import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HPublish extends HNavigable(LitElement) {
-  static properties = {
+  static override properties = {
     currentUser: { attribute: false },
     file: { attribute: false },
   } satisfies PropertyDeclarations
@@ -74,7 +74,7 @@ class HPublish extends HNavigable(LitElement) {
       : `${displayName} (${pubkeyEncodedTruncated})`
   }
 
-  render() {
+  override render() {
     const isPending = this.#publishTask.status === TaskStatus.PENDING
     // stays disabled after publishing until the navigation to the verify page
     // lands, so the file can't be published twice.
@@ -144,7 +144,7 @@ class HPublish extends HNavigable(LitElement) {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

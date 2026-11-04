@@ -6,7 +6,7 @@ import userSubscriberManager from '@/services/user_subscriber_manager'
 type OnChange = (events: FileEvent[]) => void
 
 class FileSubscriber {
-  hash: string
+  readonly hash: string
   onChange: OnChange | null = null
   events: FileEvent[] = []
 

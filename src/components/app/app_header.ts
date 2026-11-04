@@ -22,13 +22,13 @@ class HAppHeader extends LitElement {
     '    350   1bf    ',
   ]
 
-  static properties = {
+  static override properties = {
     large: { type: Boolean },
   } satisfies PropertyDeclarations
 
   declare large?: boolean
 
-  render() {
+  override render() {
     return html`
       <header>
         <a href="/">
@@ -55,7 +55,7 @@ class HAppHeader extends LitElement {
       .map((char) => (char === ' ' ? char : html`<span class="digit-${char}">${char}</span>`))
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

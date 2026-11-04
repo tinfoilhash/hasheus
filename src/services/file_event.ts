@@ -3,7 +3,7 @@ import NostrEvent from '@/services/nostr_event'
 import type UserEvent from '@/services/user_event'
 
 class FileEvent extends NostrEvent {
-  static KIND = 1063
+  static readonly KIND = 1063
 
   userEvent: UserEvent | null = null
 

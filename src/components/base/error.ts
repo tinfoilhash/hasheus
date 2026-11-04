@@ -3,7 +3,7 @@ import '@/components/base/status'
 import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HError extends LitElement {
-  static properties = {
+  static override properties = {
     error: { attribute: false },
   } satisfies PropertyDeclarations
 
@@ -17,7 +17,7 @@ class HError extends LitElement {
     return String(hasMessage ? error.message : error)
   }
 
-  render() {
+  override render() {
     return html`
       <h-status color="red">
         <strong>an error occurred!</strong>
@@ -26,7 +26,7 @@ class HError extends LitElement {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

@@ -9,6 +9,8 @@
       "@/*": ["./src/*"]
     },
     "strict": true,
+    "noImplicitOverride": true,
+    "erasableSyntaxOnly": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

@@ -2,15 +2,15 @@ import type { Event as RawEvent } from 'nostr-tools/core'
 import { npubEncode } from 'nostr-tools/nip19'
 
 class NostrEvent<TContent = string> {
-  id: string
-  pubkey: string
-  createdAt: number
-  kind: number
-  tags: Map<string, string[][]>
-  tagsRaw: string[][]
-  content: TContent
-  contentRaw: string
-  sig: string
+  readonly id: string
+  readonly pubkey: string
+  readonly createdAt: number
+  readonly kind: number
+  readonly tags: Map<string, string[][]>
+  readonly tagsRaw: string[][]
+  readonly content: TContent
+  readonly contentRaw: string
+  readonly sig: string
 
   constructor({ id, pubkey, created_at: createdAt, kind, tags, content, sig }: RawEvent) {
     this.id = id

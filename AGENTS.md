@@ -31,7 +31,7 @@ touches components or user flows.
 - lit properties are declared in `static properties` with a matching `declare` field, since vite+
   doesn't compile standard decorators yet. reactive state is `private _name`, and every other
   internal member is `#name`.
-- files are snake_case with one default export.
+- files are snake_case with one default export, and exports go at the bottom of the file.
 - import from `src` through the `@/` alias, not relative paths.
 - unit tests sit next to the module they test (`file.ts` → `file.test.ts`) and import from
   `vite-plus/test`. components are covered by the end-to-end tests instead.

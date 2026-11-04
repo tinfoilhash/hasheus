@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vite-plus/test'
 // shrinks the thresholds so both hashing paths and their chunk boundaries can
 // be tested with tiny files.
 class SmallHFile extends HFile {
-  static WEB_CRYPTO_MAX_SIZE_BYTES = 16
-  static HASH_CHUNK_SIZE_BYTES = 4
+  static override readonly WEB_CRYPTO_MAX_SIZE_BYTES = 16
+  static override readonly HASH_CHUNK_SIZE_BYTES = 4
 }
 
 function buildBytes(size: number) {
@@ -36,7 +36,7 @@ describe('HFile', () => {
       class SpyHFile extends SmallHFile {
         static chunkedSizes: number[] = []
 
-        static async hashInChunks(file: File) {
+        static override async hashInChunks(file: File) {
           this.chunkedSizes.push(file.size)
 
           return await super.hashInChunks(file)

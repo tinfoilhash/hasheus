@@ -1,4 +1,5 @@
 import type { Event as RawEvent } from 'nostr-tools/core'
+import TypedEventTarget from '@/lib/typed_event_target'
 import CurrentUser from '@/services/current_user'
 import FollowListEvent from '@/services/follow_list_event'
 import FollowListSubscriber from '@/services/follow_list_subscriber'
@@ -13,8 +14,6 @@ interface ChangeDetail {
   error: unknown
 }
 
-type ChangeListener = (event: CustomEvent<ChangeDetail>) => void
-
 // what JSON.stringify makes of a CurrentUser, with its events as raw events.
 interface StoredCurrentUser {
   userEvent: RawEvent
@@ -22,29 +21,11 @@ interface StoredCurrentUser {
   requestedAt: number
 }
 
-// adds a typed `change` event to EventTarget's listeners, the way the dom types
-// do for elements. the base class implements them, so nothing goes uninitialized.
-// oxlint-disable-next-line typescript/no-unsafe-declaration-merging
-interface CurrentUserConnection {
-  addEventListener(
-    type: 'change',
-    listener: ChangeListener,
-    options?: boolean | AddEventListenerOptions,
-  ): void
-  addEventListener(...args: Parameters<EventTarget['addEventListener']>): void
-  removeEventListener(
-    type: 'change',
-    listener: ChangeListener,
-    options?: boolean | EventListenerOptions,
-  ): void
-  removeEventListener(...args: Parameters<EventTarget['removeEventListener']>): void
-}
+class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<ChangeDetail> }> {
+  static readonly STORAGE_KEY = 'currentUser'
+  static readonly REFRESH_AFTER_MS = 1000 * 60 * 60
 
-class CurrentUserConnection extends EventTarget {
-  static STORAGE_KEY = 'currentUser'
-  static REFRESH_AFTER_MS = 1000 * 60 * 60
-
-  static STATUSES = {
+  static readonly STATUSES = {
     UNINITIALIZED: 'UNINITIALIZED',
     DISCONNECTED: 'DISCONNECTED',
     PENDING: 'PENDING',

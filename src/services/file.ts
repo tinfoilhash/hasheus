@@ -4,11 +4,11 @@ import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
 
 class HFile {
-  static WEB_CRYPTO_MAX_SIZE_BYTES = 1024 * 1024 * 512
-  static HASH_CHUNK_SIZE_BYTES = 1024 * 1024 * 8
+  static readonly WEB_CRYPTO_MAX_SIZE_BYTES = 1024 * 1024 * 512
+  static readonly HASH_CHUNK_SIZE_BYTES = 1024 * 1024 * 8
 
-  file: File
-  hash: string
+  readonly file: File
+  readonly hash: string
   publishedFileEvent: FileEvent | null = null
 
   constructor({ file, hash }: { file: File; hash: string }) {

@@ -5,7 +5,7 @@ import HFile from '@/services/file'
 import { css, html, LitElement, nothing, type PropertyDeclarations } from 'lit'
 
 class HStart extends LitElement {
-  static properties = {
+  static override properties = {
     _error: { state: true },
     _isDispatchingFile: { state: true },
   } satisfies PropertyDeclarations
@@ -19,7 +19,7 @@ class HStart extends LitElement {
     this._isDispatchingFile = false
   }
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
 
     window.addEventListener('dragenter', this.#preventDefault)
@@ -27,7 +27,7 @@ class HStart extends LitElement {
     window.addEventListener('drop', this.#dispatchFileFromDrop)
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
 
     window.removeEventListener('dragenter', this.#preventDefault)
@@ -81,7 +81,7 @@ class HStart extends LitElement {
     }
   }
 
-  render() {
+  override render() {
     return html`
       ${this._error ? html`<h-error .error=${this._error}></h-error>` : nothing}
       <h2>verify the integrity of a file with the largest decentralized web of trust</h2>
@@ -102,7 +102,7 @@ class HStart extends LitElement {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

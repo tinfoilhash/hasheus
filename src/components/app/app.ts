@@ -9,7 +9,7 @@ import HRouter from '@/services/router'
 import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HApp extends LitElement {
-  static properties = {
+  static override properties = {
     _currentUser: { state: true },
     _file: { state: true },
   } satisfies PropertyDeclarations
@@ -30,7 +30,7 @@ class HApp extends LitElement {
     )
   }
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
 
     currentUserConnection.addEventListener('change', this.#setCurrentUserFromConnection)
@@ -40,7 +40,7 @@ class HApp extends LitElement {
     this.addEventListener('h-navigate', this.#navigateFromEvent)
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
 
     currentUserConnection.removeEventListener('change', this.#setCurrentUserFromConnection)
@@ -66,14 +66,14 @@ class HApp extends LitElement {
     this.#router.navigate(url, { replace, back })
   }
 
-  render() {
+  override render() {
     return html`
       <h-app-header ?large=${this.#router.link() === '/'}></h-app-header>
       <main>${this.#router.outlet()}</main>
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     cssVariables,
     css`

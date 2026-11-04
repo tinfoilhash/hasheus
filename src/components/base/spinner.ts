@@ -2,11 +2,11 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
 class HSpinner extends LitElement {
-  render() {
+  override render() {
     return html`&mdash;`
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {

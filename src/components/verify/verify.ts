@@ -14,7 +14,7 @@ import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing, type PropertyDeclarations, type TemplateResult } from 'lit'
 
 class HVerify extends LitElement {
-  static properties = {
+  static override properties = {
     currentUser: { attribute: false },
     file: { attribute: false },
     hash: { attribute: false },
@@ -36,7 +36,7 @@ class HVerify extends LitElement {
     this._events = []
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
 
     this.#subscriber?.close()
@@ -121,7 +121,7 @@ class HVerify extends LitElement {
     `
   }
 
-  render() {
+  override render() {
     const isPending = this.#subscribeTask.status === TaskStatus.PENDING
     const { trustedEvents, untrustedEvents, source } = verificationSorter({
       events: this._events,
@@ -250,7 +250,7 @@ class HVerify extends LitElement {
     `
   }
 
-  static styles = [
+  static override styles = [
     cssNormalize,
     css`
       :host {
