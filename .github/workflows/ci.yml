@@ -22,8 +22,8 @@ jobs:
           run-install: |
             - args: ['--frozen-lockfile']
 
-      - name: lint
-        run: vp run lint
+      - name: check
+        run: vp run check
 
       # `shell: bash` adds pipefail, so a failing test is caught through tee.
       # the summary is written either way, then the step fails if tests did.
