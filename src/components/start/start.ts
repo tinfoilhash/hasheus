@@ -114,7 +114,7 @@ class HStart extends LitElement {
       }
 
       /* in a monospace font, "verify the integrity of a file" is 30ch, so it's
-     the first line. the extra 1ch is slack against rounding. */
+         the first line. the extra 1ch is slack against rounding. */
       h2 {
         max-width: 31ch;
         margin: 0;
