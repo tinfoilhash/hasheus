@@ -2,7 +2,7 @@
   "name": "@tinfoilhash/hasheus",
   "version": "2.1.0",
   "private": true,
-  "description": "check who has verified your exact file, and whether that includes people you follow",
+  "description": "verify any file with signatures from people you trust",
   "bugs": "https://github.com/tinfoilhash/hasheus/issues",
   "license": "MIT",
   "repository": {

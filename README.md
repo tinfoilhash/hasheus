@@ -1,6 +1,6 @@
 # hasheus
 
-check who has verified your exact file, and whether that includes people you follow. built using
+verify any file with signatures from people you trust. built using
 [typescript](https://www.typescriptlang.org/), [lit](https://lit.dev/), and
 [vite+](https://viteplus.dev/).
 
