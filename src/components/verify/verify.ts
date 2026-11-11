@@ -3,11 +3,11 @@ import '@/components/app/app_header'
 import '@/components/base/button'
 import cssNormalize from '@/components/base/css/css_normalize'
 import cssPage from '@/components/base/css/css_page'
-import cssTags from '@/components/base/css/css_tags'
 import '@/components/base/error'
 import '@/components/base/hash'
 import '@/components/base/spinner'
 import '@/components/base/status'
+import '@/components/base/tag'
 import '@/components/base/user_picture'
 import type CurrentUser from '@/services/current_user'
 import type HFile from '@/services/file'
@@ -91,13 +91,13 @@ class HVerify extends LitElement {
 
   #renderUnknownTag(isUnknown: boolean) {
     return isUnknown
-      ? html`<span class="unknown" data-testid="unknown-tag">unknown</span>`
+      ? html`<h-tag kind="unknown" data-testid="unknown-tag">unknown</h-tag>`
       : nothing
   }
 
   #renderTrustedTag(isTrusted: boolean) {
     return isTrusted
-      ? html`<span class="trusted" data-testid="trusted-tag">trusted</span>`
+      ? html`<h-tag kind="trusted" data-testid="trusted-tag">trusted</h-tag>`
       : nothing
   }
 
@@ -106,7 +106,7 @@ class HVerify extends LitElement {
     const otherCount = agreementCount - 1
 
     return otherCount > 0
-      ? html`<span class="trusted" data-testid="agreement-tag">+${otherCount} trusted</span>`
+      ? html`<h-tag kind="trusted" data-testid="agreement-tag">+${otherCount} trusted</h-tag>`
       : nothing
   }
 
@@ -306,7 +306,6 @@ class HVerify extends LitElement {
   static override styles = [
     cssNormalize,
     cssPage,
-    cssTags,
     css`
       h2.empty {
         color: var(--h-color-500);

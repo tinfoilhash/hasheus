@@ -1,9 +1,9 @@
 import '@/components/app/app_header'
 import '@/components/base/command'
 import '@/components/base/status'
+import '@/components/base/tag'
 import cssNormalize from '@/components/base/css/css_normalize'
 import cssPage from '@/components/base/css/css_page'
-import cssTags from '@/components/base/css/css_tags'
 import bidiControlStripper from '@/lib/bidi_control_stripper'
 import statusTextFormatter from '@/lib/status_text_formatter'
 import HFile from '@/services/file'
@@ -224,11 +224,11 @@ class HStart extends LitElement {
   }
 
   #renderTrusted(text = 'trusted') {
-    return html`<span class="trusted">${text}</span>`
+    return html`<h-tag kind="trusted">${text}</h-tag>`
   }
 
   #renderUnknown() {
-    return html`<span class="unknown">unknown</span>`
+    return html`<h-tag kind="unknown">unknown</h-tag>`
   }
 
   #renderProblem() {
@@ -414,7 +414,6 @@ class HStart extends LitElement {
   static override styles = [
     cssNormalize,
     cssPage,
-    cssTags,
     css`
       .visually-hidden {
         position: absolute;
