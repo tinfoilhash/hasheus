@@ -50,15 +50,15 @@ test.describe('a file with a backdated verification', () => {
     })
   })
 
-  test('is labeled untrusted for visitors who aren’t connected', async ({ page }) => {
+  test('is labeled unknown for visitors who aren’t connected', async ({ page }) => {
     await page.goto(`/${hash}`)
 
-    await expect(page.getByTestId('untrusted-status')).toContainText(
-      'connect to see if anyone in your web of trust has verified this file',
+    await expect(page.getByTestId('unknown-status')).toContainText(
+      'connect to see if anyone you follow has verified this file',
     )
     await expect(page.getByTestId('description')).toHaveText('official download')
     await expect(page.getByTestId('url')).toContainText(EVIL_URL)
-    await expect(page.getByTestId('untrusted-tag')).toHaveCount(2)
+    await expect(page.getByTestId('unknown-tag')).toHaveCount(2)
     await expect(page.getByTestId('trusted-tag')).toHaveCount(0)
   })
 
@@ -74,14 +74,17 @@ test.describe('a file with a backdated verification', () => {
     await expect(page.getByTestId('agreement-tag')).toHaveText('+1 trusted')
     await expect(page.getByTestId('description')).toHaveText('from alice')
     await expect(page.getByTestId('source')).toContainText('alice')
-    await expect(page.getByTestId('untrusted-status')).toHaveCount(0)
-    await expect(page.getByTestId('untrusted-tag')).toHaveCount(0)
+    await expect(page.getByTestId('unknown-status')).toHaveCount(0)
+    await expect(page.getByTestId('unknown-tag')).toHaveCount(0)
     await expect(page.getByTestId('trusted-tag')).toHaveCount(1)
     await expect(page.getByTestId('trusted-verifiers').locator('h-user-picture')).toHaveCount(3)
+    await expect(page.getByTestId('trusted-status')).toHaveText(
+      '3 people you follow verified this file',
+    )
   })
 })
 
-test('warns when no one in your web of trust has verified the file', async ({
+test('warns when no one you follow has verified the file', async ({
   page,
   relay,
   installExtension,
@@ -94,8 +97,8 @@ test('warns when no one in your web of trust has verified the file', async ({
   await page.goto(`/${hash}`)
   await page.getByTestId('connect-button').click()
 
-  await expect(page.getByTestId('untrusted-status')).toContainText(
-    'no one in your web of trust has verified this file',
+  await expect(page.getByTestId('unknown-status')).toContainText(
+    'no one you follow has verified this file',
   )
 })
 

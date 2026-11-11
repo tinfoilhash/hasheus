@@ -1,3 +1,4 @@
+import bidiControlStripper from '@/lib/bidi_control_stripper'
 import mimeTypeGuesser, { GENERIC_MIME_TYPE } from '@/lib/mime_type_guesser'
 import type FileEvent from '@/services/file_event'
 import { sha256 } from '@noble/hashes/sha2.js'
@@ -51,8 +52,9 @@ class HFile {
     return bytesToHex(hasher.digest())
   }
 
+  // a downloaded file can be named by anyone, like an event.
   get name() {
-    return this.file.name
+    return bidiControlStripper(this.file.name)
   }
 
   // browsers report an empty or generic type for files they don't know, like

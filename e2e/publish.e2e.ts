@@ -24,7 +24,7 @@ async function openConnectedForm(page: Page) {
   const hash = await chooseFile(page)
 
   await page.getByTestId('add-verification-link').click()
-  await page.getByTestId('verified-by').getByTestId('connect-button').click()
+  await page.getByTestId('verifier').getByTestId('connect-button').click()
   await expect(page.getByTestId('publish-button')).toBeEnabled()
 
   return hash
@@ -49,6 +49,19 @@ test.describe('publishing', () => {
     await expect(page.getByTestId('connect-button')).toHaveText('connected: publisher')
   })
 
+  test("doesn't show the verification as yours once disconnected", async ({ page }) => {
+    await openConnectedForm(page)
+    await page.getByTestId('url-input').fill('https://example.com/file.txt')
+    await page.getByTestId('publish-button').click()
+    await expect(page.getByTestId('verified-status')).toBeVisible()
+
+    await page.getByTestId('connect-button').click()
+
+    await expect(page.getByTestId('connect-button')).toHaveText('connect')
+    await expect(page.getByTestId('verified-status')).toHaveCount(0)
+    await expect(page.getByTestId('unknown-status')).toBeVisible()
+  })
+
   test('shows the mime type, guessed when the browser reports the generic one', async ({
     page,
   }) => {
@@ -67,11 +80,11 @@ test.describe('publishing', () => {
 
     await expect(page.getByTestId('publish-button')).toBeDisabled()
 
-    await page.getByTestId('verified-by').getByTestId('connect-button').click()
+    await page.getByTestId('verifier').getByTestId('connect-button').click()
 
     const npub = npubEncode(publisher.pubkey)
 
-    await expect(page.getByTestId('verified-by')).toHaveText(
+    await expect(page.getByTestId('verifier')).toHaveText(
       `publisher (${npub.slice(0, 8)}…${npub.slice(-8)})`,
     )
     await expect(page.getByTestId('publish-button')).toBeEnabled()
@@ -96,7 +109,35 @@ test.describe('publishing', () => {
     await page.getByTestId('publish-button').click()
 
     await expect(page).toHaveURL('/publish')
-    await expect(page.getByTestId('url-input')).toHaveJSProperty('validity.valid', false)
+    await expect(page.getByTestId('url-input')).toBeFocused()
+    await expect(page.getByTestId('url-input')).toHaveAccessibleDescription(
+      'enter a link that starts with http:// or https://',
+    )
+  })
+
+  test('asks for a link, until one is entered', async ({ page }) => {
+    await openConnectedForm(page)
+    await page.getByTestId('publish-button').click()
+
+    await expect(page).toHaveURL('/publish')
+    await expect(page.getByTestId('url-input')).toBeFocused()
+    await expect(page.getByTestId('url-input')).toHaveAccessibleDescription(
+      'add a link to the file',
+    )
+
+    await page.getByTestId('url-input').fill('https://example.com/file.txt')
+
+    await expect(page.getByTestId('url-input')).toHaveAccessibleDescription(
+      'where you got it, or where people can download it.',
+    )
+  })
+
+  test('asks for a description once it has been cleared', async ({ page }) => {
+    await openConnectedForm(page)
+    await page.getByLabel('description').fill('')
+    await page.getByLabel('description').blur()
+
+    await expect(page.getByLabel('description')).toHaveAccessibleDescription('describe the file')
   })
 
   test('shows why the relay rejected the verification', async ({ page }) => {

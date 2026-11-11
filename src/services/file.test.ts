@@ -72,6 +72,14 @@ describe('HFile', () => {
     })
   })
 
+  describe('name', () => {
+    it('removes bidi controls, so the extension reads as it is', () => {
+      const hFile = new HFile({ file: new File([], 'file\u202eosi.exe'), hash: '' })
+
+      expect(hFile.name).toBe('fileosi.exe')
+    })
+  })
+
   describe('type', () => {
     it("guesses from the extension when the browser doesn't know it", () => {
       const hFile = new HFile({ file: new File([], 'app.dmg'), hash: '' })

@@ -1,6 +1,9 @@
 import { expect, randomHash, test } from './fixtures.ts'
 
-test('a verification with an empty description shows the empty value', async ({ page, relay }) => {
+test('a verification with an empty description shows a placeholder name', async ({
+  page,
+  relay,
+}) => {
   const hash = randomHash()
 
   await relay.publishVerification(await relay.createUser({ name: 'alice' }), {
@@ -11,7 +14,7 @@ test('a verification with an empty description shows the empty value', async ({ 
 
   await page.goto(`/${hash}`)
   await expect(page.getByTestId('source')).toContainText('alice')
-  await expect(page.getByTestId('description')).toHaveText('—')
+  await expect(page.getByTestId('description')).toHaveText('unknown.ext')
 })
 
 test('a verification with a bidi override in its description shows it without the override', async ({

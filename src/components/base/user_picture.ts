@@ -11,9 +11,24 @@ class HUserPicture extends LitElement {
   declare pubkeyEncoded?: string
   declare userEvent?: UserEvent | null
 
+  // names can be copied, so the label pairs it with the start of the key.
+  get #label() {
+    const { userEvent, pubkeyEncoded } = this
+
+    if (!userEvent) {
+      return pubkeyEncoded ?? ''
+    }
+
+    const { displayName, pubkeyEncodedTruncated } = userEvent
+
+    return displayName === pubkeyEncodedTruncated
+      ? displayName
+      : `${displayName} (${pubkeyEncodedTruncated})`
+  }
+
   override render() {
     return html`
-      <a href=${`https://njump.to/${this.pubkeyEncoded}`} target="_blank">
+      <a href=${`https://njump.to/${this.pubkeyEncoded}`} target="_blank" aria-label=${this.#label}>
         ${
           this.userEvent?.picture
             ? html`<img src=${this.userEvent.picture} alt=${this.userEvent.displayName} />`
@@ -33,8 +48,8 @@ class HUserPicture extends LitElement {
     css`
       :host {
         display: block;
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 3.125rem;
+        height: 3.125rem;
       }
 
       a {
@@ -43,7 +58,7 @@ class HUserPicture extends LitElement {
         height: 100%;
         overflow: hidden;
         text-decoration: none;
-        border: 2px solid var(--h-color-700);
+        border: 1px solid var(--h-color-600);
       }
 
       a img {
@@ -55,14 +70,16 @@ class HUserPicture extends LitElement {
 
       a .text {
         padding: 0.125rem;
+        font-family: var(--h-font-mono);
         font-size: 0.625rem;
-        color: var(--h-color-700);
+        line-height: 0.75rem;
+        color: var(--h-color-400);
         text-align: center;
         word-break: break-all;
       }
 
       a .text .display-name {
-        color: var(--h-color-600);
+        color: var(--h-color-200);
       }
     `,
   ]

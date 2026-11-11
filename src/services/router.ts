@@ -6,6 +6,40 @@ interface NavigateOptions {
 }
 
 class HRouter extends Router {
+  // the first route is the page loading, so like back and forward, it keeps the
+  // browser's own scroll position.
+  #isRestoringHistory = true
+
+  override hostConnected() {
+    // added before the router's own listener, so it's marked before it goes.
+    window.addEventListener('popstate', this.#markHistoryRestore)
+
+    super.hostConnected()
+  }
+
+  override hostDisconnected() {
+    super.hostDisconnected()
+
+    window.removeEventListener('popstate', this.#markHistoryRestore)
+  }
+
+  #markHistoryRestore = () => {
+    this.#isRestoringHistory = true
+  }
+
+  // a new page starts at the top, rather than wherever the last one was
+  // scrolled to, like dropping a file low on the start page.
+  override async goto(pathname: string) {
+    const isRestoringHistory = this.#isRestoringHistory
+
+    this.#isRestoringHistory = false
+    await super.goto(pathname)
+
+    if (!isRestoringHistory) {
+      window.scrollTo(0, 0)
+    }
+  }
+
   navigate(path: string, { replace = false, back = false }: NavigateOptions = {}) {
     if (back && this.#isPreviousEntry(path)) {
       window.history.back()

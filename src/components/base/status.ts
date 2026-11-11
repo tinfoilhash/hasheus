@@ -6,7 +6,8 @@ class HStatus extends LitElement {
     color: { type: String },
   } satisfies PropertyDeclarations
 
-  declare color?: 'red' | 'orange' | 'green'
+  // no color is neutral, for news that's neither good nor bad.
+  declare color?: 'green' | 'yellow' | 'red'
 
   override render() {
     return html`<slot></slot>`
@@ -17,30 +18,32 @@ class HStatus extends LitElement {
     css`
       :host {
         display: block;
-        padding: 0.75rem;
-        font-size: 1.25rem;
-      }
-
-      :host([color='red']) {
-        background: var(--h-color-red);
-      }
-
-      :host([color='orange']) {
-        background: var(--h-color-orange);
+        padding: 0.75rem 1rem;
+        color: var(--h-color-200);
+        border: 1px solid var(--h-color-600);
       }
 
       :host([color='green']) {
-        background: var(--h-color-green);
+        color: var(--h-color-lime);
+        background: color-mix(in srgb, var(--h-color-lime) 10%, transparent);
+        border-color: var(--h-color-lime);
+      }
+
+      :host([color='yellow']) {
+        color: var(--h-color-yellow);
+        background: color-mix(in srgb, var(--h-color-yellow) 10%, transparent);
+        border-color: var(--h-color-yellow);
+      }
+
+      :host([color='red']) {
+        color: var(--h-color-red);
+        background: color-mix(in srgb, var(--h-color-red) 10%, transparent);
+        border-color: var(--h-color-red);
       }
 
       ::slotted(a) {
         color: inherit;
-        text-decoration: none;
-        border-bottom: 2px solid var(--h-color-100);
-      }
-
-      ::slotted(strong) {
-        font-weight: 600;
+        text-underline-offset: 0.2em;
       }
     `,
   ]

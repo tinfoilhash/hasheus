@@ -1,5 +1,6 @@
 import cssNormalize from '@/components/base/css/css_normalize'
 import '@/components/base/status'
+import statusTextFormatter from '@/lib/status_text_formatter'
 import { css, html, LitElement, type PropertyDeclarations } from 'lit'
 
 class HError extends LitElement {
@@ -8,6 +9,13 @@ class HError extends LitElement {
   } satisfies PropertyDeclarations
 
   declare error: unknown
+
+  // an alert, so an error is announced the moment it appears.
+  override connectedCallback() {
+    super.connectedCallback()
+
+    this.setAttribute('role', 'alert')
+  }
 
   // anything can be thrown, so an error without a message is shown as is.
   get #message() {
@@ -18,12 +26,7 @@ class HError extends LitElement {
   }
 
   override render() {
-    return html`
-      <h-status color="red">
-        <strong>an error occurred!</strong>
-        ${this.#message.toLowerCase()}
-      </h-status>
-    `
+    return html`<h-status color="red">${statusTextFormatter(this.#message)}</h-status>`
   }
 
   static override styles = [

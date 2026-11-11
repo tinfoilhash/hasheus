@@ -1,6 +1,6 @@
 # hasheus
 
-verify the integrity of a file with the largest decentralized web of trust. built using
+check who has verified your exact file, and whether that includes people you follow. built using
 [typescript](https://www.typescriptlang.org/), [lit](https://lit.dev/), and
 [vite+](https://viteplus.dev/).
 
