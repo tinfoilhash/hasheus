@@ -39,6 +39,9 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
 
   userEvent: UserEvent | null = null
   followListEvent: FollowListEvent | null = null
+  // when the follow list was last fetched, renewed only once a fetch finishes,
+  // so a stored list isn't marked fresh by a profile that arrives first.
+  requestedAt = 0
   connectionID = 0
 
   get isPending() {
@@ -61,6 +64,7 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
     if (!this.currentUser) {
       this.userEvent = null
       this.followListEvent = null
+      this.requestedAt = 0
     }
 
     this.dispatchEvent(
@@ -88,6 +92,7 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
     const currentUser = new CurrentUser({
       userEvent,
       followListEvent: this.followListEvent,
+      requestedAt: this.requestedAt,
     })
 
     this.saveToStorage(currentUser)
@@ -155,6 +160,7 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
 
     this.userEvent = currentUser.userEvent
     this.followListEvent = currentUser.followListEvent
+    this.requestedAt = currentUser.requestedAt
 
     return this.dispatchChange({
       status: CurrentUserConnection.STATUSES.CONNECTED,
@@ -196,7 +202,12 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
           return
         }
 
-        this.followListEvent = followListEvent
+        // a relay can return an older list than the stored one, which may still
+        // include a key that's since been unfollowed.
+        if (!this.followListEvent || followListEvent.createdAt > this.followListEvent.createdAt) {
+          this.followListEvent = followListEvent
+        }
+
         this.dispatchCurrentUserIfReady()
       },
     }).subscribe()
@@ -214,6 +225,7 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
     ignoreNoPubkeyError?: boolean
   } = {}) {
     const connectionID = ++this.connectionID
+    const requestedAt = Date.now()
 
     try {
       const restoredUser = this.restoreCurrentUser({ pubkey })
@@ -251,7 +263,7 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
         this.dispatchChange({ status: CurrentUserConnection.STATUSES.PENDING })
       }
 
-      await Promise.all([
+      const [, fetchedFollowListEvent] = await Promise.all([
         this.subscribeUserEvent(pubkey, connectionID),
         this.subscribeFollowListEvent(pubkey, connectionID),
       ])
@@ -264,12 +276,16 @@ class CurrentUserConnection extends TypedEventTarget<{ change: CustomEvent<Chang
         throw new Error('unable to find your profile')
       }
 
-      // a user who hasn't followed anyone yet has no follow list.
-      if (!this.followListEvent) {
-        return this.dispatchCurrentUser(this.userEvent)
+      // like the cli, a stored follow list is dropped when no relay returns one,
+      // so withholding a newer list can't keep an unfollowed key trusted. a user
+      // who hasn't followed anyone yet has no follow list either.
+      if (!fetchedFollowListEvent) {
+        this.followListEvent = null
       }
 
-      return this.currentUser
+      this.requestedAt = requestedAt
+
+      return this.dispatchCurrentUser(this.userEvent)
     } catch (error) {
       if (!this.isCurrentConnection(connectionID)) {
         return this.currentUser

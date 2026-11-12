@@ -236,6 +236,44 @@ describe('CurrentUserConnection', () => {
       expect(readStoredUser().requestedAt).toBeGreaterThan(0)
     })
 
+    it('drops a stored follow list the relays no longer return', async () => {
+      await (await importConnection()).connect({ canAskForPubkey: true })
+
+      storage.setItem('currentUser', JSON.stringify({ ...readStoredUser(), requestedAt: 0 }))
+      relays.followListEvent = null
+
+      const restoredConnection = await importConnection()
+      const currentUser = await restoredConnection.connect()
+
+      expect(currentUser?.hasTrusted(PUBKEYS.followed)).toBe(false)
+      expect(readStoredUser().followListEvent).toBeNull()
+      expect(readStoredUser().requestedAt).toBeGreaterThan(0)
+    })
+
+    it('keeps a stored follow list newer than the one the relays return', async () => {
+      relays.followListEvent = buildFollowListEvent({
+        pubkey: PUBKEYS.me,
+        createdAt: 2,
+        follows: [PUBKEYS.followed],
+      })
+
+      await (await importConnection()).connect({ canAskForPubkey: true })
+
+      storage.setItem('currentUser', JSON.stringify({ ...readStoredUser(), requestedAt: 0 }))
+      relays.followListEvent = buildFollowListEvent({
+        pubkey: PUBKEYS.me,
+        createdAt: 1,
+        follows: [PUBKEYS.other],
+      })
+
+      const restoredConnection = await importConnection()
+      const currentUser = await restoredConnection.connect()
+
+      expect(currentUser?.hasTrusted(PUBKEYS.followed)).toBe(true)
+      expect(currentUser?.hasTrusted(PUBKEYS.other)).toBe(false)
+      expect(readStoredUser().requestedAt).toBeGreaterThan(0)
+    })
+
     it('replaces a stored user when connecting with a different pubkey', async () => {
       await (await importConnection()).connect({ canAskForPubkey: true })
 
