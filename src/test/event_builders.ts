@@ -52,12 +52,14 @@ function buildUserEvent(options?: UserEventOptions) {
 
 function buildFollowListEvent({
   pubkey,
+  createdAt,
   follows = [],
-}: { pubkey?: string; follows?: string[] } = {}) {
+}: Omit<RawEventOptions, 'content'> & { follows?: string[] } = {}) {
   return new FollowListEvent(
     buildRawEvent({
       kind: FollowListEvent.KIND,
       pubkey,
+      createdAt,
       tags: follows.map((followed) => ['p', followed]),
     }),
   )
