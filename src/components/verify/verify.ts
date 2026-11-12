@@ -184,11 +184,11 @@ class HVerify extends LitElement {
         </div>
       </section>
       <dl>
+        ${this.#renderField('file hash', html`<h-hash data-testid="file-hash" .hash=${this.hash}></h-hash>`)}
         ${this.#renderField(
           'description',
           html`<div data-testid="description">${description || pendingOrEmptyValue}</div>`,
         )}
-        ${this.#renderField('file hash', html`<h-hash data-testid="file-hash" .hash=${this.hash}></h-hash>`)}
         ${this.#renderField(
           'url',
           html`
