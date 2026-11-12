@@ -24,6 +24,9 @@ touches components or user flows.
 - `src/test`: helpers shared by unit tests.
 - `e2e`: playwright tests and their relay & server setup.
 - `dev`: sample data for the local relay. see [`dev/README.md`](dev/README.md).
+- `docs`: [`threat_model.md`](docs/threat_model.md) defines what a verification proves and the rules
+  the web app and cli both follow. check it before changing how verifications are fetched, trusted,
+  or shown, and update it when a change alters what they prove.
 
 ## conventions
 
