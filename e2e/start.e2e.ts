@@ -28,7 +28,7 @@ test('choosing a file opens its verify page', async ({ page }) => {
 
   await expect(page).toHaveURL(`/${hash}`)
   await expect(page.getByTestId('file-hash')).toHaveText(hash)
-  await expect(page.getByTestId('description')).toHaveText('hello.txt')
+  await expect(page.getByTestId('heading')).toHaveText('hello.txt')
   await expect(page.getByTestId('not-verified-status')).toBeVisible()
 })
 

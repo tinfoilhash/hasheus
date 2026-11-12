@@ -56,7 +56,7 @@ test.describe('a file with a backdated verification', () => {
     await expect(page.getByTestId('unknown-status')).toContainText(
       'connect to see if anyone you follow has verified this file',
     )
-    await expect(page.getByTestId('description')).toHaveText('official download')
+    await expect(page.getByTestId('heading')).toHaveText('official download')
     await expect(page.getByTestId('url')).toContainText(EVIL_URL)
     await expect(page.getByTestId('unknown-tag')).toHaveCount(2)
     await expect(page.getByTestId('trusted-tag')).toHaveCount(0)
@@ -72,7 +72,7 @@ test.describe('a file with a backdated verification', () => {
 
     await expect(page.getByTestId('url')).toContainText(GOOD_URL)
     await expect(page.getByTestId('agreement-tag')).toHaveText('+1 trusted')
-    await expect(page.getByTestId('description')).toHaveText('from alice')
+    await expect(page.getByTestId('heading')).toHaveText('from alice')
     await expect(page.getByTestId('source')).toContainText('alice')
     await expect(page.getByTestId('unknown-status')).toHaveCount(0)
     await expect(page.getByTestId('unknown-tag')).toHaveCount(0)

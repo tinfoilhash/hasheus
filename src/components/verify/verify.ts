@@ -154,7 +154,7 @@ class HVerify extends LitElement {
       <section class="head margined">
         <h-app-header></h-app-header>
         <div class="body">
-          <h2 class=${description ? nothing : 'empty'} data-testid="description">
+          <h2 class=${description ? nothing : 'empty'} data-testid="heading">
             ${description || fallbackHeading}
           </h2>
           <div class="status" role="status">
@@ -184,6 +184,10 @@ class HVerify extends LitElement {
         </div>
       </section>
       <dl>
+        ${this.#renderField(
+          'description',
+          html`<div data-testid="description">${description || pendingOrEmptyValue}</div>`,
+        )}
         ${this.#renderField('file hash', html`<h-hash data-testid="file-hash" .hash=${this.hash}></h-hash>`)}
         ${this.#renderField(
           'url',
@@ -307,6 +311,14 @@ class HVerify extends LitElement {
     cssNormalize,
     cssPage,
     css`
+      /* one line, so a long description doesn't push the page down. it's in
+         full in the description field. */
+      h2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       h2.empty {
         color: var(--h-color-500);
       }

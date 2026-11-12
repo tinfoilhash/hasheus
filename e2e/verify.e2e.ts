@@ -14,7 +14,33 @@ test('a verification with an empty description shows a placeholder name', async 
 
   await page.goto(`/${hash}`)
   await expect(page.getByTestId('source')).toContainText('alice')
-  await expect(page.getByTestId('description')).toHaveText('unknown.ext')
+  await expect(page.getByTestId('heading')).toHaveText('unknown.ext')
+})
+
+test('a long description fits the heading on one line, and shows in full below', async ({
+  page,
+  relay,
+}) => {
+  const hash = randomHash()
+  const description = 'a description long enough to run past the end of the heading. '
+    .repeat(4)
+    .trim()
+
+  await relay.publishVerification(await relay.createUser({ name: 'alice' }), {
+    hash,
+    url: 'https://example.com/a.iso',
+    description,
+  })
+
+  await page.goto(`/${hash}`)
+  await expect(page.getByTestId('description')).toHaveText(description)
+
+  const { height, lineHeight } = await page.getByTestId('heading').evaluate((heading) => ({
+    height: heading.getBoundingClientRect().height,
+    lineHeight: Number.parseFloat(getComputedStyle(heading).lineHeight),
+  }))
+
+  expect(height).toBe(lineHeight)
 })
 
 test('a verification with a bidi override in its description shows it without the override', async ({
@@ -30,7 +56,7 @@ test('a verification with a bidi override in its description shows it without th
   })
 
   await page.goto(`/${hash}`)
-  await expect(page.getByTestId('description')).toHaveText('fileosi.exe')
+  await expect(page.getByTestId('heading')).toHaveText('fileosi.exe')
 })
 
 test('a verification dated too far out for a date shows its raw timestamp', async ({
@@ -63,7 +89,7 @@ test("switching straight to another file's page shows only that file's verificat
   })
 
   await page.goto(`/${verifiedHash}`)
-  await expect(page.getByTestId('description')).toHaveText('file a')
+  await expect(page.getByTestId('heading')).toHaveText('file a')
 
   // a browser back or forward between two verify pages reuses the page, so
   // simulate one rather than loading the second page fresh.
@@ -74,6 +100,6 @@ test("switching straight to another file's page shows only that file's verificat
 
   await expect(page.getByTestId('file-hash')).toHaveText(unverifiedHash)
   await expect(page.getByTestId('not-verified-status')).toBeVisible()
-  await expect(page.getByTestId('description')).not.toContainText('file a')
+  await expect(page.getByTestId('heading')).not.toContainText('file a')
   await expect(page.getByTestId('source')).not.toContainText('alice')
 })
