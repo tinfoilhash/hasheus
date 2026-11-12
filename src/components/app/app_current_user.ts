@@ -33,7 +33,7 @@ class HAppCurrentUser extends LitElement {
     const { currentUser, error } = currentUserConnection
 
     return html`
-      <h-button ?pending=${currentUserConnection.isPending}>
+      <h-button secondary ?pending=${currentUserConnection.isPending}>
         <button
           data-testid="connect-button"
           ?disabled=${currentUserConnection.isPending}
@@ -51,6 +51,7 @@ class HAppCurrentUser extends LitElement {
     css`
       :host {
         display: block;
+        max-width: 100%;
       }
 
       h-error {

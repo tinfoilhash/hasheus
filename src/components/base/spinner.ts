@@ -2,6 +2,13 @@ import cssNormalize from '@/components/base/css/css_normalize'
 import { css, html, LitElement } from 'lit'
 
 class HSpinner extends LitElement {
+  // a dash turning in place says nothing to a screen reader, so it's hidden.
+  override connectedCallback() {
+    super.connectedCallback()
+
+    this.setAttribute('aria-hidden', 'true')
+  }
+
   override render() {
     return html`&mdash;`
   }

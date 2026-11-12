@@ -1,5 +1,5 @@
 import cssNormalize from '@/components/base/css/css_normalize'
-import { css, html, LitElement, type PropertyDeclarations } from 'lit'
+import { css, html, LitElement } from 'lit'
 
 class HAppHeader extends LitElement {
   static NAME = 'hasheus'
@@ -21,12 +21,6 @@ class HAppHeader extends LitElement {
     '  5fd9c   15c00  ',
     '    350   1bf    ',
   ]
-
-  static override properties = {
-    large: { type: Boolean },
-  } satisfies PropertyDeclarations
-
-  declare large?: boolean
 
   override render() {
     return html`
@@ -64,25 +58,21 @@ class HAppHeader extends LitElement {
 
       header {
         display: flex;
-        margin-bottom: 2rem;
       }
 
       header a {
         text-decoration: none;
       }
 
-      /* 6px unless large, so the 15-row helmet doesn't push the page's content
-         too far down. the line height and spacing scale to keep its shape. */
+      /* monospace wherever it's placed, so the helmet's rows line up. the line
+         height and spacing scale with the size to keep its shape. */
       header a h1 {
         margin: 0;
-        font-size: 0.375rem;
+        font-family: var(--h-font-mono);
+        font-size: 0.5rem;
         font-weight: inherit;
         line-height: 1.25;
         letter-spacing: 0.25em;
-      }
-
-      :host([large]) header a h1 {
-        font-size: 1rem;
       }
 
       .row {
@@ -160,9 +150,10 @@ class HAppHeader extends LitElement {
         color: #da8d6d;
       }
 
-      @media (width >= 40rem) {
-        header {
-          margin-bottom: 4rem;
+      /* full size once the page has a margin to hang it in. */
+      @media (width >= 48rem) {
+        header a h1 {
+          font-size: 0.75rem;
         }
       }
     `,

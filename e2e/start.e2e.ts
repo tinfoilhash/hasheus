@@ -28,6 +28,7 @@ test('choosing a file opens its verify page', async ({ page }) => {
 
   await expect(page).toHaveURL(`/${hash}`)
   await expect(page.getByTestId('file-hash')).toHaveText(hash)
+  await expect(page.getByTestId('heading')).toHaveText('hello.txt')
   await expect(page.getByTestId('not-verified-status')).toBeVisible()
 })
 
@@ -56,6 +57,26 @@ test('dropping a file opens its verify page', async ({ page }) => {
 
   await expect(page).toHaveURL(`/${hash}`)
   await expect(page.getByTestId('file-hash')).toHaveText(hash)
+})
+
+test('opens the verify page at the top, wherever the file was dropped', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
+  await dropFiles(page, [{ text: `scrolled ${Math.random()}` }])
+
+  await expect(page.getByTestId('file-hash')).toBeVisible()
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+})
+
+test("explains when a file can't be hashed", async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => {
+    File.prototype.arrayBuffer = () => Promise.reject(new Error('Read failed'))
+  })
+  await dropFiles(page, [{ text: 'unreadable' }])
+
+  await expect(page.getByRole('alert')).toHaveText("couldn't hash that file: read failed")
 })
 
 test('lets files be dragged onto the page', async ({ page }) => {
@@ -127,7 +148,7 @@ test('hashes a file too large for web crypto', async ({ page }) => {
 test('links to the cli', async ({ page }) => {
   await page.goto('/')
 
-  await expect(page.getByRole('link', { name: 'use the cli' })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'install the cli' })).toHaveAttribute(
     'href',
     'https://github.com/tinfoilhash/hasheus-cli',
   )

@@ -1,9 +1,13 @@
 import '@/components/app/app_current_user'
+import '@/components/app/app_header'
 import '@/components/base/button'
 import cssNormalize from '@/components/base/css/css_normalize'
+import cssPage from '@/components/base/css/css_page'
 import '@/components/base/error'
+import '@/components/base/hash'
 import '@/components/base/spinner'
 import '@/components/base/status'
+import '@/components/base/tag'
 import '@/components/base/user_picture'
 import type CurrentUser from '@/services/current_user'
 import type HFile from '@/services/file'
@@ -14,6 +18,8 @@ import { Task, TaskStatus } from '@lit/task'
 import { css, html, LitElement, nothing, type PropertyDeclarations, type TemplateResult } from 'lit'
 
 class HVerify extends LitElement {
+  static UNKNOWN_FILE_NAME = 'unknown.ext'
+
   static override properties = {
     currentUser: { attribute: false },
     file: { attribute: false },
@@ -65,28 +71,33 @@ class HVerify extends LitElement {
     return this.file?.hash === this.hash
   }
 
+  // only counts the connected user's own verification, so switching accounts
+  // after publishing doesn't carry it over to someone else.
   get #hasCurrentUserVerified() {
     const pubkey = this.currentUser?.pubkey
 
-    return (
-      (this.#isFileForHash && Boolean(this.file?.hasBeenPublished)) ||
-      (pubkey !== undefined && this._events.some((event) => event.pubkey === pubkey))
-    )
+    if (pubkey === undefined) {
+      return false
+    }
+
+    const publishedPubkey = this.#isFileForHash ? this.file?.publishedFileEvent?.pubkey : undefined
+
+    return publishedPubkey === pubkey || this._events.some((event) => event.pubkey === pubkey)
   }
 
   get #canPublish() {
-    return this.#isFileForHash && !this.#hasCurrentUserVerified
+    return this.#isFileForHash && !this.file?.hasBeenPublished && !this.#hasCurrentUserVerified
   }
 
-  #renderUntrustedTag(isUntrusted: boolean) {
-    return isUntrusted
-      ? html`<span class="untrusted" data-testid="untrusted-tag">untrusted</span>`
+  #renderUnknownTag(isUnknown: boolean) {
+    return isUnknown
+      ? html`<h-tag kind="unknown" data-testid="unknown-tag">unknown</h-tag>`
       : nothing
   }
 
   #renderTrustedTag(isTrusted: boolean) {
     return isTrusted
-      ? html`<span class="trusted" data-testid="trusted-tag">trusted</span>`
+      ? html`<h-tag kind="trusted" data-testid="trusted-tag">trusted</h-tag>`
       : nothing
   }
 
@@ -95,7 +106,7 @@ class HVerify extends LitElement {
     const otherCount = agreementCount - 1
 
     return otherCount > 0
-      ? html`<span class="trusted" data-testid="agreement-tag">+${otherCount} trusted</span>`
+      ? html`<h-tag kind="trusted" data-testid="agreement-tag">+${otherCount} trusted</h-tag>`
       : nothing
   }
 
@@ -105,7 +116,7 @@ class HVerify extends LitElement {
     }
 
     return html`
-      <ol>
+      <ol class="pictures">
         ${events.map(
           (event) => html`
             <li>
@@ -123,207 +134,242 @@ class HVerify extends LitElement {
 
   override render() {
     const isPending = this.#subscribeTask.status === TaskStatus.PENDING
-    const { trustedEvents, untrustedEvents, source } = verificationSorter({
+    const { trustedEvents, unknownEvents, source } = verificationSorter({
       events: this._events,
       currentUser: this.currentUser,
     })
     const { event: sourceEvent, isTrusted, agreementCount } = source
-    // labeled whenever it shows, even while loading, so an untrusted source is
+    // labeled whenever it shows, even while loading, so an unknown source is
     // never shown unlabeled.
-    const isUntrusted = Boolean(sourceEvent) && !isTrusted
-    const url = sourceEvent?.url
+    const isUnknown = Boolean(sourceEvent) && !isTrusted
+    const description = sourceEvent?.descriptionTrimmed
     const pendingOrEmptyValue = isPending ? html`<h-spinner></h-spinner>` : html`&mdash;`
+    // with no verification to describe it, the file you just chose is named
+    // instead, muted so it isn't mistaken for someone's description.
+    const fileName = !sourceEvent && this.#isFileForHash ? this.file?.name : undefined
+    const fallbackHeading =
+      fileName || (isPending ? html`<h-spinner></h-spinner>` : HVerify.UNKNOWN_FILE_NAME)
 
     return html`
-      ${
-        this.#hasCurrentUserVerified
-          ? html`
-              <h-status color="green" data-testid="verified-status"
-                >you have verified this file!</h-status
-              >
-            `
-          : nothing
-      }
-      ${this.#subscribeTask.render({
-        complete: () => {
-          if (!sourceEvent) {
-            return html`
-              <h-status color="orange" data-testid="not-verified-status">
-                this file has not been verified!
-                ${
-                  this.#canPublish
-                    ? html`<a href="/publish" data-testid="add-verification-link"
-                        >add your verification</a
-                      >`
-                    : nothing
-                }
-              </h-status>
-            `
-          }
-
-          if (isUntrusted && !this.#hasCurrentUserVerified) {
-            return html`
-              <h-status color="orange" data-testid="untrusted-status">
-                ${
-                  this.currentUser
-                    ? 'no one in your web of trust has verified this file.'
-                    : 'connect to see if anyone in your web of trust has verified this file.'
-                }
-                its source and url are untrusted.
-              </h-status>
-            `
-          }
-
-          return nothing
-        },
-        error: (error) => html`<h-error data-testid="subscribe-error" .error=${error}></h-error>`,
-      })}
-      <ul>
-        <li>
-          <div class="key">file hash</div>
-          <div class="value" data-testid="file-hash">${this.hash}</div>
-        </li>
-        <li>
-          <div class="key">description</div>
-          <div class="value" data-testid="description">
-            ${sourceEvent?.descriptionTrimmed || pendingOrEmptyValue}
+      <section class="head margined">
+        <h-app-header></h-app-header>
+        <div class="body">
+          <h2 class=${description ? nothing : 'empty'} data-testid="heading">
+            ${description || fallbackHeading}
+          </h2>
+          <div class="status" role="status">
+            ${this.#renderStatus({
+              sourceEvent,
+              isPending,
+              isUnknown,
+              trustedCount: trustedEvents.length,
+            })}
           </div>
-        </li>
-        <li>
-          <div class="key">
-            url${this.#renderUntrustedTag(isUntrusted)}${this.#renderAgreementTag(agreementCount)}
-          </div>
-          <div class="value" data-testid="url">
-            ${url ? html`<a href=${url} target="_blank">${url}</a>` : pendingOrEmptyValue}
-          </div>
-        </li>
-        <li class="source">
-          <div class="key">
-            source${this.#renderUntrustedTag(isUntrusted)}${this.#renderTrustedTag(isTrusted)}
-          </div>
-          <div class="value" data-testid="source">
+          ${this.#subscribeTask.render({
+            error: (error) =>
+              html`<h-error data-testid="subscribe-error" .error=${error}></h-error>`,
+          })}
+          <div class="actions">
             ${
-              sourceEvent
-                ? html`
-                    <h-user-picture
-                      .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
-                      .userEvent=${sourceEvent.userEvent}
-                    ></h-user-picture>
-                    <div>
-                      <div class="name">${sourceEvent.userDisplayName}</div>
-                      <div>${sourceEvent.createdAtLocaleString}</div>
-                    </div>
-                  `
-                : pendingOrEmptyValue
+              this.#canPublish
+                ? html`<h-button
+                    ><a href="/publish" data-testid="add-verification-link"
+                      >add your verification</a
+                    ></h-button
+                  >`
+                : nothing
             }
+            <h-app-current-user></h-app-current-user>
           </div>
-        </li>
-        <li class="verified-list">
-          <div class="key">trusted verifiers</div>
-          <div class="value" data-testid="trusted-verifiers">
-            ${this.#renderVerifierList(trustedEvents, {
-              emptyValue: pendingOrEmptyValue,
-            })}
-          </div>
-        </li>
-        <li class="verified-list">
-          <div class="key">untrusted verifiers</div>
-          <div class="value">
-            ${this.#renderVerifierList(untrustedEvents, {
-              emptyValue: pendingOrEmptyValue,
-            })}
-          </div>
-        </li>
-      </ul>
-      <div class="actions">
-        ${
-          this.#canPublish
-            ? html`
-                <h-button>
-                  <a href="/publish">add your verification</a>
-                </h-button>
-              `
-            : nothing
-        }
-        <h-app-current-user></h-app-current-user>
+        </div>
+      </section>
+      <dl>
+        ${this.#renderField('file hash', html`<h-hash data-testid="file-hash" .hash=${this.hash}></h-hash>`)}
+        ${this.#renderField(
+          'description',
+          html`<div data-testid="description">${description || pendingOrEmptyValue}</div>`,
+        )}
+        ${this.#renderField(
+          'url',
+          html`
+            ${this.#renderTags(
+              this.#renderUnknownTag(isUnknown),
+              this.#renderAgreementTag(agreementCount),
+            )}
+            <div data-testid="url">${this.#renderURL(sourceEvent?.url) ?? pendingOrEmptyValue}</div>
+          `,
+        )}
+        ${this.#renderField(
+          'source',
+          html`<div class="source" data-testid="source">
+            ${sourceEvent ? this.#renderSource(sourceEvent, isUnknown, isTrusted) : pendingOrEmptyValue}
+          </div>`,
+        )}
+        ${this.#renderField(
+          'trusted',
+          html`<div data-testid="trusted-verifiers">
+            ${this.#renderVerifierList(trustedEvents, { emptyValue: pendingOrEmptyValue })}
+          </div>`,
+        )}
+        ${this.#renderField(
+          'unknown',
+          this.#renderVerifierList(unknownEvents, { emptyValue: pendingOrEmptyValue }),
+        )}
+      </dl>
+    `
+  }
+
+  // a status shows as soon as there's something to say, even while still
+  // loading, so an unknown source's description is never shown unlabeled.
+  #renderStatus({
+    sourceEvent,
+    isPending,
+    isUnknown,
+    trustedCount,
+  }: {
+    sourceEvent: FileEvent | undefined
+    isPending: boolean
+    isUnknown: boolean
+    trustedCount: number
+  }) {
+    if (this.#hasCurrentUserVerified) {
+      return html`
+        <h-status color="green" data-testid="verified-status">you've verified this file</h-status>
+      `
+    }
+
+    if (isUnknown) {
+      return html`
+        <h-status color="yellow" data-testid="unknown-status">
+          ${
+            this.currentUser
+              ? 'no one you follow has verified this file;'
+              : 'connect to see if anyone you follow has verified this file;'
+          }
+          its description, url, and source come from an unknown verifier
+        </h-status>
+      `
+    }
+
+    if (sourceEvent) {
+      return html`
+        <h-status color="green" data-testid="trusted-status">
+          ${trustedCount === 1 ? '1 person' : `${trustedCount} people`} you follow verified this
+          file
+        </h-status>
+      `
+    }
+
+    if (isPending) {
+      return html`<h-status>looking up verifications…</h-status>`
+    }
+
+    // the error explains itself, and there's no telling whether anyone verified it.
+    if (this.#subscribeTask.status === TaskStatus.ERROR) {
+      return nothing
+    }
+
+    return html`
+      <h-status data-testid="not-verified-status">no one has verified this file yet</h-status>
+    `
+  }
+
+  #renderField(label: string, value: unknown) {
+    return html`
+      <div class="field margined">
+        <dt>${label}</dt>
+        <dd>${value}</dd>
+      </div>
+    `
+  }
+
+  #renderURL(url: string | null | undefined) {
+    return url ? html`<a href=${url} target="_blank">${url}</a>` : undefined
+  }
+
+  #renderTags(...tags: unknown[]) {
+    return html`<div class="tags">${tags}</div>`
+  }
+
+  #renderSource(sourceEvent: FileEvent, isUnknown: boolean, isTrusted: boolean) {
+    return html`
+      <h-user-picture
+        .pubkeyEncoded=${sourceEvent.pubkeyEncoded}
+        .userEvent=${sourceEvent.userEvent}
+      ></h-user-picture>
+      <div>
+        <div class="name">
+          ${sourceEvent.userDisplayName}
+          ${this.#renderUnknownTag(isUnknown)}${this.#renderTrustedTag(isTrusted)}
+        </div>
+        <div class="date">${sourceEvent.createdAtLocaleString}</div>
       </div>
     `
   }
 
   static override styles = [
     cssNormalize,
+    cssPage,
     css`
-      :host {
-        display: block;
+      /* one line, so a long description doesn't push the page down. it's in
+         full in the description field. */
+      h2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
-      h-status,
-      h-error {
-        margin-bottom: 2rem;
-      }
-
-      ul {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-      }
-
-      ul li .key {
-        margin-bottom: 0.5rem;
+      h2.empty {
         color: var(--h-color-500);
-      }
-
-      ul li .value {
-        font-size: 1.25rem;
-        overflow-wrap: break-word;
-      }
-
-      ul li .value a {
-        color: inherit;
-      }
-
-      ul li .key .untrusted,
-      ul li .key .trusted {
-        padding: 0 0.375rem;
-        margin-left: 0.5rem;
-        color: var(--h-color-100);
-      }
-
-      ul li .key .untrusted {
-        background: var(--h-color-orange);
-      }
-
-      ul li .key .trusted {
-        background: var(--h-color-green);
-      }
-
-      ul li.source .value {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      ul li.source .value .name {
-        margin-bottom: 0.5rem;
-      }
-
-      ul li.verified-list .value ol {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        padding: 0;
-        margin: 0;
-        list-style: none;
       }
 
       .actions {
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
         align-items: flex-start;
-        margin-top: 1.5rem;
+      }
+
+      /* a long name truncates rather than widening the page past the screen. */
+      h-app-current-user {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .tags:not(:empty) {
+        margin-bottom: 0.25rem;
+      }
+
+      .source {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .source h-user-picture {
+        flex: none;
+      }
+
+      /* a set gap, rather than a space, between the name and its tag. */
+      .name {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .date {
+        font-size: 0.875rem;
+        line-height: 1.375rem;
+        color: var(--h-color-400);
+      }
+
+      .pictures {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0;
+        list-style: none;
       }
     `,
   ]
