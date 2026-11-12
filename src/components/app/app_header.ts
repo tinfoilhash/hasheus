@@ -85,7 +85,7 @@ class HAppHeader extends LitElement {
       }
 
       /* each digit's shade comes from its value, 0 darkest to f brightest, so
-     the hash shades itself. */
+         the hash shades itself. */
       .digit-0 {
         color: #b3552e;
       }
