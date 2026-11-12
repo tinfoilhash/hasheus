@@ -12,12 +12,12 @@ const PUBKEYS = {
 
 describe('verificationSorter', () => {
   it('returns no source when there are no events', () => {
-    const { trustedEvents, untrustedEvents, source } = verificationSorter({
+    const { trustedEvents, unknownEvents, source } = verificationSorter({
       events: [],
     })
 
     expect(trustedEvents).toEqual([])
-    expect(untrustedEvents).toEqual([])
+    expect(unknownEvents).toEqual([])
     expect(source).toEqual({
       event: undefined,
       isTrusted: false,
@@ -29,38 +29,38 @@ describe('verificationSorter', () => {
     const first = buildFileEvent({ pubkey: PUBKEYS.stranger, createdAt: 1 })
     const second = buildFileEvent({ pubkey: PUBKEYS.stranger, createdAt: 2 })
 
-    const { untrustedEvents } = verificationSorter({ events: [first, second] })
+    const { unknownEvents } = verificationSorter({ events: [first, second] })
 
-    expect(untrustedEvents).toEqual([first])
+    expect(unknownEvents).toEqual([first])
   })
 
-  it('treats everyone as untrusted without a current user', () => {
+  it('treats everyone as unknown without a current user', () => {
     const events = [
       buildFileEvent({ pubkey: PUBKEYS.trustedA, createdAt: 1 }),
       buildFileEvent({ pubkey: PUBKEYS.stranger, createdAt: 2 }),
     ]
 
-    const { trustedEvents, untrustedEvents } = verificationSorter({ events })
+    const { trustedEvents, unknownEvents } = verificationSorter({ events })
 
     expect(trustedEvents).toEqual([])
-    expect(untrustedEvents).toEqual(events)
+    expect(unknownEvents).toEqual(events)
   })
 
   it('splits events by whether the current user trusts their author', () => {
     const trusted = buildFileEvent({ pubkey: PUBKEYS.trustedA, createdAt: 1 })
     const own = buildFileEvent({ pubkey: PUBKEYS.me, createdAt: 2 })
-    const untrusted = buildFileEvent({ pubkey: PUBKEYS.stranger, createdAt: 3 })
+    const unknown = buildFileEvent({ pubkey: PUBKEYS.stranger, createdAt: 3 })
 
-    const { trustedEvents, untrustedEvents } = verificationSorter({
-      events: [trusted, own, untrusted],
+    const { trustedEvents, unknownEvents } = verificationSorter({
+      events: [trusted, own, unknown],
       currentUser: buildCurrentUser({ follows: [PUBKEYS.trustedA] }),
     })
 
     expect(trustedEvents).toEqual([trusted, own])
-    expect(untrustedEvents).toEqual([untrusted])
+    expect(unknownEvents).toEqual([unknown])
   })
 
-  it('falls back to the earliest event, untrusted, without trusted verifiers', () => {
+  it('falls back to the earliest event, unknown, without trusted verifiers', () => {
     const backdated = buildFileEvent({
       pubkey: PUBKEYS.stranger,
       createdAt: 1,
@@ -81,7 +81,7 @@ describe('verificationSorter', () => {
     })
   })
 
-  it('ignores a backdated untrusted event when a trusted verifier exists', () => {
+  it('ignores a backdated unknown event when a trusted verifier exists', () => {
     const backdated = buildFileEvent({
       pubkey: PUBKEYS.stranger,
       createdAt: 1,

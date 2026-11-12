@@ -1,6 +1,6 @@
 # hasheus
 
-verify the integrity of a file with the largest decentralized web of trust. built using
+verify any file with signatures from people you trust. built using
 [typescript](https://www.typescriptlang.org/), [lit](https://lit.dev/), and
 [vite+](https://viteplus.dev/).
 

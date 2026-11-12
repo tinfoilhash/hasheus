@@ -2,7 +2,7 @@
   "name": "@tinfoilhash/hasheus",
   "version": "2.1.0",
   "private": true,
-  "description": "verify the integrity of a file with the largest decentralized web of trust",
+  "description": "verify any file with signatures from people you trust",
   "bugs": "https://github.com/tinfoilhash/hasheus/issues",
   "license": "MIT",
   "repository": {

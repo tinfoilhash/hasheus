@@ -51,7 +51,7 @@ const VERIFICATIONS: Verification[] = [
   { file: 'trusted.txt', user: bob, day: 2 },
   { file: 'yours.txt', user: dev, day: 3 },
   { file: 'yours.txt', user: mallory, createdAt: FAR_FUTURE_AT },
-  { file: 'untrusted.txt', user: mallory, day: 4 },
+  { file: 'unknown.txt', user: mallory, day: 4 },
   // bob & carol outnumber alice, so their url wins.
   { file: 'disagreed.txt', user: alice, day: 5 },
   {

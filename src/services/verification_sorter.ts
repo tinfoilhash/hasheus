@@ -62,19 +62,19 @@ function verificationSorter({
 }) {
   const verifierEvents = getFirstEventPerPubkey(events)
   const trustedEvents: FileEvent[] = []
-  const untrustedEvents: FileEvent[] = []
+  const unknownEvents: FileEvent[] = []
 
   for (const event of verifierEvents) {
     if (currentUser?.hasTrusted(event.pubkey)) {
       trustedEvents.push(event)
     } else {
-      untrustedEvents.push(event)
+      unknownEvents.push(event)
     }
   }
 
   return {
     trustedEvents,
-    untrustedEvents,
+    unknownEvents,
     source: pickSource({ verifierEvents, trustedEvents }),
   }
 }

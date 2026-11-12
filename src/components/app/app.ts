@@ -1,4 +1,4 @@
-import '@/components/app/app_header'
+import '@/components/app/app_footer'
 import hAppRoutes from '@/components/app/app_routes'
 import cssNormalize from '@/components/base/css/css_normalize'
 import cssVariables from '@/components/base/css/css_variables'
@@ -68,8 +68,8 @@ class HApp extends LitElement {
 
   override render() {
     return html`
-      <h-app-header ?large=${this.#router.link() === '/'}></h-app-header>
       <main>${this.#router.outlet()}</main>
+      <h-app-footer></h-app-footer>
     `
   }
 
@@ -80,16 +80,31 @@ class HApp extends LitElement {
       :host {
         display: block;
         padding: 1.25rem;
-        font-family:
-          ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono',
-          monospace;
+        font-family: var(--h-font-mono);
         color: var(--h-color-100);
         background: var(--h-color-900);
+      }
+
+      main,
+      h-app-footer {
+        max-width: var(--h-page-width);
+        margin-inline: auto;
+      }
+
+      /* the same space as between the start page's sections. */
+      h-app-footer {
+        margin-top: 2.5rem;
       }
 
       @media (width >= 40rem) {
         :host {
           padding: 2rem;
+        }
+      }
+
+      @media (width >= 48rem) {
+        h-app-footer {
+          margin-top: 3rem;
         }
       }
     `,
