@@ -16,8 +16,8 @@ import { css, html, LitElement, nothing, type PropertyDeclarations, type Templat
 class HPublish extends HNavigable(LitElement) {
   static VALIDATION_MESSAGES = {
     DESCRIPTION_MISSING: 'describe the file',
-    URL_MISSING: 'add a link to the file',
-    URL_INVALID: 'enter a link that starts with http:// or https://',
+    URL_MISSING: 'add a url for the file',
+    URL_INVALID: 'enter a url that starts with http:// or https://',
   }
 
   static override properties = {
@@ -228,7 +228,7 @@ class HPublish extends HNavigable(LitElement) {
             `,
           )}
           ${this.#renderField(
-            html`<label for="url">link</label>`,
+            html`<label for="url">url</label>`,
             html`
               <input
                 id="url"

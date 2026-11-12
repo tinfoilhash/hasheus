@@ -186,7 +186,7 @@ class HVerify extends LitElement {
       <dl>
         ${this.#renderField('file hash', html`<h-hash data-testid="file-hash" .hash=${this.hash}></h-hash>`)}
         ${this.#renderField(
-          'link',
+          'url',
           html`
             ${this.#renderTags(
               this.#renderUnknownTag(isUnknown),
@@ -242,7 +242,7 @@ class HVerify extends LitElement {
               ? 'no one you follow has verified this file;'
               : 'connect to see if anyone you follow has verified this file;'
           }
-          its description, link, and source come from an unknown verifier
+          its description, url, and source come from an unknown verifier
         </h-status>
       `
     }

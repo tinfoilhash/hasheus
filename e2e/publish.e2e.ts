@@ -111,18 +111,18 @@ test.describe('publishing', () => {
     await expect(page).toHaveURL('/publish')
     await expect(page.getByTestId('url-input')).toBeFocused()
     await expect(page.getByTestId('url-input')).toHaveAccessibleDescription(
-      'enter a link that starts with http:// or https://',
+      'enter a url that starts with http:// or https://',
     )
   })
 
-  test('asks for a link, until one is entered', async ({ page }) => {
+  test('asks for a url, until one is entered', async ({ page }) => {
     await openConnectedForm(page)
     await page.getByTestId('publish-button').click()
 
     await expect(page).toHaveURL('/publish')
     await expect(page.getByTestId('url-input')).toBeFocused()
     await expect(page.getByTestId('url-input')).toHaveAccessibleDescription(
-      'add a link to the file',
+      'add a url for the file',
     )
 
     await page.getByTestId('url-input').fill('https://example.com/file.txt')

@@ -92,7 +92,7 @@ class HStart extends LitElement {
         </li>
         <li>
           <strong>see who has verified it.</strong> a verification is a signed note linking that
-          hash to a description and a link to the file. the signature proves whose key published it,
+          hash to a description and a url for the file. the signature proves whose key published it,
           not whether or how they checked the file. hasheus is new, so your file may have none yet.
           if you can vouch for it, yours can be the first.
         </li>
@@ -107,7 +107,7 @@ class HStart extends LitElement {
       <p>
         say you follow an app's developer, who verifies each release. download an installer, from
         their site or a mirror, and their verification shows up ${this.#renderTrusted()}. two
-        friends you follow verified it with the same link, so that link shows
+        friends you follow verified it with the same url, so that url shows
         ${this.#renderTrusted('+2 trusted')}. check the description against the release you meant to
         get: you have the author's signed word about your exact file.
       </p>
@@ -210,10 +210,10 @@ class HStart extends LitElement {
         `,
       )}
       ${this.#renderQuestion(
-        'which link does it show?',
+        'which url does it show?',
         html`
           the one shared by the largest number of trusted verifiers: you and the people you follow.
-          if there are no trusted verifications, it shows an unknown verifier's link, marked
+          if there are no trusted verifications, it shows an unknown verifier's url, marked
           ${this.#renderUnknown()}.
         `,
       )}
